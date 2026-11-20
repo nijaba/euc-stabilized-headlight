@@ -13,7 +13,7 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 ## 2. Optical concept: fixed LEDs, moving mirror
 
 ```
-          ┌──── finned die-cast lid = LED heatsink ────────┐
+          ┌──── finned aluminium lid = LED heatsink ───────┐
           │  [LED][LED][LED][LED]  (row, left→right)        │
           │   TIR  TIR  TIR  TIR   facing DOWN              │
           │            ↓ ↓ ↓                                │
@@ -223,3 +223,8 @@ Cold weather cuts usable capacity by about 20%.
 - [ ] Does the ASA housing stay sealed over thermal cycles? Long-term creep at the screw bosses?
 - [ ] Real TF02-Pro range and dropout rate on wet and dry asphalt at about 4° grazing angle.
 - [ ] Head weight on VHB mounts. Is the leash mandatory?
+- [ ] Power-on flash: DIM floats until the firmware drives the 2N3904s, so both channels start at 2.1 A. Base pull-ups would stop it, but they also turn the light off if the MCU dies, which loses the full-on failsafe. Accept the flash, or find a way to keep both (e.g. an RC that holds the transistor on only for the first second)?
+- [ ] Does the BuckBlock reach zero output with DIM at 0 V? The trolley-mode and crash "beam off" states assume it does.
+- [ ] PTC nuisance trips in boost: ~2 A input against an RXEF250 whose 2.5 A hold rating falls to roughly 2 A at 50 °C inside the head. Move to an RXEF300?
+- [ ] The 1N5822 dissipates ~1 W at 2 A inside the sealed head. Replace it with a P-MOSFET reverse-polarity stage?
+- [ ] P6KE27A clamps at ~37.5 V, above the BuckBlock's 32 V maximum. Low risk with a 20 V bank, but a lower-clamp TVS would cover it.

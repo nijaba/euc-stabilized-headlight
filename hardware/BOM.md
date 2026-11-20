@@ -33,11 +33,11 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Input TVS | P6KE27A (through-hole) | 1 | 0.45 | 0.45 | [search](https://www.digikey.com/en/products/result?keywords=P6KE27A) |  |
 | Input fuse | Littelfuse RXEF250 PTC, 2.5 A hold | 1 | 0.60 | 0.60 | [search](https://www.digikey.com/en/products/result?keywords=RXEF250) | Resettable |
 | Bulk caps | 220 µF 35 V (input) + 470 µF 10 V (servo rail), low-ESR electrolytic | 2 | 0.50 | 1.00 | [search](https://www.digikey.com/en/products/result?keywords=220uF+35V+low+ESR+radial) |  |
-| Thermistors | Vishay NTCLE100E3103JB0, 10 k NTC | 2 | 0.55 | 1.10 | [search](https://www.digikey.com/en/products/result?keywords=NTCLE100E3103JB0) | Heatsink + internal; fix with paste + Kapton |
-| Resistors | 1/4 W kit (need 120 k, 15 k, 10 k ×2, 1 k ×3, 100 Ω) | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=1/4W+metal+film+resistor+kit) | Skip if you have a kit |
+| Thermistor | Vishay NTCLE100E3103JB0, 10 k NTC | 1 | 0.55 | 0.55 | [search](https://www.digikey.com/en/products/result?keywords=NTCLE100E3103JB0) | Heatsink only (internal temperature comes from the IMU); fix with paste + Kapton |
+| Resistors | 1/4 W kit (need 120 k, 15 k, 10 k, 1 k ×3, 100 Ω) | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=1/4W+metal+film+resistor+kit) | Skip if you have a kit |
 | Protoboard | Adafruit Perma-Proto half-size (#1609) | 1 | 4.50 | 4.50 | [link](https://www.adafruit.com/product/1609) | Custom PCB later |
 | Wire | Silicone wire 22 AWG + 26 AWG | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=silicone+wire+22+awg+26+awg+kit) |  |
-| **Subtotal** | | | | **93.25** | | |
+| **Subtotal** | | | | **92.70** | | |
 
 ## C. Optics & mechanism
 
@@ -139,7 +139,7 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 
 | | USD |
 |---|---|
-| Core build, cash outlay (sections A–G, excluding the 2 optional items) | **469** |
+| Core build, cash outlay (sections A–G, excluding the 2 optional items) | **468** |
 | Optional extras (XTC-3D coating, magnetic breakaway) | +35 |
 | Road-slope lidar (section H) | +98 |
 | Subtract if you already own a power bank, filament, resistor kit, wire, paste | −100 |
