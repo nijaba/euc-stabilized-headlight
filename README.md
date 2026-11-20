@@ -66,6 +66,7 @@ Side view of the head:
 | [`docs/test-plan.md`](docs/test-plan.md) | Every test by ID: automated firmware, bench, enclosure and ride tests |
 | [`hardware/BOM.md`](hardware/BOM.md) / [`BOM.csv`](hardware/BOM.csv) | Bill of materials with supplier links and cost summary |
 | [`CHANGELOG.md`](CHANGELOG.md) | Notable changes |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) / [`SECURITY.md`](SECURITY.md) | How to contribute; how to report safety and security faults privately |
 | `firmware/` | ESP32-S3 firmware (to do) |
 | `cad/` | Parametric housing CAD (to do) |
 
