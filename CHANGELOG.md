@@ -9,6 +9,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - `docs/build-plan.md` with phases 0–8.
 - `docs/test-plan.md` with test IDs for automated firmware tests, bench tests, enclosure tests and ride tests.
 - Design open questions: power-on flash, BuckBlock zero output, fuse derating in boost, 1N5822 heat, TVS clamp voltage, cost over the limit.
+- `CONTRIBUTING.md` and `SECURITY.md` (private reporting for safety faults as well as security issues).
 
 ### Fixed
 - BOM: one thermistor instead of two, one fewer 10 k resistor, totals updated.
