@@ -12,7 +12,7 @@ The owner decided these (2026-11-20). Ask before trading one away.
 
 - **Mirror steering.** The LEDs and heatsink never move. Only the mirror tilts to steer the beam.
 - **External power only.** The head has no battery. USB-C PD is negotiated at the power bank, in its pouch, and only plain DC reaches the head.
-- **Material cost ≤ $350 per unit, with the optional lidar fitted.** This excludes the power bank, tools, and packs left over after one unit. The current estimate is over this limit (see design.md §10).
+- **Material cost ≤ $450 per unit, with the optional lidar fitted** (raised from $350 on 2026-11-20). This excludes the power bank, tools, and packs left over after one unit. The current estimate is about $388.
 - **Head weight ≤ 350 g, with the optional lidar fitted.**
 - **The lidar stays optional.** The firmware and housing must work fully without it.
 - **No personal data in the repository:** no real names, hostnames, accounts or locations in code, docs, tests or commit messages. Personal build or ride notes go in `*.local.md`, which git ignores. The one approved exception is the repository's GitHub handle, in repository links and `CODEOWNERS`.

@@ -10,8 +10,8 @@ Phases in order. Work on the current phase only, and tick each item when it pass
 - [x] BOM v2 (XIAO ESP32-S3, printed housing, external power, optional lidar)
 - [x] `CLAUDE.md`, build plan, test plan, changelog
 - [ ] `CONTRIBUTING.md` and `SECURITY.md`
-- [ ] Branch protection on `main` (signed commits, PR required)
-- [ ] Bring the material cost with the lidar fitted from ~$388 down to ≤ $350, or get the owner's decision on which parts change
+- [x] Branch protection on `main` (signed commits, PR required)
+- [x] Material cost within the limit: ~$388 with the lidar, under the $450 limit set on 2026-11-20
 
 ## Phase 1: Firmware core on the bench
 

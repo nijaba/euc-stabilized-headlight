@@ -6,7 +6,7 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 **Firm constraints** (owner's decision, 2026-11-20). Changing one needs the owner's approval:
 - Only the mirror moves. The LEDs and heatsink stay fixed.
 - External power only. The head has no battery, and PD is negotiated at the bank.
-- Material cost ≤ $350 per unit and head weight ≤ 350 g, both **with the optional lidar fitted**. The cost excludes the power bank, tools and leftover pack contents.
+- Material cost ≤ $450 per unit (raised from $350 on 2026-11-20) and head weight ≤ 350 g, both **with the optional lidar fitted**. The cost excludes the power bank, tools and leftover pack contents.
 - The lidar stays optional. Everything must work without it.
 
 ## 1. The problem
@@ -234,4 +234,4 @@ Cold weather cuts usable capacity by about 20%.
 - [ ] PTC nuisance trips in boost: ~2 A input against an RXEF250 whose 2.5 A hold rating falls to roughly 2 A at 50 °C inside the head. Move to an RXEF300?
 - [ ] The 1N5822 dissipates ~1 W at 2 A inside the sealed head. Replace it with a P-MOSFET reverse-polarity stage?
 - [ ] P6KE27A clamps at ~37.5 V, above the BuckBlock's 32 V maximum. Low risk with a 20 V bank, but a lower-clamp TVS would cover it.
-- [ ] Cost is over the limit: about $290 core + $98 lidar ≈ $388, against the $350 ceiling (2026-11-20). Which parts change? Candidates include the Pololu regulator, the Edmund mirror, the XTC-3D coating and the GoPro base pack.
+- [x] Cost over the limit: about $290 core + $98 lidar ≈ $388, against a $350 ceiling. Resolved 2026-11-20: the owner raised the limit to $450, so no parts change.
