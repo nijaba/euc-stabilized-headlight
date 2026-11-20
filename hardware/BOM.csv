@@ -1,0 +1,67 @@
+Section,Item,Part / spec,Qty,Unit USD,Ext USD,Link,Link type,Notes
+A. Control,MCU,"Seeed Studio XIAO ESP32-S3 (non-Sense, SKU 113991114)",1,7.49,7.49,https://www.seeedstudio.com/XIAO-ESP32S3-p-5627.html,product,"Dual-core 240 MHz, FPU, BLE 5"
+A. Control,IMU,"Adafruit LSM6DSO32 6-DoF, ±32 g (#4692)",1,12.50,12.50,https://www.adafruit.com/product/4692,product,±32 g range handles crash detection; 2 INT pins
+A. Control,IMU cable,"STEMMA QT / Qwiic JST-SH 4-pin, 50 mm (Adafruit #4399)",1,0.95,0.95,https://www.adafruit.com/product/4399,product,Or solder wires directly
+B. Power electronics,"LED driver ×2 (spot, flood)","LEDdynamics BuckBlock A009-D-V-2100 (10–32 V in, 2.1 A, dimmable)",2,21.00,42.00,https://www.digikey.com/en/products/detail/leddynamics-inc/0A009-D-V-2100/22578489,product,"Replaces the discontinued Mean Well LDD-1500H. Firmware caps at ~1.5 A normal, 2.1 A boost. Also sold at ledsupply.com/led-drivers/buckblock-dc-led-driver"
+B. Power electronics,5 V regulator,"Pololu D36V28F5 (5 V 3.2 A, 5.3–50 V in)",1,23.95,23.95,https://www.pololu.com/product/3782,product,Feeds servo + XIAO. Cheaper option: generic MP1584 5 V module (~$2) for prototyping
+B. Power electronics,Dim / ring-LED transistors,"2N3904 NPN, TO-92",3,0.15,0.45,https://www.digikey.com/en/products/result?keywords=2N3904+TO-92,search,"2 for BuckBlock DIM (datasheet's MCU interface), 1 for button ring LED"
+B. Power electronics,DIM smoothing caps,10 µF 25 V ceramic or electrolytic,2,0.30,0.60,https://www.digikey.com/en/products/result?keywords=10uF+25V+radial+capacitor,search,Turns 20 kHz PWM into smooth analog dimming (no 200 Hz flicker) – confirm on bench
+B. Power electronics,Reverse-polarity diode,1N5822 Schottky 3 A 40 V,1,0.35,0.35,https://www.digikey.com/en/products/result?keywords=1N5822,search,
+B. Power electronics,5 V OR-ing diode,1N5817 Schottky,1,0.25,0.25,https://www.digikey.com/en/products/result?keywords=1N5817,search,Safe to plug in USB for flashing while powered
+B. Power electronics,Input TVS,P6KE27A (through-hole),1,0.45,0.45,https://www.digikey.com/en/products/result?keywords=P6KE27A,search,
+B. Power electronics,Input fuse,"Littelfuse RXEF250 PTC, 2.5 A hold",1,0.60,0.60,https://www.digikey.com/en/products/result?keywords=RXEF250,search,Resettable
+B. Power electronics,Bulk caps,"220 µF 35 V (input) + 470 µF 10 V (servo rail), low-ESR electrolytic",2,0.50,1.00,https://www.digikey.com/en/products/result?keywords=220uF+35V+low+ESR+radial,search,
+B. Power electronics,Thermistors,"Vishay NTCLE100E3103JB0, 10 k NTC",2,0.55,1.10,https://www.digikey.com/en/products/result?keywords=NTCLE100E3103JB0,search,Heatsink + internal; fix with paste + Kapton
+B. Power electronics,Resistors,"1/4 W kit (need 120 k, 15 k, 10 k ×2, 1 k ×3, 100 Ω)",1,8.00,8.00,https://www.amazon.com/s?k=1/4W+metal+film+resistor+kit,search,Skip if you have a kit
+B. Power electronics,Protoboard,Adafruit Perma-Proto half-size (#1609),1,4.50,4.50,https://www.adafruit.com/product/1609,product,Custom PCB later
+B. Power electronics,Wire,Silicone wire 22 AWG + 26 AWG,1,10.00,10.00,https://www.amazon.com/s?k=silicone+wire+22+awg+26+awg+kit,search,
+C. Optics & mechanism,Spot LEDs,"Cree XP-L HI (3535) on 20 mm DTP copper, 5000–6500 K",2,6.50,13.00,https://kaidomain.com/XP-L-HI-10W-3A-1095-Lumens-SMD-3535-LED,product,Choose the '20mm DTP Copper' option (+$1.20). Swapped in for SFT-40 (5050 doesn't fit the XP holder)
+C. Optics & mechanism,Flood LEDs,"Nichia 519A (3535) on 20 mm DTP copper, 4500–5000 K",2,3.20,6.40,https://kaidomain.com/SMD-LEDs/Nichia-LEDs/519A-7_04W-2200mA-SMD-3535-LED,product,2.2 A rated; high CRI = better road texture
+C. Optics & mechanism,Spot optics,"Carclo 10003 narrow spot, 20 mm (~8–12°)",2,2.75,5.50,https://www.ledsupply.com/led-optics/10003-carclo-lens-20mm-narrow-spot-led-optic,product,
+C. Optics & mechanism,Flood optics,"Carclo 10003-L25 elliptical, 20 mm (~44×13°)",2,3.25,6.50,https://www.ledsupply.com/led-optics/10003-l25-carclo-lens-20mm-elliptical-spot-led-optic,product,Mount with the wide axis horizontal
+C. Optics & mechanism,Optic holders,"Carclo 10734, 20 mm, XP footprint",4,0.80,3.20,https://www.digikey.com/en/products/detail/carclo-technical-plastics/10734/2641685,product,Check the 519A dome fits before ordering more
+C. Optics & mechanism,Mirror,"Front-surface (first-surface) glass mirror, enhanced Al, cut to ~90×35 mm",1,18.00,18.00,https://www.edmundoptics.com/f/first-surface-mirrors/12017/,product family,"Edmund: precise, pricier. Budget: https://www.aliexpress.com/w/wholesale-front-surface-mirror-glass.html (glass, not acrylic). Score on the back face to cut"
+C. Optics & mechanism,Pivot bearings,"MR63ZZ (3×6×2.5 mm), pack of 10",1,8.00,8.00,https://www.amazon.com/s?k=MR63ZZ+bearing,search,
+C. Optics & mechanism,Pivot shaft,"3 mm stainless steel rod, 100 mm",1,6.00,6.00,https://www.amazon.com/s?k=3mm+stainless+steel+rod+100mm,search,
+C. Optics & mechanism,Linkage,RC pushrod set: 1.2 mm Z-bend wire + clevis / EZ connector,1,7.00,7.00,https://www.amazon.com/s?k=rc+pushrod+clevis+kit+1.2mm,search,Gives the 4:1 lever ratio
+C. Optics & mechanism,Servo,"EMAX ES08MD II, digital, metal gear, 12–13 g",1,14.00,14.00,https://www.readymaderc.com/products/details/emax-es08mdii-12g-digital-metal-gear-servo,product,"Also AMain Hobbies, RaceDayQuads"
+C. Optics & mechanism,Heatsink (= lid),Finned aluminium heatsink ~100×60×20 mm,1,9.00,9.00,https://www.amazon.com/s?k=aluminum+heatsink+100x60x20mm,search,LED stars screw to the flat side; drill/tap M3
+C. Optics & mechanism,Thermal paste,Arctic MX-4 (or similar),1,7.00,7.00,https://www.amazon.com/s?k=Arctic+MX-4,search,Skip if you have it
+D. Housing & sealing,Filament,ASA 1 kg (Polymaker / Prusament) – ~150 g used,1,25.00,25.00,https://www.amazon.com/s?k=ASA+filament+1kg,search,Black interior parts can be same spool
+D. Housing & sealing,Window,"Polycarbonate sheet 2–3 mm (or 3 mm tempered glass), cut to ~100×50 mm",1,10.00,10.00,https://www.amazon.com/s?k=polycarbonate+sheet+3mm+8x10,search,
+D. Housing & sealing,Anti-fog,Rain-X Anti-Fog (inside of window),1,6.00,6.00,https://www.amazon.com/s?k=Rain-X+anti+fog,search,
+D. Housing & sealing,O-ring,"Silicone O-ring cord, 2 mm, 2 m",1,8.00,8.00,https://www.amazon.com/s?k=silicone+o-ring+cord+2mm,search,Glue the ends with CA glue
+D. Housing & sealing,Heat-set inserts,"CNC Kitchen M3 short (M3×3.0), 100 pcs",1,10.00,10.00,https://www.3djake.com/cnc-kitchen/threaded-inserts-m3-short,product,Also at prusa3d.com
+D. Housing & sealing,Screws,"M3 A2 stainless assortment (6–16 mm, button head)",1,10.00,10.00,https://www.amazon.com/s?k=M3+stainless+button+head+screw+assortment,search,
+D. Housing & sealing,Mount insert,"1/4""-20 brass heat-set insert (or captive 1/4""-20 nut)",1,6.00,6.00,https://www.amazon.com/s?k=1/4-20+heat+set+insert+brass,search,Main structural anchor
+D. Housing & sealing,Pressure vent,"Amphenol LTW VT-BPM08BK-NO8001, M8 ePTFE vent, IP68",1,4.00,4.00,https://www.masterelectronics.com/en/amphenol-ltw/vtbpm08bkno8001-64689643.html,product,Also search the same part number at Mouser/DigiKey
+D. Housing & sealing,Cable gland,"M12 nylon IP68 gland, 3–6.5 mm cable",1,5.00,5.00,https://www.amazon.com/s?k=M12+cable+gland+IP68+3-6.5mm,search,Only if not using a panel connector
+D. Housing & sealing,Button,"Adafruit Rugged Metal Pushbutton, 16 mm, LED ring, momentary (#560 green / #481 blue)",1,4.95,4.95,https://www.adafruit.com/product/560,product,Includes rubber gasket; 6 V LED – run from 5 V via 2N3904
+D. Housing & sealing,Desiccant,1–2 g silica gel packs,1,6.00,6.00,https://www.amazon.com/s?k=silica+gel+packets+1+gram,search,
+D. Housing & sealing,Sealant,Sensor-safe neutral-cure RTV (e.g. Permatex Ultra Black 82180),1,8.00,8.00,https://www.amazon.com/s?k=Permatex+82180,search,Do NOT use acetoxy (vinegar-smell) silicone near the mirror/LEDs
+D. Housing & sealing,Surface sealer (optional),Smooth-On XTC-3D epoxy coating,1,25.00,25.00,https://www.amazon.com/s?k=XTC-3D,search,Skip if acetone-vapour smoothing the ASA
+E. Mounting,Adhesive bases,"GoPro Curved + Flat Adhesive Mounts (AACFT-001, 6 pcs)",1,19.99,19.99,https://www.bhphotovideo.com/c/product/895457-REG/GoPro_130_02095_000_Flat_Curved_Adhesive_Mounts.html,product,
+E. Mounting,Adapter,"1/4""-20 tripod screw to GoPro adapter",1,6.00,6.00,https://www.amazon.com/s?k=1/4-20+to+gopro+mount+adapter,search,
+E. Mounting,Bar clamp,"GoPro-compatible tube clamp, 15–35 mm (trolley handle)",1,10.00,10.00,https://www.amazon.com/s?k=gopro+handlebar+clamp+aluminum,search,Strongest mounting option
+E. Mounting,Leash,Coiled lanyard / tether with mini carabiner,1,8.00,8.00,https://www.amazon.com/s?k=coiled+tether+lanyard+carabiner,search,
+F. External power,Power bank,"Baseus Adaman 65 W 20,000 mAh (15 V / 3 A on USB-C)",1,50.00,50.00,https://www.baseus.com/products/adaman-power-bank-65w-20000mah,product,"Any 20 Ah bank with 15 V ≥ 2 A PD works (alt: JSAUX PB6501, Anker A1383). $0 if you own one"
+F. External power,PD trigger cable,"USB-C PD → 5.5 mm barrel, fixed 15 V, e-marked",1,12.00,12.00,https://shop.pimoroni.com/products/usb-type-c-3-1-pd-to-5-5mm-barrel-jack-cable-1-2m-long-with-e-mark,product,Cut the barrel off and splice to the IP68 connector
+F. External power,Waterproof connector,IP68 2-pin inline connector pair (SP13 / M12 style),1,7.00,7.00,https://www.amazon.com/s?k=IP68+2+pin+waterproof+connector,search,
+F. External power,Pouch,Waterproof pouch/bag for the power bank,1,12.00,12.00,https://www.amazon.com/s?k=waterproof+dry+pouch+power+bank,search,
+F. External power,Breakaway (optional),IP67 magnetic 2-pin connector,1,10.00,10.00,https://www.amazon.com/s?k=waterproof+magnetic+connector+2+pin,search,Pops apart in a fall
+G. Remote (DIY),Remote MCU,Seeed Studio XIAO nRF52840 (non-Sense),1,9.90,9.90,https://www.seeedstudio.com/Seeed-XIAO-BLE-nRF52840-p-5201.html,product,Has LiPo charging built in
+G. Remote (DIY),Battery,LiPo 3.7 V 150 mAh (Adafruit #1317),1,5.95,5.95,https://www.adafruit.com/product/1317,product,
+G. Remote (DIY),Buttons,IP67 sealed tactile switch (e.g. C&K KSC series),2,1.20,2.40,https://www.digikey.com/en/products/result?keywords=IP67+tactile+switch,search,
+G. Remote (DIY),Strap,"Hook-and-loop strap, 20 mm",1,5.00,5.00,https://www.amazon.com/s?k=velcro+strap+20mm,search,Case printed from the ASA spool
+G'. Remote (cheap alternative),BLE shutter / page-turner ring,Generic BLE HID remote,1,6.00,6.00,https://www.amazon.com/s?k=bluetooth+camera+shutter+remote,search,Replaces all of section G. May lose the first press after it sleeps
+Printed,Body,"ASA, 5 perimeters, open top, O-ring groove, vent + button + gland bosses",1,0.00,0.00,,printed,
+Printed,Front bezel,"ASA, clamps window with gasket",1,0.00,0.00,,printed,
+Printed,Mirror cradle,"ASA, pivots on MR63 bearings, balanced about the shaft",1,0.00,0.00,,printed,
+Printed,Servo bracket + lever arm,"ASA, sets the 4:1 ratio",1,0.00,0.00,,printed,
+Printed,Optic plate,"ASA, locates the 4 Carclo holders on the heatsink",1,0.00,0.00,,printed,
+Printed,Electronics tray,"ASA, holds the protoboard, BuckBlocks, Pololu",1,0.00,0.00,,printed,
+Printed,Mount boss,"ASA, holds the 1/4""-20 insert",1,0.00,0.00,,printed,
+Printed,Remote case,"ASA or TPU, 2 buttons + strap slots",1,0.00,0.00,,printed,
+H. Road-slope lidar (optional),Lidar,"Benewake TF02-Pro, IP65, 13.5 m @10% reflectivity, UART/I2C, 5-12 V",1,92.49,92.49,https://www.racedayquads.com/products/benewake-tf02-pro-ip65-lidar,product,Also Lumenier / GetFPV (~$100). Shared I2C bus
+H. Road-slope lidar (optional),Lidar gasket + screws,EPDM foam gasket strip 3 mm + M2.5 stainless screws,1,6.00,6.00,https://www.amazon.com/s?k=EPDM+foam+gasket+tape+3mm,search,Seals the lidar face in its own cut-out
+Printed,Lidar bracket,"ASA, fixed to body, aims lidar 3-5 deg below beam axis",1,0.00,0.00,,printed,
