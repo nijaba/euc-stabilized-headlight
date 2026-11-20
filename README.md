@@ -53,8 +53,8 @@ Side view of the head:
 | Out-the-front lumens (after TIR, mirror, window) | ~1500 lm | ~2000 lm |
 | Input power | ~21 W | ~30 W |
 | Runtime on a 20 Ah bank (~50 Wh usable at 15 V) | ~2.4 h | ~1.7 h |
-| Head weight | ~280 g (+ lidar) | |
-| Material cost per unit | ~$290 + power bank (+ ~$98 lidar) | |
+| Head weight (limit: 350 g with lidar) | ~280 g (+ lidar) | |
+| Material cost per unit (limit: $350 with lidar) | ~$290 + power bank (+ ~$98 lidar), so currently over the limit with lidar | |
 
 ## Repository layout
 
@@ -62,23 +62,16 @@ Side view of the head:
 |---|---|
 | [`docs/design.md`](docs/design.md) | Full hardware design: optics, mirror mechanism, power, housing, thermal, mounting, electronics, lidar |
 | [`docs/firmware-spec.md`](docs/firmware-spec.md) | Firmware behaviour: control loop, calibration, auto-off, thermal derating, BLE remote, lidar fusion |
+| [`docs/build-plan.md`](docs/build-plan.md) | Phases in order, from bench firmware to ride tests, with checkboxes |
+| [`docs/test-plan.md`](docs/test-plan.md) | Every test by ID: automated firmware, bench, enclosure and ride tests |
 | [`hardware/BOM.md`](hardware/BOM.md) / [`BOM.csv`](hardware/BOM.csv) | Bill of materials with supplier links and cost summary |
+| [`CHANGELOG.md`](CHANGELOG.md) | Notable changes |
 | `firmware/` | ESP32-S3 firmware (to do) |
 | `cad/` | Parametric housing CAD (to do) |
 
 ## Roadmap
 
-- [x] Concept, requirements, mirror-steering approach
-- [x] BOM v2 (XIAO ESP32-S3, printed housing, external power, optional lidar)
-- [ ] Firmware: IMU filter + servo loop on the bench (laser pointer on the mirror)
-- [ ] Firmware: calibration, auto-off, derating, BLE remote
-- [ ] Parametric CAD: body, bezel, mirror cradle, servo bracket, optic plate, mount boss
-- [ ] Optics bench test: mirror size and beam clipping across ±7.5°
-- [ ] Bench-verify BuckBlock analog dimming (20 kHz PWM + RC on DIM)
-- [ ] Enclosure leak test (submersion before electronics go in)
-- [ ] First ride tests: aim, filter tuning
-- [ ] Optional: lidar road-slope look-ahead
-- [ ] Custom PCB to replace the protoboard
+The phases and their progress are in [`docs/build-plan.md`](docs/build-plan.md).
 
 ## Safety and legality
 

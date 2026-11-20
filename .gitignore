@@ -2,3 +2,8 @@
 .vscode/
 *.stl.tmp
 .DS_Store
+
+# Personal notes and tool folders
+*.local.md
+.claude/
+.env
