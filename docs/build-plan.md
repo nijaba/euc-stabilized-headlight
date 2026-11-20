@@ -2,14 +2,14 @@
 
 Phases in order. Work on the current phase only, and tick each item when it passes. Test IDs refer to [`test-plan.md`](test-plan.md).
 
-**Current phase: 0.**
+**Current phase: 1.** Phase 0 is complete.
 
 ## Phase 0: Project setup and budget
 
 - [x] Concept, requirements, mirror-steering approach
 - [x] BOM v2 (XIAO ESP32-S3, printed housing, external power, optional lidar)
 - [x] `CLAUDE.md`, build plan, test plan, changelog
-- [ ] `CONTRIBUTING.md` and `SECURITY.md`
+- [x] `CONTRIBUTING.md` and `SECURITY.md`
 - [x] Branch protection on `main` (signed commits, PR required)
 - [x] Material cost within the limit: ~$388 with the lidar, under the $450 limit set on 2026-11-20
 
