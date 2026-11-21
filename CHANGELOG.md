@@ -5,6 +5,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ## [Unreleased]
 
 ### Added
+- v4 turning behaviour decided: only the turn-side beam swings into the curve, the other stays straight (design §5).
 - Beam response requirement (owner, 2026-11-21): ±10° of pitch, beam adapts in under 1 s. Proposed hill-follower fix to meet it (firmware-spec §2): remove the acceleration's pitch, then follow with τ = 0.3 s; owner to decide.
 - Calibration and settings control decided (firmware-spec §11): a page over the head's own Wi-Fi, with the button and remote as a full fallback; no phone app. Tests U-CFG-01..04, B-CFG-01.
 - Bench kit (BOM) to order before firmware, and why it comes before any PCB (build plan phase 2).
