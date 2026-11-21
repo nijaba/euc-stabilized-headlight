@@ -96,6 +96,15 @@ Status is "–" until a test exists or has been run.
 | U-REM-03 | A remote disconnect keeps the current mode | FW §7 | – |
 | U-REM-04 | The head button produces the same actions as the remote | FW §7 | – |
 
+### Calibration page (Wi-Fi)
+
+| ID | What it checks | Spec | Status |
+|---|---|---|---|
+| U-CFG-01 | Every setting written from the page is validated and clamped to its safe range; none can break a safety invariant (e.g. the moving brightness floor) | FW §11, §1 | – |
+| U-CFG-02 | The hotspot starts only when stationary, and stops as soon as the wheel moves or after 10 min idle | FW §11 | – |
+| U-CFG-03 | A write with a request ID already applied is not applied again | FW §11 | – |
+| U-CFG-04 | Triple-click then hold 2 s starts the page only when stationary, and doesn't trigger hold-3 s on/off | FW §7, §11 | – |
+
 ### Lidar fusion (optional hardware)
 
 | ID | What it checks | Spec | Status |
@@ -213,6 +222,7 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | B-SLP-01 | Sleep current and wake on motion | Wakes on a nudge; sleep current recorded | – |
 | B-REM-01 | DIY nRF52840 remote | Press-to-action latency ≤ 100 ms; battery life estimate recorded | – |
 | B-REM-02 | Cheap BLE shutter remote | First-press-after-sleep behaviour recorded | – |
+| B-CFG-01 | Calibration page on an iPhone and an Android phone | Joins the hotspot, shows live pitch, runs steps A–D and saves; every step also works with button and remote only | – |
 | B-LID-01 | TF02-Pro on dry and wet asphalt at a grazing angle of about 4° | Usable range and dropout rate recorded | – |
 
 ## Enclosure and mount tests (`E-`)

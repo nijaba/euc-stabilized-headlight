@@ -397,3 +397,4 @@ v4 has fewer separate openings but about 80% more seal length, so more places fo
 - [ ] Larger mirror (115 × 55 mm, about 5× the moment of inertia): does the servo still settle in under 50 ms (B-MIR-01)?
 - [ ] A second free GPIO for the right cornering light: the XIAO ESP32-S3's back pads (MTDI/GPIO41 and others) are the likely choice. Confirm on the board.
 - [ ] Cornering-light glare at the horizon (B-CRN-01) and the toed-out cutoff tilt across the mirror's travel (B-OPT-08).
+- [x] How calibration and settings are controlled: a calibration page over the head's own Wi-Fi, with the button and remote kept as a full fallback (decided 2026-11-21; firmware-spec §11).

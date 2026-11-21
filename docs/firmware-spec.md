@@ -104,6 +104,7 @@ Inputs:
 | Hold | Flash-to-pass (high while held) |
 | Double-click | Low-beam level 50 / 75 / 100% |
 | Hold 3 s, **stationary only** | On / off |
+| Triple-click then hold 2 s, **stationary only** | Start the Wi-Fi calibration page (§11) |
 | Combos (TBD) | Enter trim mode (A) / aim mode (D), boost |
 
 If the remote disconnects, the light keeps its current mode. The button on the head mirrors the remote's actions.
@@ -140,3 +141,37 @@ Two fixed lights aimed 30° outward and 10° down (design §3). Left on D3, righ
 - **Fades:** in over 0.2 s, out over 0.6 s.
 - **Thermal cap:** after 20 s continuously at full power on one side, that side falls to 50% until it has been off for 20 s.
 - Only one side is lit at a time. If the inputs flip side, the old side fades out as the new one fades in.
+
+## 11. Calibration and settings: how they're controlled (decided 2026-11-21)
+
+**Decision (owner, 2026-11-21): option B, the Wi-Fi calibration page, with the button and remote (A) kept as a full fallback.** Every calibration step and the everyday controls stay usable without a phone; the page adds feedback, settings and logs.
+
+Options considered:
+
+| Option | What the rider uses | Works on | Extra parts | Effort | Notes |
+|---|---|---|---|---|---|
+| A. Button and remote only (current) | Button holds and clicks, ring-LED blinks | — | None | Low | Hard to see what's happening; no logs |
+| **B. Calibration page over the head's own Wi-Fi (recommended)** | Any phone's browser, joined to the head's hotspot | iPhone and Android, no install | None (the ESP32-S3 has Wi-Fi) | Medium | Live pitch and aim, guided steps, settings, ride-log download |
+| C. Web Bluetooth page | A browser page talking Bluetooth to the head | Android and desktop Chrome only; **not iPhone** | None | Medium | Rules out iPhone riders |
+| D. Native phone app | An app from the app stores | iPhone and Android | None | High | Store accounts, reviews and upkeep; overkill |
+
+**How B works:**
+- **Starting it:** on the head button, triple-click then hold 2 s, **stationary only**; or a remote combo (TBD, §7). A plain hold is avoided because hold 3 s is already on/off. The head starts a hotspot named `EUC-Light-` plus a random 4-character suffix, with a random WPA2 password generated on first boot and shown in the serial log and on a printed label. No personal data.
+- **It stops** after 10 min idle, or as soon as the wheel moves. The hotspot is never on while riding.
+- **The page,** served from the ESP32's flash:
+  - live pitch and roll
+  - guided calibration steps A–D with a mirror-trim slider and an aim slider
+  - settings: modes, brightness levels, cornering thresholds or, for v4, yaw limits
+  - ride-log download as CSV
+  - over-the-air updates possibly later
+- **Fallback:** if the phone or the page fails, every step in §3 still works with the button and the remote, exactly as before.
+- **Safety:** the firmware validates every setting and clamps it to safe ranges. No setting can break a safety invariant (§1); for example, the minimum brightness while moving has a floor.
+- **Security, from the project rules:**
+  - a strict Content Security Policy, with no external scripts or fonts
+  - every displayed value escaped
+  - writes as POST with a JSON body and a request ID applied once
+  - a rate limit on writes
+  - the password changeable from the page
+- **Dependencies:** Arduino-ESP32's built-in Wi-Fi and WebServer, so no new libraries. Wi-Fi draws ~100 mA, only while calibrating.
+
+**Tests:** U-CFG-01 to U-CFG-04 and B-CFG-01 in the test plan. The page itself is designed under the project's web rules when the firmware reaches it.
