@@ -16,19 +16,19 @@ B. Power electronics,Resistors,"1/4 W kit (need 120 k, 15 k, 10 k, 1 k ×3, 100 
 B. Power electronics,Protoboard,Adafruit Perma-Proto half-size (#1609),1,4.50,4.50,https://www.adafruit.com/product/1609,product,Custom PCB later
 B. Power electronics,Wire,Silicone wire 22 AWG + 26 AWG,1,10.00,10.00,https://www.amazon.com/s?k=silicone+wire+22+awg+26+awg+kit,search,
 C. Optics & mechanism,Spot LEDs,"Cree XP-L HI (3535) on 20 mm DTP copper, 5000–6500 K",2,6.50,13.00,https://kaidomain.com/XP-L-HI-10W-3A-1095-Lumens-SMD-3535-LED,product,Choose the '20mm DTP Copper' option (+$1.20). Swapped in for SFT-40 (5050 doesn't fit the XP holder)
-C. Optics & mechanism,Flood LEDs,"Nichia 519A (3535) on 20 mm DTP copper, 4500–5000 K",2,3.20,6.40,https://kaidomain.com/SMD-LEDs/Nichia-LEDs/519A-7_04W-2200mA-SMD-3535-LED,product,2.2 A rated; high CRI = better road texture
+C. Optics & mechanism,Low-beam LEDs,"Cree XP-L HI (3535) on 20 mm DTP copper, about 5000 K",2,6.50,13.00,https://kaidomain.com/XP-L-HI-10W-3A-1095-Lumens-SMD-3535-LED,product,"For the FILIPPA optics. Replaces the Nichia 519A, which isn't on LEDiL's compatible list"
 C. Optics & mechanism,Spot optics,"Carclo 10003 narrow spot, 20 mm (~8–12°)",2,2.75,5.50,https://www.ledsupply.com/led-optics/10003-carclo-lens-20mm-narrow-spot-led-optic,product,
-C. Optics & mechanism,Flood optics,"Carclo 10003-L25 elliptical, 20 mm (~44×13°)",2,3.25,6.50,https://www.ledsupply.com/led-optics/10003-l25-carclo-lens-20mm-elliptical-spot-led-optic,product,Mount with the wide axis horizontal
-C. Optics & mechanism,Optic holders,"Carclo 10734, 20 mm, XP footprint",4,0.80,3.20,https://www.digikey.com/en/products/detail/carclo-technical-plastics/10734/2641685,product,Check the 519A dome fits before ordering more
-C. Optics & mechanism,Mirror,"Front-surface (first-surface) glass mirror, enhanced Al, cut to ~90×35 mm",1,18.00,18.00,https://www.edmundoptics.com/f/first-surface-mirrors/12017/,product family,"Edmund: precise, pricier. Budget: https://www.aliexpress.com/w/wholesale-front-surface-mirror-glass.html (glass, not acrylic). Score on the back face to cut"
+C. Optics & mechanism,Low-beam optics,"LEDiL FILIPPA-STVZO (C18612_FILIPPA-STVZO), Ø 32.9 mm cutoff optic",2,5.00,10.00,https://www.mouser.com/en/ProductDetail/Ledil/C18612_FILIPPA-STVZO?qs=2SLPxufLcgCat%2F0uKWgVhA%3D%3D,product,"Price is a placeholder; confirm on Mouser. LEDiL's own MOQ is 252. Flange mount; orienting rib toward the back of the housing"
+C. Optics & mechanism,Optic holders,"Carclo 10734, 20 mm, XP footprint",2,0.80,1.60,https://www.digikey.com/en/products/detail/carclo-technical-plastics/10734/2641685,product,Spot optics only
+C. Optics & mechanism,Mirror,"Front-surface (first-surface) glass mirror, enhanced Al, cut to ~115×55 mm, flat",1,18.00,18.00,https://www.edmundoptics.com/f/first-surface-mirrors/12017/,product family,"Edmund: precise, pricier. Budget: https://www.aliexpress.com/w/wholesale-front-surface-mirror-glass.html (glass, not acrylic). Score on the back face to cut. Price was for ~90×35 mm; recheck for the larger size. Flatness matters for a sharp cutoff"
 C. Optics & mechanism,Pivot bearings,"MR63ZZ (3×6×2.5 mm), pack of 10",1,8.00,8.00,https://www.amazon.com/s?k=MR63ZZ+bearing,search,
 C. Optics & mechanism,Pivot shaft,"3 mm stainless steel rod, 100 mm",1,6.00,6.00,https://www.amazon.com/s?k=3mm+stainless+steel+rod+100mm,search,
 C. Optics & mechanism,Linkage,RC pushrod set: 1.2 mm Z-bend wire + clevis / EZ connector,1,7.00,7.00,https://www.amazon.com/s?k=rc+pushrod+clevis+kit+1.2mm,search,Gives the 4:1 lever ratio
 C. Optics & mechanism,Servo,"EMAX ES08MD II, digital, metal gear, 12–13 g",1,14.00,14.00,https://www.readymaderc.com/products/details/emax-es08mdii-12g-digital-metal-gear-servo,product,"Also AMain Hobbies, RaceDayQuads"
-C. Optics & mechanism,Heatsink (= lid),Finned aluminium heatsink ~100×60×20 mm,1,9.00,9.00,https://www.amazon.com/s?k=aluminum+heatsink+100x60x20mm,search,LED stars screw to the flat side; drill/tap M3
+C. Optics & mechanism,Heatsink (= lid),Finned aluminium heatsink ~120×60×20 mm,1,9.00,9.00,https://www.amazon.com/s?k=aluminum+heatsink+120x60x20mm,search,LED stars screw to the flat side; drill/tap M3
 C. Optics & mechanism,Thermal paste,Arctic MX-4 (or similar),1,7.00,7.00,https://www.amazon.com/s?k=Arctic+MX-4,search,Skip if you have it
 D. Housing & sealing,Filament,ASA 1 kg (Polymaker / Prusament) – ~150 g used,1,25.00,25.00,https://www.amazon.com/s?k=ASA+filament+1kg,search,Black interior parts can be same spool
-D. Housing & sealing,Window,"Polycarbonate sheet 2–3 mm (or 3 mm tempered glass), cut to ~100×50 mm",1,10.00,10.00,https://www.amazon.com/s?k=polycarbonate+sheet+3mm+8x10,search,
+D. Housing & sealing,Window,"Polycarbonate sheet 2–3 mm (or 3 mm tempered glass), cut to ~125×65 mm",1,10.00,10.00,https://www.amazon.com/s?k=polycarbonate+sheet+3mm+8x10,search,
 D. Housing & sealing,Anti-fog,Rain-X Anti-Fog (inside of window),1,6.00,6.00,https://www.amazon.com/s?k=Rain-X+anti+fog,search,
 D. Housing & sealing,O-ring,"Silicone O-ring cord, 2 mm, 2 m",1,8.00,8.00,https://www.amazon.com/s?k=silicone+o-ring+cord+2mm,search,Glue the ends with CA glue
 D. Housing & sealing,Heat-set inserts,"CNC Kitchen M3 short (M3×3.0), 100 pcs",1,10.00,10.00,https://www.3djake.com/cnc-kitchen/threaded-inserts-m3-short,product,Also at prusa3d.com
@@ -58,7 +58,7 @@ Printed,Body,"ASA, 5 perimeters, open top, O-ring groove, vent + button + gland 
 Printed,Front bezel,"ASA, clamps window with gasket",1,0.00,0.00,,printed,
 Printed,Mirror cradle,"ASA, pivots on MR63 bearings, balanced about the shaft",1,0.00,0.00,,printed,
 Printed,Servo bracket + lever arm,"ASA, sets the 4:1 ratio",1,0.00,0.00,,printed,
-Printed,Optic plate,"ASA, locates the 4 Carclo holders on the heatsink",1,0.00,0.00,,printed,
+Printed,Optic plate,"ASA, locates the 2 Carclo holders and 2 FILIPPA optics on the heatsink. Slots key the FILIPPA ribs toward the back; spacers set the FILIPPA focus height",1,0.00,0.00,,printed,
 Printed,Electronics tray,"ASA, holds the protoboard, BuckBlocks, Pololu",1,0.00,0.00,,printed,
 Printed,Mount boss,"ASA, holds the 1/4""-20 insert",1,0.00,0.00,,printed,
 Printed,Remote case,"ASA or TPU, 2 buttons + strap slots",1,0.00,0.00,,printed,

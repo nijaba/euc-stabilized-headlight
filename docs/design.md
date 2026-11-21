@@ -20,8 +20,8 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 
 ```
           ┌──── finned aluminium lid = LED heatsink ───────┐
-          │  [LED][LED][LED][LED]  (row, left→right)        │
-          │   TIR  TIR  TIR  TIR   facing DOWN              │
+          │  [spot][ low ][ low ][spot]  (row, left→right)  │
+          │   TIR  FILIPPA FILIPPA TIR   facing DOWN        │
           │            ↓ ↓ ↓                                │
   window  │     ╲  front-surface mirror @45°, pivots on     │
  ◄════════│      ╲ its long (left-right) axis ── pushrod ── servo
@@ -30,20 +30,21 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 
 **Why a mirror:**
 - **Angle doubling.** Tilting the mirror by θ moves the beam by 2θ. Correcting ±15° of pitch needs only ±7.5° of mirror travel.
-- **Light moving part.** The mirror is about 15 g of glass, against 200–400 g for a whole lamp head. That means faster response, less servo power and less sensitivity to vibration.
+- **Light moving part.** The mirror is about 30 g of glass, against 200–400 g for a whole lamp head. That means faster response, less servo power and less sensitivity to vibration.
 - **Fixed LEDs.** The LEDs stay bolted to the heatsink. There are no flexing wires and no moving thermal joints.
 - **Costs:** about 5–8% of the light is lost at the mirror, and the fold makes the housing slightly larger.
 
 **Mirror geometry:**
-- The four 20 mm optics sit in a row along the pivot axis, so the mirror is long and thin: about 90 × 35 mm.
+- The four optics sit in a row along the pivot axis: two 20 mm spot optics and two 33 mm FILIPPA low-beam optics, about 112 mm in all. The mirror is long and thin: about **115 × 55 mm**, about 30 g in 1.9 mm glass (1.1 mm glass would bring it to about 17 g).
+- The mirror must be **flat**: any curvature blurs the low-beam cutoff.
 - It rotates about its long axis, which gives it a very small moment of inertia.
 - Use a **front-surface** mirror (enhanced aluminium, R > 95% across the visible range). A normal back-silvered mirror produces ghost beams and absorbs light.
 - The pivot passes through the mirror's **centre of mass**. Bumps and acceleration then create no torque, and the servo only holds position.
 - **Pivot:** 2× MR63ZZ bearings on a 3 mm stainless shaft, pressed into printed bosses with CA glue.
 - **Linkage:** a pushrod at about 4:1. The servo sweeps ±30° for ±7.5° of mirror, which gives 4× the resolution and hides servo backlash. Response stays well under 50 ms.
-- **Window:** about 45 mm tall so the beam can sweep ±15° without clipping.
+- **Window:** about 60 mm tall so the 33 mm low beam can sweep ±15° without clipping.
 
-**Limitation: pitch only.** A single fold mirror corrects pitch but not roll. In a turn, the elliptical flood beam tilts with the lean. A two-axis mirror could add cornering (steering on yaw rate) later.
+**Limitation: pitch only.** A single fold mirror corrects pitch but not roll. In a turn, the low-beam cutoff tilts with the lean, so on one side it rises by the lateral angle × tan(lean). Motorcycle low beams have the same limitation. A two-axis mirror could add cornering (steering on yaw rate) later.
 
 **Alternative considered:** moving an aspheric lens sideways in front of a fixed LED (a decentred lens). It avoids the mirror losses but needs larger travel and distorts TIR beams. Rejected for v1.
 
@@ -51,11 +52,14 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 
 | Channel | LEDs | Optic | Driver |
 |---|---|---|---|
-| Spot / high | 2× Cree XP-L HI (3535) on 20 mm copper DTP boards | Carclo 10003 narrow spot (~8–12°) | BuckBlock A009-D-V-2100 |
-| Flood / low | 2× Nichia 519A (3535, high CRI) on 20 mm copper DTP boards | Carclo 10003-L25 elliptical (~44×13°), wide axis horizontal | BuckBlock A009-D-V-2100 |
+| Spot / high beam | 2× Cree XP-L HI (3535), 5000–6500 K, on 20 mm copper DTP boards | Carclo 10003 narrow spot (~8–12°) in Carclo 10734 holders | BuckBlock A009-D-V-2100 |
+| Low beam (the "flood" channel in the firmware) | 2× Cree XP-L HI (3535), about 5000 K, on 20 mm copper DTP boards | **LEDiL FILIPPA-STVZO** (C18612), cutoff beam 22° × 13° | BuckBlock A009-D-V-2100 |
 
-- All four use **Carclo 10734** holders (XP footprint).
-  - The SFT-40 was dropped because it's a 5050 package and doesn't fit these holders.
+- **Low-beam decision (owner, 2026-11-21):** two FILIPPA-STVZO optics replace the Nichia 519A + Carclo 10003-L25 elliptical flood, which had no cutoff and glared above horizontal. All four LEDs are now XP-L HI. The high-CRI 519A is dropped because it isn't on LEDiL's compatible list.
+- **FILIPPA-STVZO** (LEDiL datasheet, simulated): Ø 32.9 mm, 18.5 mm tall, 6.3 g, PMMA, one LED per optic. With an XP-L HI: 7 cd/lm peak, FWHM 22° × 13°, FWTM 32° × 33°, 90% efficient. It mounts by its 1.5 mm flange, with no holder.
+- **Cutoff orientation.** The datasheet's beam sketch puts the flat cutoff edge on the same side as the flange's 3.1 mm **orienting rib**. The 45° fold sends light that leaves the optic toward the window downward, so the **rib must point to the back of the housing**, away from the window. The optic plate has a slot for the rib so the optic can't rotate: any rotation tilts the cutoff by the same angle. Confirm the orientation on the bench (B-OPT-06).
+- **Focus height.** The datasheet gives the flange height above the PCB only for Luxeon Altilon (10.0 mm) and Osram Oslon (11 mm), not for the XP-L HI. Find it on the bench with printed spacers in 0.1 mm steps, choosing the sharpest cutoff (B-OPT-05).
+- **Brighter option to test.** LEDiL lists higher peaks for smaller or rectangular emitters (XP-LR 9.6, XP-GR 10.4, SFT-12R 11.1, Oslon Black Flat 12.6 cd/lm), usually with a sharper cutoff, but they emit fewer lumens than the XP-L HI.
 - **Each channel:** 2 LEDs in series (about 6.2 V) on its own BuckBlock driver.
   - Drivers: 10–32 V input, 2.1 A, buck topology, dimming input.
   - The 15 V supply leaves plenty of headroom.
@@ -72,32 +76,34 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 
 | Mode | Emitted | Out the front |
 |---|---|---|
-| Normal (1.5 A) | ~2000 lm | ~1500 lm |
-| Boost (2.1 A) | ~2700 lm | ~2000 lm |
+| Normal (1.5 A) | ~2400 lm | ~1800 lm |
+| Boost (2.1 A) | ~3100 lm | ~2400 lm |
 
-The out-the-front figures assume about 0.75 total efficiency (TIR × mirror × window).
+About 600 lm per XP-L HI in normal mode and 780 lm in boost. Out the front assumes the optic (0.85 for the Carclo TIR, 0.90 for the FILIPPA) × mirror (0.95) × window (0.92).
 
 **Beam estimate** (to be measured in B-OPT-04):
 
-| | Spot (2× XP-L HI, Carclo 10003) | Flood (2× 519A, Carclo 10003-L25) |
+| | Spot (2× XP-L HI, Carclo 10003) | Low beam (2× XP-L HI, FILIPPA-STVZO) |
 |---|---|---|
-| Beam angle | ~8–12° round | ~44° wide × 13° tall |
-| Peak intensity, normal (1.5 A) | ~25,000 cd (18–40k) | ~3,000 cd |
-| Peak intensity, boost (2.1 A) | ~33,000 cd | ~4,000 cd |
-| ANSI throw (to 0.25 lux), normal | ~320 m (270–400 m) | ~110 m |
-| ANSI throw, boost | ~360 m | ~125 m |
-| Distance to 1 lux, normal | ~160 m | ~55 m |
-| Beam width at 30 m | ~5 m | ~24 m wide × 7 m tall |
+| Beam angle | ~8–12° round | 22° wide × 13° tall, sharp top edge |
+| Peak intensity, normal (1.5 A) | ~25,000 cd (18–40k) | ~7,300 cd (~73 lux at 10 m) |
+| Peak intensity, boost (2.1 A) | ~33,000 cd | ~9,500 cd (~95 lux at 10 m) |
+| ANSI throw (to 0.25 lux), normal | ~320 m (270–400 m) | ~170 m |
+| ANSI throw, boost | ~360 m | ~195 m |
+| Distance to 1 lux, normal | ~160 m | ~85 m |
+| Beam width at 30 m | ~5 m | ~12 m |
 
 How it's estimated:
-- In normal mode, about 600 lm per XP-L HI and 400 lm per 519A, about 0.74 optical efficiency overall.
-- Each beam is treated as a smooth peak with the stated beam angle: about 21 cd per emitted lumen for a 10° spot (15 at 12°, 33 at 8°), and about 3.75 cd/lm for the 44 × 13° flood. Two LEDs aimed the same way add.
-- ANSI throw = 2 × √(peak cd).
-- The biggest uncertainty is the spot's real beam angle with the XP-L HI. Carclo's photometric files would narrow it.
+- **Spot:** each beam is treated as a smooth peak with the stated beam angle, about 21 cd per emitted lumen for a 10° spot (15 at 12°, 33 at 8°) after about 0.74 optical efficiency. The biggest uncertainty is the spot's real beam angle with the XP-L HI; Carclo's photometric files would narrow it.
+- **Low beam:** LEDiL's 7 cd/lm for the XP-L HI, × 0.95 mirror × 0.92 window, × 600 lm per LED, × 2 optics.
+- Two LEDs aimed the same way add. ANSI throw = 2 × √(peak cd).
 
-For scale, a car's low beam peaks at roughly 15–20k cd and its high beam at roughly 40–100k cd. The mirror steers both beams ±15°, and the low-beam hotspot is calibrated to land 25–40 m ahead.
+For scale, good StVZO bicycle lights are about 70–150 lux at 10 m. A car's low beam peaks at roughly 15–20k cd and its high beam at roughly 40–100k cd. The spot has no cutoff by design: it's a high beam, like a car's, for use without oncoming traffic.
 
-**No cutoff yet.** Both optics give a beam with no sharp top edge. With the hotspot 30 m ahead, the top of the flood still reaches about 5° above horizontal and dazzles oncoming traffic, whatever the levelling does. See §10.
+**Cutoff and aim.**
+- Target (StVZO, from secondary sources): no more than 2 lux at 10 m above about 3.4° over the brightest point, and at least 10 lux at 10 m at the brightest point. Confirm against the official text before claiming compliance.
+- Aim the cutoff about **1.2° below horizontal**. With the head at about 0.8 m, it meets the road about 38 m ahead. On a wall 10 m away, the cutoff sits about 20 cm below the lamp's height (calibration step D in `firmware-spec.md`).
+- The mirror tilts the beam about the left–right axis, so levelling moves the cutoff up and down without tilting it. Self-levelling also matters here: ECE car rules require automatic levelling for powerful low beams.
 
 ## 4. Power: external USB-C PD bank
 
@@ -111,7 +117,7 @@ power bank ──USB-C──► PD trigger cable (fixed 15 V, e-marked) ──�
 |---|---|---|---|
 | Normal (both channels 1.5 A) | ~21 W | ~1.4 A | ~2.4 h |
 | Boost (both channels 2.1 A, at most 60 s at a time) | ~30 W | ~2.0 A | ~1.7 h |
-| Typical (flood normal, spot 50%) | ~16 W | ~1.1 A | ~3 h |
+| Typical (low beam normal, spot 50%) | ~16 W | ~1.1 A | ~3 h |
 | Optional lidar | +~1 W | +~0.07 A | about 5% less |
 
 Where it goes in normal mode:
@@ -159,7 +165,7 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - **Material: ASA.** It resists UV and its glass transition is about 100 °C.
   - PETG softens at about 75–80 °C and creeps.
   - Don't use PLA.
-- **Thermal path:** the LEDs screw onto a stock finned aluminium heatsink (about 100×60×20 mm) that forms the **lid**. Heat never passes through the plastic.
+- **Thermal path:** the LEDs screw onto a stock finned aluminium heatsink (about 120×60×20 mm, long enough for the 112 mm optic row) that forms the **lid**. Heat never passes through the plastic.
 - **Print settings:**
   - 4–5 perimeters (≥ 2 mm walls), 0.2 mm layers.
   - Hotter nozzle for layer bonding, flow at about 103%.
@@ -270,7 +276,7 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 
 ## 10. Open questions and risks
 
-- [ ] Does the 519A dome fit the Carclo 10734 holder? (It's specified for XP-G.)
+- [x] ~~Does the 519A dome fit the Carclo 10734 holder?~~ No longer needed: the 519A was dropped for the FILIPPA low beam (2026-11-21).
 - [ ] BuckBlock analog dimming using 20 kHz PWM + RC: linearity, minimum level.
 - [ ] Mirror vibration and ringing at EUC vibration frequencies. Is the balance good enough?
 - [ ] Hobby servo deadband and jitter after the 4:1 linkage. Is a gimbal BLDC needed (GBM2804 + SimpleFOC + AS5600)?
@@ -283,4 +289,8 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - [ ] The 1N5822 dissipates ~1 W at 2 A inside the sealed head. Replace it with a P-MOSFET reverse-polarity stage?
 - [ ] P6KE27A clamps at ~37.5 V, above the BuckBlock's 32 V maximum. Low risk with a 20 V bank, but a lower-clamp TVS would cover it.
 - [x] Cost over the limit: about $290 core + $98 lidar ≈ $388, against a $350 ceiling. Resolved 2026-11-20: the owner raised the limit to $450, so no parts change.
-- [ ] **The flood has no cutoff.** TIR optics give no sharp top edge, so the low beam glares above horizontal, and many countries (ECE, StVZO) require a cutoff for a low beam. Options: a cutoff shield, a masked mirror edge, a cutoff optic, or aiming lower. (2026-11-21)
+- [x] **The flood has no cutoff.** Resolved 2026-11-21: the owner chose two LEDiL FILIPPA-STVZO cutoff optics with XP-L HI as the low beam (§3). A shield or masked mirror edge was rejected because a TIR beam isn't an image, so blocking part of it only dims it without making a sharp edge.
+- [ ] **Head weight may exceed 350 g with the lidar.** The larger mirror (+~15 g), longer heatsink (+~18 g), larger housing (+~8 g) and FILIPPA optics (+~6 g) add roughly 47 g, taking the estimate from ~280 g to ~327 g, or ~377 g with the lidar (about 50 g). Options: 1.1 mm mirror glass (−13 g), a lighter heatsink, thinner walls away from the seals. (2026-11-21)
+- [ ] FILIPPA with XP-L HI: focus height, cutoff sharpness and cutoff orientation are not in LEDiL's data. Bench tests B-OPT-05 and B-OPT-06.
+- [ ] Larger mirror (115 × 55 mm, about 5× the moment of inertia): does the servo still settle in under 50 ms (B-MIR-01)?
+- [ ] FILIPPA price and stock: a Mouser listing exists for C18612_FILIPPA-STVZO, but the price isn't confirmed; LEDiL's own minimum order is 252.
