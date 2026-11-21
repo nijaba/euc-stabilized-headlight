@@ -3,8 +3,10 @@
 All figures are design estimates until they're verified on a prototype.
 The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 
+**Layout: v4 adopted (owner's decision, 2026-11-21).** Two mirror modules, each steering one FILIPPA low beam and one spot on a 2-axis gimbal (pitch for levelling, yaw for turns), four 5 g servos, the lidar on its side between the modules, and one clear thermoformed piece per side wrapping the front and side. No cornering lights, toe-out wedges or brow. The v4 layout, its checks and its turning behaviour are in §5 ("v4"). Earlier sections still describe v3's single mirror, cornering lights and toe-out where marked *(v3)*; they're kept as the record of how the design got here.
+
 **Firm constraints** (owner's decision, 2026-11-20). Changing one needs the owner's approval:
-- Only the mirror moves. The LEDs and heatsink stay fixed.
+- Only the mirrors move. The LEDs and heatsinks stay fixed.
 - External power only. The head has no battery, and PD is negotiated at the bank.
 - Material cost ≤ $450 per unit (raised from $350 on 2026-11-20) and head weight ≤ 400 g (raised from 350 g on 2026-11-21), both **with the optional lidar fitted**. The cost excludes the power bank, tools and leftover pack contents.
 - The lidar stays optional. Everything must work without it.
@@ -52,7 +54,7 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 - **Linkage:** a pushrod at about 4:1. The servo sweeps ±30° for ±7.5° of mirror, which gives 4× the resolution and hides servo backlash. Response stays well under 50 ms.
 - **Window:** about 124 × 61 mm, 2 mm polycarbonate, so the 33 mm low beam can sweep ±15° without clipping.
 
-**Limitation: pitch only.** A single fold mirror corrects pitch but not roll. In a turn, the low-beam cutoff tilts with the lean: the side on the inside of the turn drops toward the road, shortening reach exactly where the rider needs to look. Motorcycle low beams have the same limitation. The answer here (owner's decision, 2026-11-21) is a wider low beam plus IMU-switched cornering lights (§3), not a second mirror axis.
+**Limitation: pitch only** *(v3; v4's yaw axis and per-mirror pitch answer it, §5)*. A single fold mirror corrects pitch but not roll. In a turn, the low-beam cutoff tilts with the lean: the side on the inside of the turn drops toward the road, shortening reach exactly where the rider needs to look. Motorcycle low beams have the same limitation. The answer here (owner's decision, 2026-11-21) is a wider low beam plus IMU-switched cornering lights (§3), not a second mirror axis.
 
 **How cars and motorcycles do it (researched 2026-11-21):**
 - **Cars: automatic levelling.** UN ECE R48 requires automatic headlamp levelling when a light source exceeds 2000 lm, which this head does (~2400 lm emitted). Usually a stepper motor tilts the **whole lighting module** inside the headlamp, driven by a lighting ECU from suspension ride-height sensors. "Dynamic" systems react within fractions of a second to braking and acceleration; "semi-static" ones only correct for load. One research system computes pitch from vehicle acceleration instead of height sensors, which is close to what this head does with its IMU.
@@ -90,7 +92,7 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 - **DIM failsafe:** with the DIM input left open, the BuckBlock runs at its full rated current. If the MCU dies, the light stays **on**. This is intentional, but thermal derating is lost in that state.
 - **The Mean Well LDD-1500H** from the first draft is discontinued.
 
-**Cornering lights (owner's decision, 2026-11-21).** One fixed light at each end of a rounded brow across the top front of the head, aimed **30° outward and 10° down**, lit by the IMU when the wheel leans or turns that way (firmware-spec §10). It lights the inside of a turn, where the low beam drops.
+**Cornering lights (owner's decision, 2026-11-21)** *(v3; v4 replaces them by swinging the turn-side beam, §5)*. One fixed light at each end of a rounded brow across the top front of the head, aimed **30° outward and 10° down**, lit by the IMU when the wheel leans or turns that way (firmware-spec §10). It lights the inside of a turn, where the low beam drops.
 - **Each light:** a Cree XP-L HI (about 4000 K) on a 20 mm copper board, a Carclo 10003-L25 elliptical optic (~44 × 13°, wide axis horizontal) in a Carclo 10734 holder, behind a small polycarbonate window in the brow's corner. About 0.7 A, ~2.2 W, ~300 lm, roughly 1,000 cd (~10 lux at 10 m).
 - **Glare:** aimed 10° down, the half-intensity top edge of the 13° beam stays about 3.5° below horizontal; only the faint outer fringe reaches the horizon. B-CRN-01 checks it against the 2 lux limit.
 - **Heat:** each LED sits on a 24 × 24 × 2 mm aluminium spreader plate. They're only on in turns, and firmware caps continuous full power at 20 s.
@@ -144,7 +146,7 @@ power bank ──USB-C──► PD trigger cable (fixed 15 V, e-marked) ──�
 | Boost (both channels 2.1 A, at most 60 s at a time) | ~30 W | ~2.0 A | ~1.7 h |
 | Typical (low beam normal, spot 50%) | ~16 W | ~1.1 A | ~3 h |
 | Optional lidar | +~1 W | +~0.07 A | about 5% less |
-| Cornering lights (in turns only) | +~2.2 W per side | +~0.15 A per side | negligible |
+| Cornering lights (v3 only, in turns only) | +~2.2 W per side | +~0.15 A per side | negligible |
 
 Where it goes in normal mode:
 - **LEDs:** 2 channels × ~6.2 V × 1.5 A ≈ 18.6 W. With the BuckBlocks at about 90% efficiency, that's ~20.5 W from the input.
@@ -283,7 +285,7 @@ v4 has fewer separate openings but about 80% more seal length, so more places fo
 - **Mass:** the printed body and brow are now **measured from the model's geometry** (STL volumes), not approximated: body ~53 g, brow ~33 g. The head comes to **~401 g** with the lidar, right at the 400 g limit. The custom PCB (build-plan phase 9) should take off another ~20 g.
 - Further options if needed: foaming lightweight ASA for the brow and other non-sealing parts (~−15 g, material to verify), a LightWare LW20/C lidar (~−45 g but ~$187 more, over the cost limit).
 
-*v4 study (two 2-axis mirrors, 2026-11-21, `cad/headlight-v4.scad`).* Modelled at the owner's request; not adopted yet. v3 stays the design.
+*v4 (two 2-axis mirrors, 2026-11-21, `cad/headlight-v4.scad`).* Modelled at the owner's request and **adopted on 2026-11-21 (owner's decision)**, with the clear wraparound sides below. v3 is kept as the earlier layout.
 - **Layout:** two mirror modules, each steering one FILIPPA and one spot, on a gimbal: pitch for levelling and yaw for swinging the beam ±15° into turns. Four 5 g-class servos sit in the back slot, two per side, stacked. The yaw steering replaces the cornering lights and the toe-out wedges, so there's no brow: the lidar sits on its side (~42 × 69 mm) in its own bay between the modules, behind a gasketed opening.
 - **Shape:** a low, wide light bar, about **221 × 70 × 108 mm** (v3: 139 × 70 × 149 mm). It's wider than first estimated because a module's beam must clear the lidar bay when it swings inward at full yaw. At 221 mm it's wider than a typical 16" wheel's shell (~190 mm in the generic scale model), so it sticks out ~15 mm each side when mounted on the front.
 - **Heatsinks:** two, one under each module's LED boards (~60 × 32 mm, 6 fins each), about 1.6 K/W together at 25 km/h (~19 K rise) and ~2.9 K/W at walking pace.
@@ -319,18 +321,21 @@ v4 has fewer separate openings but about 80% more seal length, so more places fo
 | D0 | 1 | Input voltage sense (120 k / 15 k divider; 20 V → ~2.2 V) |
 | D1 | 2 | Heatsink NTC (10 k NTC + 10 k pull-up) |
 | D2 | 3 | IMU INT1: wake-on-motion |
-| D3 | 4 | Left cornering light driver PWM |
-| back pad (e.g. MTDI, GPIO41) | 41 | Right cornering light driver PWM. Confirm on Seeed's pinout |
+| D3 | 4 | Left mirror yaw servo PWM (v4; was the left cornering light in v3) |
+| back pad (MTDI) | 41 | Right mirror pitch servo PWM (v4). Confirm on Seeed's pinout |
+| back pad (MTMS) | 42 | Right mirror yaw servo PWM (v4). Confirm on Seeed's pinout |
 | D4 | 5 | I²C SDA (IMU + lidar) |
 | D5 | 6 | I²C SCL |
 | D6 | 43 | Button ring LED (6 V LED from 5 V via 2N3904) |
 | D7 | 44 | Button (to GND, internal pull-up) |
 | D8 | 7 | Spot BuckBlock DIM (2N3904 + 10 µF) |
 | D9 | 8 | Flood BuckBlock DIM (2N3904 + 10 µF) |
-| D10 | 9 | Servo PWM |
+| D10 | 9 | Left mirror pitch servo PWM |
+
+Seven LEDC channels are used (four servos, two DIM, the ring LED) of the ESP32-S3's eight.
 
 **5 V rail:**
-- Pololu D36V28F5 feeds the servo and the XIAO's 5 V pin through a 1N5817.
+- Pololu D36V28F5 feeds the four servos and the XIAO's 5 V pin (3.2 A covers four 5 g servos moving at once) through a 1N5817.
 - The diode makes it safe to plug in USB for flashing while the head is powered.
 - 470 µF capacitor on the servo rail.
 
@@ -393,10 +398,12 @@ v4 has fewer separate openings but about 80% more seal length, so more places fo
 - [ ] P6KE27A clamps at ~37.5 V, above the BuckBlock's 32 V maximum. Low risk with a 20 V bank, but a lower-clamp TVS would cover it.
 - [x] Cost over the limit: about $290 core + $98 lidar ≈ $388, against a $350 ceiling. Resolved 2026-11-20: the owner raised the limit to $450, so no parts change.
 - [x] **The flood has no cutoff.** Resolved 2026-11-21: the owner chose two LEDiL FILIPPA-STVZO cutoff optics with XP-L HI as the low beam (§3). A shield or masked mirror edge was rejected because a TIR beam isn't an image, so blocking part of it only dims it without making a sharp edge.
-- [ ] **Head weight is at the 400 g limit** (raised from 350 g, owner, 2026-11-21): ~401 g with the lidar after the aerodynamic, lean v3 shape, with no margin. The custom PCB should add ~20 g of margin; the part masses are estimates until weighed (E-MNT-01).
+- [ ] **Head weight is close to the 400 g limit** (raised from 350 g, owner, 2026-11-21): ~393 g with the lidar for v4 with the clear wraparound sides (v3 was ~401 g). The custom PCB should add ~20 g of margin; the part masses are estimates until weighed (E-MNT-01).
 - [ ] Heatsink sized for moving air (§8): confirm the riding temperature and the parked derating on the bench (B-THM-01).
 - [ ] FILIPPA with XP-L HI: focus height, cutoff sharpness and cutoff orientation are not in LEDiL's data. Bench tests B-OPT-05 and B-OPT-06.
 - [ ] Larger mirror (115 × 55 mm, about 5× the moment of inertia): does the servo still settle in under 50 ms (B-MIR-01)?
-- [ ] A second free GPIO for the right cornering light: the XIAO ESP32-S3's back pads (MTDI/GPIO41 and others) are the likely choice. Confirm on the board.
-- [ ] Cornering-light glare at the horizon (B-CRN-01) and the toed-out cutoff tilt across the mirror's travel (B-OPT-08).
+- [ ] Two free GPIO for the right mirror's servos (v4): the XIAO ESP32-S3's back pads MTDI/GPIO41 and MTMS/GPIO42. Confirm on the board.
+- [x] ~~Cornering-light glare and the toed-out cutoff tilt (B-CRN-01, B-OPT-08)~~ v3 only; v4 has neither (2026-11-21).
+- [ ] v4 turn steering: write the yaw rule into the firmware spec (the ride demo aims the turn-side beam at the road 20 m ahead, up to 25°) and the safety invariant that goes with it.
+- [ ] v4 with no inward yaw: narrow the body and simplify the gimbals (§5), then re-run the checks and the mass budget.
 - [x] How calibration and settings are controlled: a calibration page over the head's own Wi-Fi, with the button and remote kept as a full fallback (decided 2026-11-21; firmware-spec §11).
