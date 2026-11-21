@@ -5,7 +5,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ## [Unreleased]
 
 ### Added
-- README link to the v4 ride demo.
+- v4 ride demo page (`docs/v4-ride-demo.html`), linked from the README: a standalone simulation of the levelling loop and turn steering.
 - v4 turning behaviour decided: only the turn-side beam swings into the curve, the other stays straight (design §5).
 - Beam response requirement (owner, 2026-11-21): ±10° of pitch, beam adapts in under 1 s. Tests U-ROAD-03..06, R-ROAD-01..02.
 - Calibration and settings control decided (firmware-spec §11): a page over the head's own Wi-Fi, with the button and remote as a full fallback; no phone app. Tests U-CFG-01..04, B-CFG-01.

@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- v4 ride demo: simulation of firmware-spec §2 levelling and the v4 turn steering. Open this file in a browser; no build or server needed. -->
+<title>v4 Ride Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one night-road instrument board. A wide side view on top, three square views below, controls and live readouts beside them. Deliberately dark (a night ride). */
+:root {
+  color-scheme: dark;
+  --bg: #0b0f15;
+  --panel: #121923;
+  --line: #243041;
+  --fg: #dde4ec;
+  --muted: #8592a4;
+  --beam: #ffeec2;
+  --left: #73c4ff;
+  --right: #ffae63;
+  --fixed: #ff6b6b;
+  --road: #2b3442;
+  --ok: #6fd39a;
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 var(--f-body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 28px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 20px; }
+header { display: grid; gap: 6px; }
+.eyebrow { font: 500 12px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+h1 { font: 600 clamp(32px, 5vw, 48px)/1 var(--f-display); letter-spacing: .01em; margin: 0; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 70ch; margin: 0; }
+.lede b { color: var(--fg); font-weight: 500; }
+.board { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+.views { display: grid; gap: 12px; min-width: 0; }
+.row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+figure { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; min-width: 0; }
+figcaption { display: flex; justify-content: space-between; gap: 8px; padding: 8px 12px; font: 500 11px/1.3 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line); }
+figcaption span:last-child { text-transform: none; letter-spacing: 0; }
+canvas { display: block; width: 100%; }
+.side canvas { aspect-ratio: 16 / 5.4; }
+.row3 canvas { aspect-ratio: 1 / 1; }
+.wall canvas { aspect-ratio: 1 / 1; }
+aside { display: grid; gap: 12px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 14px; display: grid; gap: 12px; }
+.chapter { display: grid; gap: 6px; }
+.chapter h2 { margin: 0; font: 600 24px/1.1 var(--f-display); letter-spacing: .02em; }
+.chapter p { margin: 0; font-size: 14px; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+button, .chip { font: 500 13px/1 var(--f-body); color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 7px 11px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--beam); color: #1b1608; border-color: var(--beam); }
+button:hover, .chip:hover { border-color: var(--muted); }
+button:focus-visible, .chip:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--left); outline-offset: 2px; }
+.transport { display: flex; align-items: center; gap: 10px; }
+#play { width: 44px; height: 44px; padding: 0; border-radius: 50%; font-size: 16px; background: var(--beam); color: #1b1608; border-color: var(--beam); flex: none; }
+#scrub { flex: 1; min-width: 0; accent-color: var(--beam); }
+#clock { font: 500 13px/1 var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; min-width: 6ch; text-align: right; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: var(--muted); }
+.opts label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 4px; padding: 3px 4px; }
+.readouts { display: grid; gap: 7px; font: 13px/1.2 var(--f-mono); font-variant-numeric: tabular-nums; }
+.ro { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: center; }
+.ro .k { color: var(--muted); font-family: var(--f-body); }
+.bar { grid-column: 1 / -1; position: relative; height: 5px; background: var(--bg); border-radius: 3px; }
+.bar i { position: absolute; top: 0; bottom: 0; border-radius: 3px; }
+.bar b { position: absolute; top: -2px; bottom: -2px; width: 1px; background: var(--muted); }
+.status { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill { font: 500 12px/1 var(--f-mono); padding: 5px 8px; border-radius: 4px; border: 1px solid var(--line); }
+.pill.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+.pill.bad { color: var(--fixed); border-color: color-mix(in srgb, var(--fixed) 50%, transparent); }
+.key { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); }
+.key span::before { content: ""; display: inline-block; width: 14px; height: 0; border-top: 2px solid currentColor; vertical-align: middle; margin-right: 6px; }
+.key .l { color: var(--left); } .key .r { color: var(--right); } .key .f { color: var(--fixed); } .key .f::before { border-top-style: dashed; } .key .b { color: var(--beam); }
+.notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.notes section { min-width: 0; }
+.notes h3 { font: 600 18px/1.2 var(--f-display); letter-spacing: .02em; margin: 0 0 6px; }
+.notes ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; display: grid; gap: 4px; max-width: 65ch; }
+.notes code { font: 13px var(--f-mono); color: var(--fg); }
+@media (max-width: 900px) { .board { grid-template-columns: minmax(0, 1fr); } .row3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } .notes { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">EUC stabilized headlight · layout v4 study · simulation</div>
+    <h1>v4 Ride Demo</h1>
+    <p class="lede">A 45-second ride through the firmware's control loop: accelerating, braking, a hill with a crest, and two turns. The wheel pitches up to ±10°. Two mirrors, each on pitch and yaw, keep the <b>low-beam cutoff about 38 m ahead</b>, and in a turn the beam on that side swings into the curve while the other stays straight. The dashed red line is a light bolted to the wheel, for comparison.</p>
+  </header>
+
+  <div class="board">
+    <div class="views">
+      <figure class="side">
+        <figcaption><span>Side view · cutoff on the road</span><span>vertical ×4</span></figcaption>
+        <canvas id="cSide" aria-label="Side view of the wheel on the road with the beam cutoff"></canvas>
+      </figure>
+      <div class="row3">
+        <figure>
+          <figcaption><span>Close-up · left module</span><span>true angles</span></figcaption>
+          <canvas id="cClose" aria-label="Close-up of the wheel pitch and the mirror"></canvas>
+        </figure>
+        <figure>
+          <figcaption><span>From above</span><span>heading up</span></figcaption>
+          <canvas id="cTop" aria-label="Top view of the path and both beams"></canvas>
+        </figure>
+        <figure class="wall">
+          <figcaption><span>Rider's view · cutoffs</span><span>vertical ×4</span></figcaption>
+          <canvas id="cWall" aria-label="Rider's view of the road ahead and both beam cutoffs"></canvas>
+        </figure>
+      </div>
+      <div class="key"><span class="l">Left module</span><span class="r">Right module</span><span class="b">Beam cutoff</span><span class="f">Fixed light (no levelling)</span></div>
+    </div>
+
+    <aside>
+      <div class="panel">
+        <div class="chapter" aria-live="polite">
+          <div class="eyebrow" id="chNum">Chapter</div>
+          <h2 id="chName">Cruise</h2>
+          <p id="chText"></p>
+        </div>
+        <div class="chips" id="chips" role="group" aria-label="Jump to a part of the ride"></div>
+        <div class="transport">
+          <button id="play" aria-label="Pause">❚❚</button>
+          <input id="scrub" type="range" min="0" max="45" step="0.01" value="0" aria-label="Ride time">
+          <span id="clock">0.0 s</span>
+        </div>
+        <div class="opts">
+          <label><input type="checkbox" id="optLidar"> Lidar fitted</label>
+          <label><input type="checkbox" id="optHill"> Old hill follower (4 s)</label>
+          <label><input type="checkbox" id="optFixed" checked> Fixed light</label>
+          <label>Speed <select id="optSpeed"><option value="0.5">0.5×</option><option value="1" selected>1×</option></select></label>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="status" id="status"></div>
+        <div class="readouts" id="readouts"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="notes">
+    <section>
+      <h3>What the model does</h3>
+      <ul>
+        <li>Pitch follows firmware-spec §2: the mirror moves by <code>−err/2 + aim_down/2</code>, clamped to ±7.5°.</li>
+        <li>With the lidar fitted, the road estimate blends 70% toward the slope it measures over the next 12 m, and ignores anything steeper than +12% (§8).</li>
+        <li><b>Hill follower</b> (firmware-spec §2, adopted 2026-11-21) removes the pitch the measured acceleration explains, then follows the road with a 0.3 s time constant, so a grade change settles in under 1 s. It freezes for 0.3 s after anything harder than 1 m/s². Tick “Old hill follower” to compare with the earlier 4 s version.</li>
+        <li>The wheel pitches up to ±10° when accelerating or braking (the balance angle for 1.7 m/s²). The servo moves the mirror at about 150°/s.</li>
+        <li>Head 0.8 m above the road, cutoff 1.2° down, so it meets a flat road about 38 m ahead.</li>
+        <li>Yaw limit from the CAD model: each beam swings up to 25° outward, through the clear wraparound side. With this rule no beam ever swings inward.</li>
+      </ul>
+    </section>
+    <section>
+      <h3>What it assumes</h3>
+      <ul>
+        <li>Yaw: the beam on the turn side swings into the curve and the other stays straight (owner, 2026-11-21). The swinging beam aims at the road 20 m ahead along the curve (yaw ≈ 20 m × yaw rate ÷ 2 × speed), up to 25°, rate-limited to 90°/s. The exact rule isn't in the firmware spec yet.</li>
+        <li>Leaning is corrected by tilting each mirror so the middle of its cutoff sits where it would with the wheel upright. A tilt is left within each half.</li>
+        <li>The IMU reading is perfect. The real gated filter adds a small lag and noise.</li>
+        <li>Servo speed, mirror ringing and the cutoff's compound-angle error are not modelled.</li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+  const DT = 1 / 200, T_PLAY = 45, T_SIM = 58, G = 9.81;
+  const H_HEAD = 0.8, AIM = -1.2, TAU_ROAD = 4, MIR_MAX = 7.5;
+  const YAW_OUT = 25, YAW_IN = 15, LOOK = 20, HALF_W = 11;
+  const D = Math.PI / 180;
+  const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+  const sstep = (e0, e1, x) => { const t = clamp((x - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); };
+  const pulse = (t, a, b, r) => sstep(a - r / 2, a + r / 2, t) - sstep(b - r / 2, b + r / 2, t);
+
+  const CHAPTERS = [
+    { t: 0, name: "Cruise", text: "Flat road at 29 km/h. Both mirrors sit at their trim and the cutoff meets the road about 38 m ahead." },
+    { t: 4, name: "Accelerating", text: "The wheel pitches 10° nose-down. The mirrors cancel that within about 0.05 s. The hill follower removes the lean the acceleration explains, so the cutoff stays at 38 m. The old 4 s follower mistook it for a downhill and let the cutoff creep to about 7 m." },
+    { t: 9, name: "Braking", text: "The wheel pitches 10° nose-up, the moment a fixed light shines into oncoming drivers' eyes. The mirrors tilt down by 5°. The cutoff stays at 38 m or closer. The old follower overshot to about 78 m." },
+    { t: 14, name: "Uphill, 8%", text: "The road estimate settles in under 1 s; the old follower took about 12 s. Either way, the rising road catches the beam short as the hill starts." },
+    { t: 22.5, name: "Crest and downhill", text: "Over the crest the estimate lags the falling road, so the beam points above it: about 2 s (the old follower: about 4 s). Most of what's left is geometry, a beam parallel to the climb passing over the top. The lidar sees the drop ahead and shortens it further." },
+    { t: 31, name: "Left turn", text: "20 m radius at 29 km/h: about 18° of lean. The left beam swings up to 25° into the curve, toward the road 20 m ahead. The right beam stays straight ahead, so the road you're about to leave and anything coming the other way stay lit. Each mirror also tilts to undo the lean." },
+    { t: 37, name: "Right turn", text: "The same turn to the right: now the right beam swings into the curve and the left one stays straight. The fixed light shines straight ahead only, with its cutoff tilted by the full lean." },
+  ];
+  const chapterAt = t => { let i = 0; CHAPTERS.forEach((c, k) => { if (t >= c.t) i = k; }); return i; };
+
+  // ---------- ride inputs ----------
+  const AMAX = G * Math.tan(10 * D);                   // acceleration that pitches the wheel 10°
+  const accAt = t => AMAX * pulse(t, 4.5, 7.5, 0.4) - AMAX * pulse(t, 9.6, 12.6, 0.4);
+  const omegaAt = t => 0.4 * pulse(t, 32, 35, 1.0) - 0.4 * pulse(t, 38, 41, 1.0);
+  const N = Math.round(T_SIM / DT) + 1;
+  const F = n => new Float32Array(n);
+  const S = F(N), V = F(N), X = F(N), Y = F(N), PSI = F(N), OM = F(N), ACC = F(N);
+  {
+    let s = 0, v = 8, x = 0, y = 0, psi = 0;
+    for (let i = 0; i < N; i++) {
+      const t = i * DT, a = accAt(t), w = omegaAt(t);
+      S[i] = s; V[i] = v; X[i] = x; Y[i] = y; PSI[i] = psi; OM[i] = w; ACC[i] = a;
+      v += a * DT; psi += w * DT; s += v * DT; x += v * Math.cos(psi) * DT; y += v * Math.sin(psi) * DT;
+    }
+  }
+  const sAtT = t => S[Math.min(N - 1, Math.round(t / DT))];
+
+  // ---------- road profile by distance ----------
+  const g8 = Math.atan(0.08) / D;
+  const sUp = sAtT(15), sCrest = sAtT(24), sBottom = sAtT(29.5);
+  const gradeAt = s => g8 * sstep(sUp, sUp + 12, s) - 2 * g8 * sstep(sCrest - 8, sCrest + 8, s) + g8 * sstep(sBottom, sBottom + 12, s);
+  const DS = 0.25, S0 = -40, NZ = Math.ceil((S[N - 1] + 220 - S0) / DS);
+  const ZG = F(NZ);
+  for (let k = 1; k < NZ; k++) ZG[k] = ZG[k - 1] + Math.tan(gradeAt(S0 + (k - 0.5) * DS) * D) * DS;
+  const zAt = s => { const f = (s - S0) / DS, k = clamp(Math.floor(f), 0, NZ - 2), r = f - k; return ZG[k] * (1 - r) + ZG[k + 1] * r; };
+  const idxAtS = s => { let lo = 0, hi = N - 1; while (lo < hi) { const m = (lo + hi) >> 1; if (S[m] < s) lo = m + 1; else hi = m; } return lo; };
+
+  // ---------- firmware simulation ----------
+  const fields = ["pitch", "lean", "road", "mpL", "mpR", "myL", "myR", "bpL", "bpR", "byL", "byR", "fix", "grade"];
+  let R = {};
+  function simulate(lidar) {
+    fields.forEach(f => R[f] = F(N));
+    let roadImu = 0, lidF = 0, byL = 0, byR = 0, hold = 0, mL = AIM / 2, mR = AIM / 2;
+    for (let i = 0; i < N; i++) {
+      const s = S[i], v = V[i], w = OM[i];
+      const grade = gradeAt(s);
+      const pitch = grade - Math.atan(ACC[i] / G) / D; // nose down when accelerating, up when braking (±10°)
+      const lean = Math.atan(v * w / G) / D;           // + = leaning left
+      if (opt.newHill) {                               // proposed: remove the acceleration's pitch, follow with τ = 0.3 s
+        const raw = pitch + Math.atan(ACC[i] / G) / D; // K_TILT = 1, a_long from a perfect IMU
+        hold = Math.abs(ACC[i]) > 1 ? 0.3 : Math.max(0, hold - DT);
+        if (hold === 0) roadImu += (raw - roadImu) * DT / 0.3;
+      } else roadImu += (pitch - roadImu) * DT / TAU_ROAD;
+      let road = roadImu;
+      if (lidar) {
+        const slope = (zAt(s + 12) - zAt(s)) / 12;
+        lidF += (Math.atan(slope) / D - lidF) * DT / 0.3;
+        if (Math.tan(lidF * D) <= 0.12) road = roadImu + 0.7 * (lidF - roadImu);
+      }
+      // yaw (assumed rule): aim at the road LOOK m ahead along the curve
+      const target = v > 1 ? Math.atan(LOOK * w / (2 * v)) / D : 0;
+      const step = 90 * DT;
+      // owner, 2026-11-21: the beam on the turn side swings into the curve; the other stays straight ahead
+      byL += clamp(clamp(target, 0, YAW_OUT) - byL, -step, step);
+      byR += clamp(clamp(target, -YAW_OUT, 0) - byR, -step, step);
+      // pitch: levelling plus lean correction for each module's centre direction
+      const err = pitch - road;
+      const want = road + AIM;                         // world elevation the cutoff should have
+      const elevBody = (h) => {                        // body-frame elevation that lands at `want` after the lean
+        const phi = lean * D, hh = h * D, tw = Math.sin((want - pitch) * D);
+        // solve sin(e)cos(phi) - cos(e)sin(hh)sin(phi) = tw
+        const A = Math.cos(phi), B = -Math.sin(hh) * Math.sin(phi), Rr = Math.hypot(A, B);
+        return (Math.asin(clamp(tw / Rr, -1, 1)) - Math.atan2(B, A)) / D;
+      };
+      const mp = h => clamp(elevBody(h) / 2, -MIR_MAX, MIR_MAX);
+      const sv = 150 * DT;                             // servo through the 4:1 linkage: ~150°/s at the mirror
+      mL += clamp(mp(byL + 5) - mL, -sv, sv); mR += clamp(mp(byR - 5) - mR, -sv, sv);
+      const mpL = mL, mpR = mR;
+      R.pitch[i] = pitch; R.lean[i] = lean; R.road[i] = road; R.grade[i] = grade;
+      R.mpL[i] = mpL; R.mpR[i] = mpR; R.myL[i] = byL / 2; R.myR[i] = byR / 2;
+      R.byL[i] = byL; R.byR[i] = byR;
+      R.bpL[i] = pitch + 2 * mpL; R.bpR[i] = pitch + 2 * mpR;   // centre-line elevation, ignoring lean
+      R.fix[i] = pitch + AIM;
+      void err;
+    }
+  }
+
+  // world elevation of a body-frame direction (azimuth h, elevation e) after pitch and lean
+  function toWorld(h, e, pitch, lean) {
+    const hh = h * D, ee = (e) * D, phi = lean * D;
+    const fwd = Math.cos(ee) * Math.cos(hh), left = Math.cos(ee) * Math.sin(hh), up = Math.sin(ee);
+    // lean about forward axis (left side down for +lean)
+    const l2 = left * Math.cos(phi) + up * Math.sin(phi), u2 = -left * Math.sin(phi) + up * Math.cos(phi);
+    // pitch about the left axis
+    const th = pitch * D, f3 = fwd * Math.cos(th) - u2 * Math.sin(th), u3 = fwd * Math.sin(th) + u2 * Math.cos(th);
+    return [Math.atan2(l2, f3) / D, Math.asin(clamp(u3, -1, 1)) / D];
+  }
+
+  // world elevation of the v4 cutoff: mean of both modules' centre directions
+  const beamElev = i => (toWorld(R.byL[i] + 5, 2 * R.mpL[i], R.pitch[i], R.lean[i])[1] + toWorld(R.byR[i] - 5, 2 * R.mpR[i], R.pitch[i], R.lean[i])[1]) / 2;
+
+  // distance along the road where a ray from the head at world elevation `a` meets it
+  function throwAt(s0, a) {
+    const z0 = zAt(s0) + H_HEAD, t = Math.tan(a * D);
+    for (let d = 0.5; d <= 150; d += 0.25) if (z0 + t * d <= zAt(s0 + d)) return d;
+    return Infinity;
+  }
+
+  // ---------- canvases ----------
+  const css = getComputedStyle(document.documentElement);
+  const C = k => css.getPropertyValue("--" + k).trim();
+  const col = { bg: C("bg"), panel: C("panel"), line: C("line"), fg: C("fg"), muted: C("muted"), beam: C("beam"), left: C("left"), right: C("right"), fixed: C("fixed"), road: C("road") };
+  const cv = {};
+  ["cSide", "cClose", "cTop", "cWall"].forEach(id => {
+    const el = document.getElementById(id);
+    cv[id] = { el, ctx: el.getContext("2d"), w: 0, h: 0 };
+  });
+  function fit() {
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    Object.values(cv).forEach(c => {
+      const r = c.el.getBoundingClientRect();
+      c.w = r.width; c.h = r.height;
+      c.el.width = Math.round(r.width * dpr); c.el.height = Math.round(r.height * dpr);
+      c.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    });
+  }
+  const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+  const MONO = "11px " + C("f-mono");
+
+  function drawSide(i) {
+    const { ctx, w, h } = cv.cSide;
+    ctx.fillStyle = col.panel; ctx.fillRect(0, 0, w, h);
+    const s0 = S[i], z0 = zAt(s0), back = 6, span = 58, sc = w / span, VEX = 4;
+    const px = s => (s - s0 + back) * sc, py = z => h * 0.62 - (z - z0) * sc * VEX;
+    // distance ticks
+    ctx.font = MONO; ctx.fillStyle = col.muted; ctx.strokeStyle = col.line; ctx.lineWidth = 1;
+    for (let d = 10; d <= 50; d += 10) {
+      const x = px(s0 + d); ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+      ctx.fillText(d + " m", x + 4, 14);
+    }
+    // road
+    ctx.beginPath(); ctx.moveTo(px(s0 - back), h);
+    for (let s = s0 - back; s <= s0 + span; s += 0.5) ctx.lineTo(px(s), py(zAt(s)));
+    ctx.lineTo(px(s0 + span), h); ctx.closePath(); ctx.fillStyle = col.road; ctx.fill();
+    ctx.strokeStyle = rgba(col.fg, 0.35); ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let s = s0 - back; s <= s0 + span; s += 0.5) { const x = px(s), y = py(zAt(s)); s === s0 - back ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+    ctx.stroke();
+    const hx = px(s0), hy = py(z0 + H_HEAD);
+    // beam: lit wedge below the cutoff
+    const ray = (a, color, dashed, fill) => {
+      const d = throwAt(s0, a), dd = Math.min(d, span), ex = px(s0 + dd), ey = py(z0 + H_HEAD + Math.tan(a * D) * dd);
+      if (fill) {
+        const gr = ctx.createLinearGradient(hx, 0, ex, 0);
+        gr.addColorStop(0, rgba(col.beam, 0.32)); gr.addColorStop(1, rgba(col.beam, 0.05));
+        ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(ex, ey);
+        const s1 = s0 + dd; for (let s = s1; s >= s0 + 3; s -= 0.5) ctx.lineTo(px(s), py(zAt(s)));
+        ctx.closePath(); ctx.fillStyle = gr; ctx.fill();
+      }
+      ctx.setLineDash(dashed ? [6, 5] : []); ctx.strokeStyle = color; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(ex, ey); ctx.stroke(); ctx.setLineDash([]);
+      if (isFinite(d) && d <= span) { ctx.fillStyle = color; ctx.beginPath(); ctx.arc(ex, ey, 3.5, 0, 7); ctx.fill(); }
+      return d;
+    };
+    if (opt.fixed) ray(R.fix[i], col.fixed, true, false);
+    ray(beamElev(i), col.beam, false, true);
+    // wheel marker
+    ctx.save(); ctx.translate(hx, py(z0)); ctx.rotate(-R.pitch[i] * D * VEX);
+    ctx.fillStyle = col.fg; ctx.fillRect(-3, -(H_HEAD * sc * VEX), 6, H_HEAD * sc * VEX - 6);
+    ctx.beginPath(); ctx.arc(0, -6, 6, 0, 7); ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = col.muted; ctx.fillText("grade " + (Math.tan(R.grade[i] * D) * 100).toFixed(1) + "%", 10, h - 10);
+  }
+
+  function drawClose(i) {
+    const { ctx, w, h } = cv.cClose;
+    ctx.fillStyle = col.panel; ctx.fillRect(0, 0, w, h);
+    const u = w / 300, cx = w * 0.36, cy = h * 0.66, th = R.pitch[i], m = R.mpL[i];
+    // level reference
+    ctx.strokeStyle = col.line; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(0, cy - 120 * u); ctx.lineTo(w, cy - 120 * u); ctx.stroke(); ctx.setLineDash([]);
+    ctx.font = MONO; ctx.fillStyle = col.muted; ctx.fillText("level", w - 44, cy - 124 * u);
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(-th * D);
+    // wheel and shell
+    ctx.strokeStyle = rgba(col.fg, 0.5); ctx.lineWidth = 9 * u; ctx.beginPath(); ctx.arc(0, 0, 52 * u, 0, 7); ctx.stroke();
+    ctx.fillStyle = "#1c2633"; ctx.strokeStyle = rgba(col.fg, 0.35); ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.roundRect(-30 * u, -96 * u, 60 * u, 120 * u, 14 * u); ctx.fill(); ctx.stroke();
+    // head
+    const hx = 22 * u, hy = -120 * u;
+    ctx.fillStyle = "#26313f"; ctx.beginPath(); ctx.roundRect(hx - 20 * u, hy - 18 * u, 52 * u, 36 * u, 10 * u); ctx.fill(); ctx.stroke();
+    // LED pointing up, mirror at 45° + m
+    const mx = hx + 6 * u, my = hy - 2 * u;
+    ctx.fillStyle = col.beam; ctx.fillRect(mx - 5 * u, hy + 12 * u, 10 * u, 4 * u);
+    ctx.strokeStyle = rgba(col.beam, 0.6); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(mx, hy + 12 * u); ctx.lineTo(mx, my); ctx.stroke();
+    const ma = (45 + m) * D, L = 15 * u;
+    ctx.strokeStyle = col.left; ctx.lineWidth = 3; ctx.beginPath();
+    ctx.moveTo(mx - Math.cos(ma) * L, my + Math.sin(ma) * L); ctx.lineTo(mx + Math.cos(ma) * L, my - Math.sin(ma) * L); ctx.stroke();
+    ctx.restore();
+    // outgoing ray in world frame
+    const c = Math.cos(-th * D), s = Math.sin(-th * D);
+    const wx = cx + (mx * c - my * s), wy = cy + (mx * s + my * c);
+    const a = (th + 2 * m) * D;
+    ctx.strokeStyle = col.beam; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(wx, wy); ctx.lineTo(wx + Math.cos(a) * w, wy - Math.sin(a) * w); ctx.stroke();
+    if (opt.fixed) { const af = (th + AIM) * D; ctx.strokeStyle = col.fixed; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(wx, wy); ctx.lineTo(wx + Math.cos(af) * w, wy - Math.sin(af) * w); ctx.stroke(); ctx.setLineDash([]); }
+    ctx.fillStyle = col.fg; ctx.font = MONO;
+    ctx.fillText("wheel  " + sgn(th) + "°", 10, h - 28);
+    ctx.fillStyle = col.left; ctx.fillText("mirror " + sgn(m) + "°", 10, h - 12);
+  }
+
+  function drawTop(i) {
+    const { ctx, w, h } = cv.cTop;
+    ctx.fillStyle = col.panel; ctx.fillRect(0, 0, w, h);
+    const sc = h / 62, cx = w / 2, cy = h * 0.88, x0 = X[i], y0 = Y[i], ps = PSI[i];
+    const toS = (x, y) => { const dx = x - x0, dy = y - y0, f = dx * Math.cos(ps) + dy * Math.sin(ps), l = -dx * Math.sin(ps) + dy * Math.cos(ps); return [cx - l * sc, cy - f * sc]; };
+    // road band
+    const j0 = idxAtS(S[i] - 8), j1 = idxAtS(S[i] + 70);
+    const edge = off => { ctx.beginPath(); for (let j = j0; j <= j1; j += 20) { const nx = -Math.sin(PSI[j]) * off, ny = Math.cos(PSI[j]) * off, [a, b] = toS(X[j] + nx, Y[j] + ny); j === j0 ? ctx.moveTo(a, b) : ctx.lineTo(a, b); } };
+    ctx.strokeStyle = col.road; ctx.lineWidth = 3.5 * sc; edge(0); ctx.stroke();
+    ctx.strokeStyle = rgba(col.fg, 0.25); ctx.lineWidth = 1; ctx.setLineDash([5, 7]); edge(0); ctx.stroke(); ctx.setLineDash([]);
+    // beams
+    const thr = Math.min(throwAt(S[i], beamElev(i)), 60);
+    const wedge = (az, color, len, dashed) => {
+      const a0 = (az - HALF_W) * D, a1 = (az + HALF_W) * D, r = len * sc;
+      const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, r); gr.addColorStop(0, rgba(color, 0.42)); gr.addColorStop(1, rgba(color, 0.02));
+      ctx.beginPath(); ctx.moveTo(cx, cy);
+      for (let a = a0; a <= a1 + 1e-6; a += (a1 - a0) / 16) ctx.lineTo(cx - Math.sin(a) * r, cy - Math.cos(a) * r);
+      ctx.closePath();
+      if (dashed) { ctx.setLineDash([6, 5]); ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]); }
+      else { ctx.fillStyle = gr; ctx.fill(); }
+    };
+    if (opt.fixed) wedge(0, col.fixed, Math.min(throwAt(S[i], R.fix[i]), 60), true);
+    wedge(R.byL[i], col.left, thr, false);
+    wedge(R.byR[i], col.right, thr, false);
+    ctx.fillStyle = col.fg; ctx.beginPath(); ctx.arc(cx, cy, 4, 0, 7); ctx.fill();
+    ctx.font = MONO; ctx.fillStyle = col.muted;
+    ctx.fillText("10 m", 8, h - 10); ctx.strokeStyle = col.muted; ctx.beginPath(); ctx.moveTo(44, h - 14); ctx.lineTo(44 + 10 * sc, h - 14); ctx.stroke();
+  }
+
+  function drawWall(i) {
+    const { ctx, w, h } = cv.cWall;
+    ctx.fillStyle = col.panel; ctx.fillRect(0, 0, w, h);
+    const HR = 42, VT = 4, VB = -9;  // degrees shown
+    const sx = w / (2 * HR), sy = h / (VT - VB);
+    const px = az => w / 2 - az * sx, py = el => (VT - el) * sy;
+    const pitch = R.pitch[i], lean = R.lean[i], g = R.grade[i];
+    // horizon (road-level at the wheel) and target cutoff
+    ctx.strokeStyle = col.line; ctx.beginPath(); ctx.moveTo(0, py(0)); ctx.lineTo(w, py(0)); ctx.stroke();
+    ctx.font = MONO; ctx.fillStyle = col.muted; ctx.fillText("level with the road", 6, py(0) - 5);
+    // road ahead: project the future path
+    const s0 = S[i], x0 = X[i], y0 = Y[i], ps = PSI[i], z0 = zAt(s0) + H_HEAD;
+    const proj = (x, y, z) => { const dx = x - x0, dy = y - y0, f = dx * Math.cos(ps) + dy * Math.sin(ps), l = -dx * Math.sin(ps) + dy * Math.cos(ps); if (f < 1) return null; return [Math.atan2(l, f) / D, Math.atan2(z - z0, Math.hypot(f, l)) / D - g]; };
+    const edge = off => { const pts = []; for (let d = 4; d <= 80; d += 1) { const j = idxAtS(s0 + d), nx = -Math.sin(PSI[j]) * off, ny = Math.cos(PSI[j]) * off, p = proj(X[j] + nx, Y[j] + ny, zAt(S[j])); if (p) pts.push(p); } return pts; };
+    const L = edge(1.75), Rr = edge(-1.75);
+    ctx.beginPath(); L.forEach(([a, e], k) => k ? ctx.lineTo(px(a), py(e)) : ctx.moveTo(px(a), py(e))); Rr.reverse().forEach(([a, e]) => ctx.lineTo(px(a), py(e))); ctx.closePath();
+    ctx.fillStyle = col.road; ctx.fill();
+    // cutoffs
+    const cut = (az, eBody, color) => {
+      const pts = []; for (let hh = az - HALF_W; hh <= az + HALF_W + 1e-6; hh += 1) pts.push(toWorld(hh, eBody, pitch, lean));
+      ctx.beginPath(); pts.forEach(([a, e], k) => k ? ctx.lineTo(px(a), py(e - g)) : ctx.moveTo(px(a), py(e - g)));
+      for (let k = pts.length - 1; k >= 0; k--) ctx.lineTo(px(pts[k][0]), py(pts[k][1] - g - 3.2));
+      ctx.closePath(); const gr = ctx.createLinearGradient(0, py(pts[0][1] - g), 0, py(pts[0][1] - g - 3.2));
+      gr.addColorStop(0, rgba(col.beam, 0.38)); gr.addColorStop(1, rgba(col.beam, 0)); ctx.fillStyle = gr; ctx.fill();
+      ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.beginPath(); pts.forEach(([a, e], k) => k ? ctx.lineTo(px(a), py(e - g)) : ctx.moveTo(px(a), py(e - g))); ctx.stroke();
+    };
+    cut(R.byL[i], 2 * R.mpL[i], col.left);
+    cut(R.byR[i], 2 * R.mpR[i], col.right);
+    if (opt.fixed) {
+      const pts = []; for (let hh = -HALF_W; hh <= HALF_W; hh += 1) pts.push(toWorld(hh, AIM, pitch, lean));
+      ctx.setLineDash([6, 5]); ctx.strokeStyle = col.fixed; ctx.lineWidth = 2; ctx.beginPath();
+      pts.forEach(([a, e], k) => k ? ctx.lineTo(px(a), py(e - g)) : ctx.moveTo(px(a), py(e - g))); ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.fillStyle = col.muted; ctx.fillText("±" + HR + "°", w - 40, h - 8);
+  }
+
+  // ---------- readouts ----------
+  const sgn = x => (x >= 0 ? "+" : "−") + Math.abs(x).toFixed(1);
+  const roEl = document.getElementById("readouts"), stEl = document.getElementById("status");
+  const ROWS = [
+    ["Speed", i => (V[i] * 3.6).toFixed(0) + " km/h", null],
+    ["Wheel pitch", i => sgn(R.pitch[i]) + "°", i => [R.pitch[i], -10, 10, col.fg]],
+    ["Road estimate", i => sgn(R.road[i]) + "°", i => [R.road[i], -10, 10, col.muted]],
+    ["Lean", i => sgn(R.lean[i]) + "°", i => [R.lean[i], -25, 25, col.fg]],
+    ["Mirror pitch L", i => sgn(R.mpL[i]) + "°", i => [R.mpL[i], -7.5, 7.5, col.left]],
+    ["Mirror pitch R", i => sgn(R.mpR[i]) + "°", i => [R.mpR[i], -7.5, 7.5, col.right]],
+    ["Mirror yaw L", i => sgn(R.myL[i]) + "°", i => [R.myL[i], -12.5, 12.5, col.left]],
+    ["Mirror yaw R", i => sgn(R.myR[i]) + "°", i => [R.myR[i], -12.5, 12.5, col.right]],
+  ];
+  roEl.innerHTML = ROWS.map((r, k) => `<div class="ro"><span class="k">${r[0]}</span><span id="rv${k}"></span>${r[2] ? `<div class="bar"><b style="left:50%"></b><i id="rb${k}"></i></div>` : ""}</div>`).join("");
+  function readouts(i) {
+    ROWS.forEach((r, k) => {
+      document.getElementById("rv" + k).textContent = r[1](i);
+      if (r[2]) {
+        const [v, lo, hi, c] = r[2](i), z = 50, p = clamp((v - lo) / (hi - lo) * 100, 0, 100), b = document.getElementById("rb" + k);
+        b.style.left = Math.min(z, p) + "%"; b.style.width = Math.abs(p - z) + "%"; b.style.background = c;
+      }
+    });
+    const fmt = d => isFinite(d) ? d.toFixed(0) + " m" : "above the road";
+    const tv = throwAt(S[i], beamElev(i)), tf = throwAt(S[i], R.fix[i]);
+    const glareV = !isFinite(tv) || tv > 80, glareF = !isFinite(tf) || tf > 80;
+    let html = `<span class="pill ${glareV ? "bad" : "ok"}">v4 cutoff ${fmt(tv)}</span>`;
+    if (opt.fixed) html += `<span class="pill ${glareF ? "bad" : ""}">fixed ${fmt(tf)}</span>`;
+    stEl.innerHTML = html;
+  }
+
+  // ---------- controls ----------
+  const opt = { lidar: false, fixed: true, speed: 1, newHill: true };
+  const chipsEl = document.getElementById("chips");
+  CHAPTERS.forEach((c, k) => { const b = document.createElement("button"); b.className = "chip"; b.id = "chip" + k; b.textContent = c.name; b.setAttribute("aria-pressed", "false"); b.onclick = () => { t = c.t + 0.001; render(); }; chipsEl.appendChild(b); });
+  const playBtn = document.getElementById("play"), scrub = document.getElementById("scrub"), clock = document.getElementById("clock");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let t = reduce ? 11 : 0, playing = !reduce, last = null, lastCh = -1;
+  const setPlay = p => { playing = p; playBtn.textContent = p ? "❚❚" : "▶"; playBtn.setAttribute("aria-label", p ? "Pause" : "Play"); last = null; };
+  setPlay(playing);
+  playBtn.onclick = () => setPlay(!playing);
+  scrub.oninput = () => { t = +scrub.value; render(); };
+  document.getElementById("optLidar").onchange = e => { opt.lidar = e.target.checked; simulate(opt.lidar); render(); };
+  document.getElementById("optHill").onchange = e => { opt.newHill = !e.target.checked; simulate(opt.lidar); render(); };
+  document.getElementById("optFixed").onchange = e => { opt.fixed = e.target.checked; render(); };
+  document.getElementById("optSpeed").onchange = e => { opt.speed = +e.target.value; };
+  document.addEventListener("keydown", e => { if (e.code === "Space" && e.target === document.body) { e.preventDefault(); setPlay(!playing); } });
+
+  function render() {
+    const i = Math.min(N - 1, Math.round(t / DT));
+    drawSide(i); drawClose(i); drawTop(i); drawWall(i); readouts(i);
+    scrub.value = t.toFixed(2); clock.textContent = t.toFixed(1) + " s";
+    const ch = chapterAt(t);
+    if (ch !== lastCh) {
+      lastCh = ch;
+      document.getElementById("chNum").textContent = "Part " + (ch + 1) + " of " + CHAPTERS.length;
+      document.getElementById("chName").textContent = CHAPTERS[ch].name;
+      document.getElementById("chText").textContent = CHAPTERS[ch].text;
+      CHAPTERS.forEach((_, k) => document.getElementById("chip" + k).setAttribute("aria-pressed", k === ch ? "true" : "false"));
+    }
+  }
+  function frame(now) {
+    if (playing) {
+      if (last !== null) { t += Math.min(0.1, (now - last) / 1000) * opt.speed; if (t >= T_PLAY) t = 0; }
+      last = now; render();
+    }
+    requestAnimationFrame(frame);
+  }
+  simulate(false);
+  fit(); render();
+  new ResizeObserver(() => { fit(); render(); }).observe(document.querySelector(".board"));
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
