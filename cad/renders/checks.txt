@@ -3,7 +3,6 @@
 C-PKG-01..13 passed
 C-MASS-01 2F+2S+lidar: 401 g vs 400 g limit: FAIL
 v4: C-PKG checks passed
-v4 "PKG config=v4-2x2axis+lidar body_outer_mm=220.774x69.8344x91.7816 head_height_mm=108.282 windows_mm=2x78.0369x60.9019 mirrors_mm=2x56.9x55 heatsinks_mm=2x60.45x32 fins=2x6 beam_yaw=+-15 wrap=none"
-v4 (study): C-MASS-01 v4-2x2axis+lidar: 410 g vs 400 g limit: FAIL
-v4-wrap "PKG config=v4-2x2axis+lidar body_outer_mm=199.765x69.8344x94.2259 head_height_mm=110.726 windows_mm=2x59.5327x60.9019 mirrors_mm=2x56.9x55 heatsinks_mm=2x54.45x26 fins=2x6 beam_yaw=+-15 wrap_depth_mm=30 outward_beam=25"
-v4 with clear wraparound sides (study): C-MASS-01 v4-2x2axis+lidar: 393 g vs 400 g limit: PASS
+C-PKG-18 v4: nothing pokes through the skin at any mirror pose
+v4 "PKG config=v4-2x2axis+lidar body_outer_mm=200.493x70.8344x94.79 head_height_mm=111.29 windows_mm=2x59.8967x62.0302 mirrors_mm=2x56.9x55 heatsinks_mm=2x54.45x26 fins=2x6 beam_yaw=+-15 wrap_depth_mm=30 outward_beam=25"
+v4 (adopted, clear wraparound sides): C-MASS-01 v4-2x2axis+lidar: 399 g vs 400 g limit: PASS

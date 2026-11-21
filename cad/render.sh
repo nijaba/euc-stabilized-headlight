@@ -48,38 +48,39 @@ python3 -I weight.py "$OUT/model.echo" "$OUT/shell.stl" "$OUT/hood.stl" > "$OUT/
 rm -f "$OUT/model.echo" "$OUT/shell.stl" "$OUT/hood.stl"
 tail -1 "$OUT/mass.txt" >> "$LOG"
 
-# Layout v4, adopted 2026-11-21 (two 2-axis mirrors, lidar between them). Its C-PKG checks and the wrap variant's mass gate the exit status.
+# Layout v4, adopted 2026-11-21 (two 2-axis mirrors, lidar between them). Its C-PKG checks and mass gate the exit status. Only the clear-wraparound version is modelled now (owner, 2026-11-21).
 render4() { name=$1; view=$2; cam=$3; shift 3
   fit=""; case "$cam" in *,0) fit="--viewall --autocenter" ;; esac
   # shellcheck disable=SC2086
   "$OPENSCAD" -o "$OUT/v4-$name.png" --imgsize=1600,1200 --colorscheme=Tomorrow $fit --camera="$cam" -D "view=\"$view\"" "$@" headlight-v4.scad 2>>"$LOG.v4"
 }
-render4 three-quarter assembly 0,0,0,62,0,140,0
+render4 three-quarter assembly 0,0,0,62,0,140,0 -D show_beams=false
 render4 front         front    0,0,0,90,0,180,0 -D show_beams=false --projection=ortho
-render4 turning       assembly 0,0,0,62,0,140,0 -D yaw=7.5
+render4 turning       assembly 0,0,0,62,0,140,0 -D yaw_l=12.5 -D yaw_r=0
 render4 cutaway       cutaway  0,-10,45,90,0,270,520 --projection=ortho
-render4 top           assembly 0,0,0,0,0,0,0 -D show_beams=false --projection=ortho
+render4 top           assembly 0,0,0,0,0,0,0 -D yaw_l=12.5 -D yaw_r=0 --projection=ortho
 render4 under         under    0,0,0,140,0,150,0 -D show_beams=false
 render4 on-wheel      wheel    0,0,0,75,0,125,0 -D show_beams=false
-render4 wrap-three-quarter assembly 0,0,0,62,0,140,0 -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 -D show_beams=false
-render4 wrap-turning  assembly 0,0,0,62,0,140,0 -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 -D yaw=12.5
-render4 wrap-top      assembly 0,0,0,0,0,0,0 -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 -D yaw=12.5 --projection=ortho
 if grep -q 'C-PKG' "$LOG.v4"; then status=1; echo "v4: $(grep -o 'C-PKG[^"]*' "$LOG.v4" | sort -u | head -3)" >> "$LOG"; else echo "v4: C-PKG checks passed" >> "$LOG"; fi
 rm -f "$LOG.v4"
+# C-PKG-18: nothing inside pokes through the outer skin, with the mirrors at every corner of their travel.
+fit_fail=""
+fit_check() { "$OPENSCAD" -o "$OUT/fit.stl" -D 'view="none"' "$@" fit-v4.scad 2>&1 | grep -q "top level object is empty"; }
+fit_check -D 'part="fixed"' || fit_fail="$fit_fail fixed-parts"
+for tp in "7.5 12.5" "-7.5 12.5" "7.5 -7.5" "-7.5 -7.5"; do
+  # shellcheck disable=SC2086
+  set -- $tp
+  fit_check -D 'part="mirrors"' -D "tilt=$1" -D "yaw=$2" || fit_fail="$fit_fail mirrors(tilt=$1,yaw=$2)"
+done
+rm -f "$OUT/fit.stl"
+if [ -n "$fit_fail" ]; then status=1; echo "C-PKG-18 v4: parts poke through the skin:$fit_fail" >> "$LOG"; else echo "C-PKG-18 v4: nothing pokes through the skin at any mirror pose" >> "$LOG"; fi
 "$OPENSCAD" -o "$OUT/v4.echo" headlight-v4.scad 2>/dev/null
 "$OPENSCAD" -o "$OUT/v4-shell.stl" -D 'view="stl_shell"' headlight-v4.scad 2>/dev/null
-python3 -I weight.py "$OUT/v4.echo" "$OUT/v4-shell.stl" > "$OUT/mass-v4.txt" || true
+python3 -I weight.py "$OUT/v4.echo" "$OUT/v4-shell.stl" > "$OUT/mass-v4.txt" || status=$?
 grep '"PKG' "$OUT/v4.echo" | sed 's/^ECHO: /v4 /' >> "$LOG"
 rm -f "$OUT/v4.echo" "$OUT/v4-shell.stl"
-echo "v4 flat front (not built): $(tail -1 "$OUT/mass-v4.txt")" >> "$LOG"
-# v4 with one clear wraparound piece per side (front + corner + side, no pillar).
-"$OPENSCAD" -o "$OUT/v4w.echo" -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 headlight-v4.scad 2>/dev/null
-"$OPENSCAD" -o "$OUT/v4w-shell.stl" -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 -D 'view="stl_shell"' headlight-v4.scad 2>/dev/null
-python3 -I weight.py "$OUT/v4w.echo" "$OUT/v4w-shell.stl" > "$OUT/mass-v4-wrap.txt" || status=$?
-grep '"PKG' "$OUT/v4w.echo" | sed 's/^ECHO: /v4-wrap /' >> "$LOG"
-rm -f "$OUT/v4w.echo" "$OUT/v4w-shell.stl"
-echo "v4 with clear wraparound sides (adopted): $(tail -1 "$OUT/mass-v4-wrap.txt")" >> "$LOG"
+echo "v4 (adopted, clear wraparound sides): $(tail -1 "$OUT/mass-v4.txt")" >> "$LOG"
 # The project site (GitHub Pages, docs/) shows these renders; keep its copies current.
-for f in v4-wrap-three-quarter v4-wrap-turning v4-wrap-top v4-cutaway v4-under v4-on-wheel v4-front; do cp "$OUT/$f.png" ../docs/img/; done
+for f in three-quarter turning top cutaway under on-wheel front; do cp "$OUT/v4-$f.png" ../docs/img/; done
 cat "$LOG"
 exit $status

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>EUC Stabilized Headlight</title>
-<meta name="description" content="An open-hardware, self-levelling headlight for electric unicycles: two servo-steered mirrors keep the beam on the road while the wheel pitches, and swing it into turns.">
+<meta name="description" content="An open-hardware, self-levelling headlight for electric unicycles: two servo-steered mirrors keep the beam on the road while the wheel pitches, and swing one beam into each turn.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -140,6 +140,9 @@ ol.phases li.now { border-color: color-mix(in srgb, var(--beam) 45%, var(--line)
 .doc .path { font: 500 13px/1.2 var(--f-mono); color: var(--beam); }
 .doc p { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
 
+.concept { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 32px; margin-bottom: 48px; padding: 22px 24px; border: 1px solid color-mix(in srgb, var(--right) 45%, var(--line)); border-radius: 10px; background: color-mix(in srgb, var(--right) 7%, var(--panel)); }
+.concept p { margin: 0; color: var(--muted); max-width: 70ch; }
+@media (max-width: 900px) { .concept { grid-template-columns: minmax(0, 1fr); } }
 footer { border-top: 1px solid var(--line); padding-block: 32px 48px; color: var(--muted); font-size: 14px; }
 footer p { margin: 0 0 8px; max-width: 80ch; }
 
@@ -173,19 +176,33 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
 <header class="wrap hero" id="top">
   <div>
     <div class="eyebrow">Open hardware · GPL-3.0</div>
-    <h1>A headlight that <span class="lit">keeps its beam on the road</span></h1>
+    <h1>A headlight that <span class="lit">keeps its beam on the road</span> and looks into the turn</h1>
     <p class="lede">An electric unicycle pitches up to <b>10°</b> every time you accelerate or brake. This head steers its beams with <b>two small mirrors</b>, so the cutoff stays about <b>38 m ahead</b>, and swings one beam into each turn.</p>
     <div class="cta">
       <a class="btn primary" href="v4-ride-demo.html">Try the ride demo</a>
       <a class="btn" href="https://github.com/nijaba/euc-stabilized-headlight">Source on GitHub</a>
     </div>
-    <div class="status">Design phase: nothing built or tested yet. Every figure is an estimate.</div>
+    <div class="status">Concept design: nothing built or tested yet. Every figure is an estimate.</div>
   </div>
   <figure class="render" style="margin:0">
-    <img src="img/v4-wrap-three-quarter.png" alt="Packaging model of the head: a rounded light bar with a mirror module each side, the lidar in the middle and clear wraparound sides" width="1600" height="1200">
+    <img src="img/v4-three-quarter.png" alt="Packaging model of the head: a rounded light bar with a mirror module each side, the lidar in the middle and clear wraparound sides" width="1600" height="1200">
     <figcaption>Packaging model, layout v4 · OpenSCAD</figcaption>
   </figure>
 </header>
+
+<div class="wrap">
+  <aside class="concept" aria-label="Project status">
+    <div>
+      <div class="eyebrow" style="color:var(--right)">A concept, not a kit</div>
+      <h2 style="font-size:clamp(26px,3.4vw,34px);margin:8px 0 8px">Ideas welcome. Please don't build it yet.</h2>
+      <p>This is a concept design at the packaging-study stage: no prototype exists, the parts list hasn't been ordered, the firmware isn't written, and the numbers on this page come from datasheets and a CAD model. It will change. If you ride an EUC, know optics, servos or embedded firmware, or just see a better way, open an issue with your idea or doubt.</p>
+    </div>
+    <div class="cta" style="align-self:center">
+      <a class="btn primary" href="https://github.com/nijaba/euc-stabilized-headlight/issues/new">Suggest an idea</a>
+      <a class="btn" href="https://github.com/nijaba/euc-stabilized-headlight/issues">Browse issues</a>
+    </div>
+  </aside>
+</div>
 
 <section id="problem">
   <div class="wrap grid2" style="align-items:center">
@@ -273,12 +290,12 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
     <h2>A rounded light bar, 200 mm wide</h2>
     <p class="intro">The packaging model checks that everything fits, sweeps and stays under the weight limit before any part is bought. Layout v4 was chosen on 2026-11-21 over a narrower single-mirror head (v3) with fixed cornering lights.</p>
     <div class="gallery">
-      <figure><div class="shot"><img src="img/v4-wrap-turning.png" alt="Model with both mirrors yawed outward" loading="lazy" width="1600" height="1200"></div><figcaption><b>Full outward swing.</b> Both mirrors at 25° to show the travel; in a turn only the turn-side one swings.</figcaption></figure>
-      <figure><div class="shot"><img src="img/v4-wrap-top.png" alt="Top view of the head with beams yawed" loading="lazy" width="1600" height="1200"></div><figcaption><b>From above.</b> Two modules, lidar bay between them, servos in the back slot; both beams at full outward swing.</figcaption></figure>
-      <figure><div class="shot"><img src="img/v4-cutaway.png" alt="Cut-away side view showing LED, optic, mirror and heatsink" loading="lazy" width="1600" height="1200"></div><figcaption><b>Cut-away.</b> LED facing up, optic, 45° mirror, heatsink floor (flat-front variant).</figcaption></figure>
-      <figure><div class="shot"><img src="img/v4-under.png" alt="Underside with two finned heatsinks" loading="lazy" width="1600" height="1200"></div><figcaption><b>Underneath.</b> Two aluminium heatsinks, fins fore-aft in the airflow (flat-front variant).</figcaption></figure>
-      <figure><div class="shot"><img src="img/v4-on-wheel.png" alt="The head mounted on a generic wheel for scale" loading="lazy" width="1600" height="1200"></div><figcaption><b>On a wheel.</b> Generic 16-inch shell, for scale (flat-front variant).</figcaption></figure>
-      <figure><div class="shot"><img src="img/v4-front.png" alt="Front view of the head" loading="lazy" width="1600" height="1200"></div><figcaption><b>Front.</b> Low beam outside, spot inside, on each side (flat-front variant).</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-turning.png" alt="Model in a left turn: the left beam swung outward, the right beam straight ahead" loading="lazy" width="1600" height="1200"></div><figcaption><b>Left turn.</b> The left beam swings 25° out through the clear side; the right one stays straight.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-top.png" alt="Top view in a left turn: left beam swung out, right beam straight" loading="lazy" width="1600" height="1200"></div><figcaption><b>From above, left turn.</b> Two modules with the lidar bay between them and the servos in the back slot.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-cutaway.png" alt="Cut-away side view showing LED, optic, mirror and heatsink" loading="lazy" width="1600" height="1200"></div><figcaption><b>Cut-away.</b> LED facing up, optic, 45° mirror, heatsink floor.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-under.png" alt="Underside with two finned heatsinks" loading="lazy" width="1600" height="1200"></div><figcaption><b>Underneath.</b> Two aluminium heatsinks, fins fore-aft in the airflow.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-on-wheel.png" alt="The head mounted on a generic wheel for scale" loading="lazy" width="1600" height="1200"></div><figcaption><b>On a wheel.</b> Generic 16-inch shell, for scale.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-front.png" alt="Front view of the head" loading="lazy" width="1600" height="1200"></div><figcaption><b>Front.</b> Low beam outside, spot inside, behind one curved clear piece per side.</figcaption></figure>
     </div>
   </div>
 </section>
@@ -323,9 +340,9 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
       <div class="panel budget">
         <h3>Limits, with the lidar fitted</h3>
         <div class="meter">
-          <div class="row"><span>Head weight</span><span>~393 / 400 g</span></div>
-          <div class="bar" role="img" aria-label="393 of 400 grams"><i style="width:98.25%"></i><b></b></div>
-          <small>Printed parts measured from the model; bought parts from datasheets.</small>
+          <div class="row"><span>Head weight</span><span>~399 / 400 g</span></div>
+          <div class="bar" role="img" aria-label="399 of 400 grams"><i style="width:99.75%"></i><b></b></div>
+          <small>Printed parts measured from the model; bought parts from datasheets. Only 1 g of margin: the custom PCB should win some back.</small>
         </div>
         <div class="meter">
           <div class="row"><span>Material cost per unit</span><span>~$440 / $450</span></div>
@@ -381,7 +398,7 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
   <div class="wrap">
     <div class="eyebrow">Roadmap</div>
     <h2>Where the project stands</h2>
-    <p class="intro">Phases run in order, each with its tests. The packaging study is nearly done; next is ordering a bench kit and writing the firmware core, with the pure logic tested on a computer first.</p>
+    <p class="intro">Phases run in order, each with its tests. Nothing past the packaging study has started, so this is the best time to change the design: <a href="https://github.com/nijaba/euc-stabilized-headlight/issues/new">open an issue</a>. The packaging study is nearly done; next is ordering a bench kit and writing the firmware core, with the pure logic tested on a computer first.</p>
     <ol class="phases">
       <li><span class="ph">PHASE 0</span><span class="t">Project setup and budget</span><span class="prog"><span class="bar"><i style="width:100%"></i></span>6/6</span></li>
       <li class="now"><span class="ph">PHASE 1</span><span class="t">Packaging study<small>v4 chosen; renders to review</small></span><span class="prog"><span class="bar"><i style="width:90%"></i></span>9/10</span></li>
@@ -416,7 +433,7 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
 
 <footer>
   <div class="wrap">
-    <p><b style="color:var(--fg);font-weight:500">An experimental project.</b> Nothing here has been built or tested yet. Ride with a backup light until it's proven, and check your country's lighting rules: aim the low beam so it doesn't dazzle other road users. The optional TF02-Pro is a Class 1 (eye-safe) laser device.</p>
+    <p><b style="color:var(--fg);font-weight:500">A concept design.</b> Nothing here has been built or tested yet, so it isn't ready to build; ideas and doubts are welcome as <a href="https://github.com/nijaba/euc-stabilized-headlight/issues">GitHub issues</a>. Ride with a backup light until it's proven, and check your country's lighting rules: aim the low beam so it doesn't dazzle other road users. The optional TF02-Pro is a Class 1 (eye-safe) laser device.</p>
     <p>Hardware and firmware under GPL-3.0. <a href="https://github.com/nijaba/euc-stabilized-headlight">github.com/nijaba/euc-stabilized-headlight</a></p>
   </div>
 </footer>

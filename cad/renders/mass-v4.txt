@@ -1,9 +1,9 @@
 Part                                            v4-2x2axis+lidar
-Heatsink (aluminium, bottom)                                44
-Body shell (ASA, measured)                                  88
+Heatsink (aluminium, bottom)                                33
+Body shell (ASA, measured)                                  82
 Brow fairing (ASA, measured)                                 0
 Bezel, bosses, ribs (ASA)                                   16
-Window (polycarbonate)                                      21
+Window (polycarbonate)                                      26
 Mirror (front-surface glass)                                17
 Mirror cradle, shaft, bearings                              14
 Gimbal frames, yaw pins, bearings                           14
@@ -17,12 +17,12 @@ XIAO, IMU, cable                                             6
 BuckBlocks, Pololu 5 V                                      13
 Protoboard, passives, wiring                                20
 Screws + heat-set inserts                                    9
-O-rings, window gasket                                       6
+O-rings, window gasket                                       5
 Mount boss + 1/4"-20 insert                                 10
 Gland (M8), vent, button, desiccant                          9
 2x cornering light (LED, optic, plate, window)               0
 2x cornering driver (700 mA buck)                            0
 TF02-Pro lidar                                              50
 Lidar gasket + screws                                        2
-Total                                                      410
-C-MASS-01 v4-2x2axis+lidar: 410 g vs 400 g limit: FAIL
+Total                                                      399
+C-MASS-01 v4-2x2axis+lidar: 399 g vs 400 g limit: PASS

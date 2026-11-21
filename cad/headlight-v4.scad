@@ -14,7 +14,10 @@
 /* [View] */
 view = "assembly";   // assembly | cutaway | exploded | front | under | wheel | stl_shell
 tilt = 0;            // mirror pitch from nominal, degrees (-7.5 .. 7.5)
-yaw = 0;             // mirror yaw, degrees (-7.5 .. 7.5); beam swings by twice this
+yaw = 0;             // mirror yaw, degrees (-7.5 .. 7.5); beam swings by twice this; positive = outward
+yaw_l = yaw;         // left module (rider's left, x < 0); in a left turn only this one swings (owner, 2026-11-21)
+yaw_r = yaw;         // right module (x > 0)
+function side_yaw(sx) = sx < 0 ? yaw_l : yaw_r;
 show_beams = true;
 
 /* [Optics] */
@@ -26,7 +29,7 @@ fil_fwtm = 16.5;  spot_fwtm = 6;   // tenth-intensity half-angles (window sized 
 fil_fwhm = 11;    spot_fwhm = 5;   // half-intensity half-angles (window sized for these at full yaw)
 
 /* [Clear wraparound sides] (study, 2026-11-21) */
-wrap_sides = false;                // true: on each side, one thermoformed clear piece runs across the front, round the corner
+wrap_sides = true;                 // true: on each side, one thermoformed clear piece runs across the front, round the corner
                                    // and back along the side, with no pillar; the outward beam leaves through the side
 wrap_side_min = 30;                // the clear side reaches at least this far back from the front face
 yaw_out_max = 12.5;                // with wrap_sides: outward mirror yaw (beam ±25° outward); inward stays yaw_max
@@ -39,11 +42,11 @@ frame_t = 4;                       // gimbal frame around each mirror
 mir_clear = 3;
 
 /* [Housing] */
-wall = 1.6;  front_clear = 3;  elec_depth = 20;  win_t = 1.5;  bezel_lip = 4;
-r_edge = 6;  taper = 14;  roof_drop = 20;  r_tail = 14;
+wall = 1.6;  front_clear = 4;  elec_depth = 20;  win_t = 1.5;  bezel_lip = 4;
+r_edge = 6;  taper = 8;  roof_drop = 20;  r_tail = 10;   // taper 8 and tail 10 keep the heatsinks on the flat floor of the wrap body (flat front used 14 / 14)
 
 /* [Heatsink] */
-hs_base = 2.5;  hs_fin_h = 14;  hs_fin_t = 1.2;  hs_pitch = 10;  hs_margin = 6;
+hs_base = 2.5;  hs_fin_h = 14;  hs_fin_t = 1.2;  hs_pitch = 10;  hs_margin = 3;  // 6 for the old flat front
 
 /* [Bought parts] */
 servo = [12, 23, 24];              // envelope: W(y) x L(z) x H(x); 5 g servos are smaller
@@ -182,7 +185,7 @@ module module_optics(sx) {
 }
 
 // Gimbal: an outer frame pitches about x on bearings; the mirror yaws inside it about its own width axis.
-module mirror_module(sx, a = tilt, b = yaw) translate([sx*x_c, 0, mir_z]) rotate([-(135 + a),0,0]) {
+module mirror_module(sx, a = tilt, b = undef) let(b = is_undef(b) ? side_yaw(sx) : b) translate([sx*x_c, 0, mir_z]) rotate([-(135 + a),0,0]) {
     color(c_asa_in) difference() {                                              // outer frame (pitch)
         translate([-mir_L/2 - frame_t, -mir_W/2 - 1, -1]) cube([mir_L + 2*frame_t, mir_W + 2, 2]);
         translate([-mir_L/2 - 0.5, -mir_W/2 + 3, -2]) cube([mir_L + 1, mir_W - 6, 4]);
@@ -209,9 +212,12 @@ module electronics() {
     color([0.2,0.25,0.3]) for (x = [-board_w/2 + 4, board_w/2 - 36]) translate([x, in_back + 2.1, 20]) cube([32, 10, 22]);  // BuckBlocks
 }
 
+// Front corners: an arc of r_edge spheres so the plan-view corner radius is r_front while the front face stays at
+// in_front + wall. (Before 2026-11-21 the corner spheres sat r_front back with radius r_edge, which pulled the whole front
+// face back by r_front - r_edge whenever r_front > r_edge, i.e. with the wrap.)
 function body_pts(inset) = [
-    for (sx = [-1,1], z = [-wall + r_edge, top_z - r_edge]) [[sx*(out_L/2 - r_front), in_front + wall - r_front, z], r_edge - inset],
-    for (sx = [-1,1], z = [-wall + r_edge, top_z - r_edge]) [[sx*(out_L/2 - r_edge), in_front + wall - r_front, z], r_edge - inset],
+    for (sx = [-1,1], z = [-wall + r_edge, top_z - r_edge], a = [0:15:90])
+        [[sx*(out_L/2 - r_front + (r_front - r_edge)*sin(a)), in_front + wall - r_front + (r_front - r_edge)*cos(a), z], r_edge - inset],
     for (sx = [-1,1], z = [-wall + r_tail, top_rear - r_tail]) [[sx*(out_L/2 - taper - r_tail), in_back - wall + r_tail, z], r_tail - inset]];
 module body_outer() blob(body_pts(0));
 module body_inner() blob(body_pts(wall));
@@ -256,7 +262,7 @@ module beams() for (sx = [-1,1]) for (o = [[spot_rx, spot_d, spot_h, spot_fwtm, 
     x = sx*(x_c + o[0]);
     color(o[4]) {
         translate([x, 0, star_t + o[2]]) cylinder(d=o[1], h=mir_z - star_t - o[2], $fn=32);
-        translate([x, 0, mir_z]) rotate([0, 0, -2*yaw]) rotate([-90 + 2*tilt, 0, 0])
+        translate([x, 0, mir_z]) rotate([0, 0, -sx*2*side_yaw(sx)]) rotate([-90 + 2*tilt, 0, 0])
             cylinder(d1=o[1], d2=o[1] + 2*60*tan(o[3]), h=win_d + 60, $fn=32);
     }
 }
