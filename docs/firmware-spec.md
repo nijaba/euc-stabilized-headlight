@@ -25,7 +25,12 @@ pitch += gyro_pitch_rate * dt;                       // rate about the learned p
 bool steady = fabsf(norm(acc)/G - 1) < 0.03f && fabsf(gyro_pitch_rate) < 5.0f;
 if (steady) pitch += 0.02f * (acc_pitch - pitch);    // slow absolute correction
 
-road_imu += (pitch - road_imu) * dt / TAU_ROAD;      // hill following, TAU ≈ 4 s
+// hill following: remove the pitch the acceleration explains, then follow fast
+float a_long = G * (sinf(acc_pitch) - sinf(pitch));  // longitudinal acceleration
+float raw    = pitch + K_TILT * atan2f(a_long, G);   // ≈ road grade; K_TILT ≈ 1, learned
+bool  jolt   = fabsf(a_long) > 1.0f || fabsf(norm(acc)/G - 1) > 0.2f;
+hold = jolt ? 0.3f : fmaxf(0, hold - dt);            // 0.3 s hold-off after hard acceleration or a bump
+if (hold == 0) road_imu += (raw - road_imu) * dt / TAU_ROAD;   // TAU_ROAD = 0.3 s
 road      = lidar_ok ? blend(road_imu, lidar_grade) : road_imu;
 
 float err    = pitch - (follow_road ? road : level_offset);
@@ -37,29 +42,19 @@ servo_write_deg(trim + mirror * LINKAGE_RATIO);                // ≈ 4:1
 - **Road reference:** `follow_road` (on by default) aims the beam at the road. When off, the beam holds pure gravity level.
 - **Response time (owner requirement, 2026-11-21).** The wheel pitches up to **±10°** when accelerating or braking, and the beam must adapt in **under 1 s**.
   - **Pitch from accelerating or braking:** the mirror cancels it directly. A 10° change needs 5° of mirror, and the servo moves that in under 50 ms (design §2, B-MIR-01), so the beam is corrected within about 0.1 s.
-  - **A change of road grade:** the hill follower must settle within 1 s. The current line above can't: with τ = 4 s it takes about 12 s.
-- **Hill follower: proposed change (2026-11-21, owner to decide).** The v4 ride demo, which runs this loop with ±10° of pitch, shows three faults in the line above:
+  - **A change of road grade:** the hill follower settles to 95% in 0.9 s (τ = 0.3 s). The earlier follower, with τ = 4 s, took about 12 s.
+- **Hill follower (adopted 2026-11-21, owner decision; replaces `road_imu += (pitch − road_imu)·dt / 4 s`).** The v4 ride demo, run with ±10° of pitch, showed three faults in the old follower:
   - **Acceleration reads as a hill.** After 3 s of acceleration at 10° of pitch, the cutoff creeps from 38 m to about 7 m; after braking it overshoots to about 79 m.
   - **Even a gentle speed-up of 0.15 m/s² does it.** That tilts the wheel only 0.9°, but the follower soon treats it as a downhill and the cutoff falls to about 18–24 m.
   - **Slow over a crest.** Going from +8% to −8%, the estimate keeps the climb, so the cutoff points above the falling road for about 4 s after the top (IMU only).
 
-  Proposed fix: before following, remove the pitch that the measured acceleration explains, then follow fast. Freeze only during hard acceleration or a jolt.
-
-  ```c
-  // longitudinal acceleration: what the accelerometer sees beyond gravity at the gyro's pitch
-  float a_long = G * (sinf(acc_pitch) - sinf(pitch));
-  float tilt   = K_TILT * atan2f(a_long, G);                 // pitch the acceleration explains; K_TILT ≈ 1
-  float raw    = pitch + tilt;                                // pitch with the acceleration lean removed ≈ road grade
-  bool  jolt   = fabsf(a_long) > 1.0f || fabsf(norm(acc)/G - 1) > 0.2f;
-  hold = jolt ? 0.3f : fmaxf(0, hold - dt);                   // 0.3 s hold-off after hard acceleration or a bump
-  if (hold == 0) road_imu += (raw - road_imu) * dt / TAU_ROAD; // TAU_ROAD = 0.3 s: 95% settled in 0.9 s
-  ```
+  The fix, now in the loop above: before following, remove the pitch that the measured acceleration explains, then follow fast. Freeze only during hard acceleration or a jolt.
   - **Why it can be fast:** the old follower had to be slow because the only signal it had was pitch, which mixes hills and acceleration. Removing the acceleration's share first leaves mostly the road grade, so a 0.3 s time constant is safe. A grade change settles within 0.9 s, inside the 1 s requirement.
   - **`K_TILT`:** how much the wheel pitches per unit of `atan(a/g)`. 1.0 means the wheel pitches by the balance angle, so 10° at about 1.7 m/s². The default is 1.0. It is learned from steady accelerations on flat ground, or set from the calibration page (§11).
   - **Why freeze at all:** above 1 m/s² (about 6° of tilt), an error in `K_TILT` would matter. A bump's jolt corrupts both the pitch and `a_long` for a moment. Holding 0.3 s covers both.
   - **Simulated result** (perfect IMU, servo 150°/s at the mirror, same ride with ±10° of pitch):
 
-    | Part of the ride | Current spec | Proposed |
+    | Part of the ride | Old follower | Adopted |
     |---|---|---|
     | Accelerating, 10° nose-down | cutoff 38 → 7 m | 38 m |
     | Braking, 10° nose-up | up to 79 m | ≤ 38 m |
@@ -70,14 +65,7 @@ servo_write_deg(trim + mirror * LINKAGE_RATIO);                // ≈ 4:1
 
   - **If the wheel pitches 20% more or less than `K_TILT` assumes:** the cutoff stays between 31 and 50 m through hard acceleration and braking.
   - **Not fixable by the IMU:** before a crest, a beam parallel to the climbing road passes over the top; at the bottom of a hill, the rising road ahead catches the beam short (about 11 m). Only the lidar, which sees the road ahead, removes these.
-  - **Tests if adopted:**
-    - U-ROAD-01: changes to "a grade step settles to 95% within 1 s".
-    - U-ROAD-03: a 10° acceleration lean with `K_TILT` correct moves `road_imu` by under 0.3°.
-    - U-ROAD-04: a 0.15 m/s² acceleration for 8 s moves `road_imu` by under 0.3°.
-    - U-ROAD-05: `a_long` over 1 m/s² or a 0.2 g jolt freezes the follower, which resumes 0.3 s later.
-    - B-MIR-01: stays at under 50 ms for the mirror (unchanged).
-    - R-ROAD-01: on a real crest, the cutoff doesn't stay above the road for more than 1.5 s after the top.
-    - R-ROAD-02: `K_TILT` learned on flat ground is within 20% of a hand measurement, and with it the cutoff stays between 30 and 50 m through a hard acceleration and a hard stop.
+  - **Tests:** U-ROAD-01 and U-ROAD-03 to 06, B-MIR-01, R-AIM-02 and R-ROAD-01 to 02 in the test plan. The thresholds (1 m/s², 0.2 g, 0.3 s) and `K_TILT` are starting values to tune with bench and ride logs.
 - **Servo output:** 50–333 Hz PWM from the ESP32's LEDC peripheral, clamped to the mechanical limits.
 
 ## 3. Calibration (saved in NVS)

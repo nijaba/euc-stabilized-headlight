@@ -40,8 +40,12 @@ Status is "–" until a test exists or has been run.
 
 | ID | What it checks | Spec | Status |
 |---|---|---|---|
-| U-ROAD-01 | On a sustained hill, the road reference settles with a time constant of about 4 s | FW §2 | – |
+| U-ROAD-01 | A step in road grade at steady speed settles to 95% within 1 s (τ = 0.3 s) | FW §2 | – |
 | U-ROAD-02 | With `follow_road` off, the beam holds gravity level | FW §2 | – |
+| U-ROAD-03 | A 10° acceleration lean (1.7 m/s², `K_TILT` correct) moves `road_imu` by under 0.3° | FW §2 | – |
+| U-ROAD-04 | A gentle 0.15 m/s² acceleration for 8 s moves `road_imu` by under 0.3° | FW §2 | – |
+| U-ROAD-05 | `a_long` over 1 m/s² or a 0.2 g jolt freezes the follower; it resumes 0.3 s after | FW §2 | – |
+| U-ROAD-06 | `a_long` from `G·(sin acc_pitch − sin pitch)` matches a known acceleration on a tilted IMU | FW §2 | – |
 
 ### Mirror command
 
@@ -243,7 +247,9 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | ID | What it checks | Pass if | Status |
 |---|---|---|---|
 | R-AIM-01 | Beam position under hard braking and acceleration (camera on the wheel, logs) | Hotspot stays on the road; never rises into oncoming traffic | – |
-| R-AIM-02 | Long hills, up and down | Beam follows the road within about 4 s | – |
+| R-AIM-02 | Long hills, up and down | Beam follows the road within 1 s of a grade change | – |
+| R-ROAD-01 | Riding over a crest (IMU only) | Cutoff above the road for no more than 1.5 s after the top | – |
+| R-ROAD-02 | `K_TILT` learned on flat ground; then hard acceleration and a hard stop | Learned value within 20% of a hand measurement; cutoff stays between 30 and 50 m throughout | – |
 | R-OFF-01 | Trolley mode and picking the wheel up | Beam goes off and comes back on | – |
 | R-OFF-02 | Parking for 2 and 10 min | Dims, then sleeps; wakes when moved | – |
 | R-THM-01 | Hour-long ride at night | Heatsink and internal temperatures stay below derating thresholds in normal mode | – |
