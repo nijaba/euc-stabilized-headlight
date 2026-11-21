@@ -8,7 +8,7 @@ An EUC pitches nose-down when it accelerates and nose-up when it brakes, by up t
 
 ![Packaging model of layout v4, three-quarter view, with the clear wraparound sides](cad/renders/v4-wrap-three-quarter.png)
 
-**[v4 ride demo](docs/v4-ride-demo.html)** (download it and open it in a browser; GitHub shows only the source): an animated simulation of the firmware's levelling and turn steering. It runs through accelerating, braking, a hill crest and two turns, compared with a fixed light.
+**[v4 ride demo](https://nijaba.github.io/euc-stabilized-headlight/v4-ride-demo.html)** ([source](docs/v4-ride-demo.html)): an animated simulation of the firmware's levelling and turn steering. It runs through accelerating, braking, a hill crest and two turns, compared with a fixed light.
 
 ## Goals
 
@@ -73,7 +73,7 @@ The low-beam figures were estimated with v3's 4° toe-out; v4 aims both low beam
 |---|---|
 | [`docs/design.md`](docs/design.md) | Full hardware design: optics, mirror mechanism, power, housing, thermal, mounting, electronics, lidar |
 | [`docs/firmware-spec.md`](docs/firmware-spec.md) | Firmware behaviour: control loop, calibration, auto-off, thermal derating, BLE remote, lidar fusion, calibration page |
-| [`docs/v4-ride-demo.html`](docs/v4-ride-demo.html) | Animated simulation of the v4 levelling and turn steering; open in a browser |
+| [`docs/v4-ride-demo.html`](docs/v4-ride-demo.html) | Animated simulation of the v4 levelling and turn steering; [open it live](https://nijaba.github.io/euc-stabilized-headlight/v4-ride-demo.html) (GitHub Pages, from `docs/`) |
 | [`docs/options-study.md`](docs/options-study.md) | Comparison of beam-shaping and steering alternatives (convex mirror, crossing beams, two 2-axis mirrors, masking, LCD) |
 | [`docs/build-plan.md`](docs/build-plan.md) | Phases in order, from bench firmware to ride tests, with checkboxes |
 | [`docs/test-plan.md`](docs/test-plan.md) | Every test by ID: automated firmware, bench, enclosure and ride tests |

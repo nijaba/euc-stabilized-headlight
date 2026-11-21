@@ -5,6 +5,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ## [Unreleased]
 
 ### Added
+- GitHub Pages serves `docs/`, so the README's demo link opens the live page (`docs/.nojekyll` serves the files as they are).
 - Ride demo: low-beam and high-beam modes (the high beam adds the two spots), and the lidar fitted by default.
 - v4 ride demo page (`docs/v4-ride-demo.html`), linked from the README: a standalone simulation of the levelling loop and turn steering.
 - v4 turning behaviour decided: only the turn-side beam swings into the curve, the other stays straight (design §5).
