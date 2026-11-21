@@ -35,6 +35,33 @@ servo_write_deg(trim + mirror * LINKAGE_RATIO);                // ≈ 4:1
 
 - **Why the gate:** the accelerometer can't tell braking from tilting. 0.5 g of braking reads as about 27° of false tilt.
 - **Road reference:** `follow_road` (on by default) aims the beam at the road. When off, the beam holds pure gravity level.
+- **Hill follower: proposed change (2026-11-21, owner to decide).** The v4 ride demo, which runs this loop, shows two faults in the line above:
+  - **Acceleration reads as a hill.** The follower can't tell the nose-down lean of a sustained acceleration from a downhill. After 2 s at 1.5 m/s² the cutoff creeps from 38 m to about 16 m; after braking it overshoots to about 46 m.
+  - **Slow over a crest.** Going from +8% to −8%, the estimate keeps the climb for several seconds, so the cutoff points above the falling road for about 5.6 s (IMU only).
+
+  Proposed fix: freeze the follower while the wheel is accelerating, and let it follow a falling road faster than a rising one.
+
+  ```c
+  // longitudinal acceleration: what the accelerometer sees beyond gravity at the gyro's pitch
+  float a_long = G * (sinf(acc_pitch) - sinf(pitch));
+  hold = fabsf(a_long) > 0.3f ? 1.0f : fmaxf(0, hold - dt);     // 1 s hold-off after accelerating
+  if (hold == 0) {
+      float tau = (pitch < road_imu) ? TAU_DOWN : TAU_UP;          // 0.5 s down, 4 s up
+      road_imu += (pitch - road_imu) * dt / tau;
+  }
+  ```
+  - **Why `a_long` and not the existing gate:** 1.5 m/s² changes `norm(acc)` by only 1.2%, inside the 3% gate, and a crest at steady speed has a high pitch rate but no longitudinal acceleration. `a_long` separates the two cases.
+  - **Why asymmetric:** following a drop quickly lowers the beam, the safe direction. Rises stay slow, so a bump or a short ramp can't lift the beam into oncoming eyes.
+  - **Simulated result (perfect IMU, same ride):**
+    - The cutoff stays at 36–38 m through the acceleration, and at ≤ 37 m after braking.
+    - Over the crest, the time above the road drops from 5.6 s to 3.4 s.
+    - What's left is geometric: before the crest, a beam parallel to the climbing road passes over the top. Only the lidar, which sees the drop ahead, removes it.
+  - **Trade-off:** at the bottom of a hill the estimate is fully on the downhill, so for a moment the cutoff lands short (about 9–16 m instead of 13–28 m). Short, not dazzling. A faster rise (`TAU_UP` 2 s or 1.5 s) doesn't shorten this and brings the crest problem back earlier, so 4 s stays.
+  - **Tests if adopted:**
+    - U-ROAD-03: a sustained 1.5 m/s² acceleration moves `road_imu` by under 0.3°.
+    - U-ROAD-04: a step down in grade is followed with a time constant of about 0.5 s; a step up still takes about 4 s.
+    - U-ROAD-05: the follower resumes 1 s after `a_long` falls below 0.3 m/s².
+    - R-ROAD-01: on a real crest, the cutoff doesn't stay above the road for more than 1.5 s after the top.
 - **Servo output:** 50–333 Hz PWM from the ESP32's LEDC peripheral, clamped to the mechanical limits.
 
 ## 3. Calibration (saved in NVS)
