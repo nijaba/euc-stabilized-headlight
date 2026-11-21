@@ -11,6 +11,9 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - Design open questions: power-on flash, BuckBlock zero output, fuse derating in boost, 1N5822 heat, TVS clamp voltage.
 - `CONTRIBUTING.md` and `SECURITY.md` (private reporting for safety faults as well as security issues).
 
+### Changed
+- design.md §4: power breakdown, input current per mode, lidar draw, and a 15 V 3 A bank recommendation.
+
 ### Fixed
 - BOM: one thermistor instead of two, one fewer 10 k resistor, totals updated.
 - Design: the heatsink lid is finned aluminium, not die-cast.
