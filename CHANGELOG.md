@@ -12,6 +12,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - `CONTRIBUTING.md` and `SECURITY.md` (private reporting for safety faults as well as security issues).
 
 ### Changed
+- design.md §3: beam estimate (beam angles, peak intensity, throw) and a note that the flood has no cutoff; §10 open question; test B-OPT-04.
 - design.md §4: power breakdown, input current per mode, lidar draw, and a 15 V 3 A bank recommendation; why wheel USB ports can't power the head, and the wheel 12 V rail and main-battery alternatives.
 
 ### Fixed

@@ -77,6 +77,28 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 
 The out-the-front figures assume about 0.75 total efficiency (TIR × mirror × window).
 
+**Beam estimate** (to be measured in B-OPT-04):
+
+| | Spot (2× XP-L HI, Carclo 10003) | Flood (2× 519A, Carclo 10003-L25) |
+|---|---|---|
+| Beam angle | ~8–12° round | ~44° wide × 13° tall |
+| Peak intensity, normal (1.5 A) | ~25,000 cd (18–40k) | ~3,000 cd |
+| Peak intensity, boost (2.1 A) | ~33,000 cd | ~4,000 cd |
+| ANSI throw (to 0.25 lux), normal | ~320 m (270–400 m) | ~110 m |
+| ANSI throw, boost | ~360 m | ~125 m |
+| Distance to 1 lux, normal | ~160 m | ~55 m |
+| Beam width at 30 m | ~5 m | ~24 m wide × 7 m tall |
+
+How it's estimated:
+- In normal mode, about 600 lm per XP-L HI and 400 lm per 519A, about 0.74 optical efficiency overall.
+- Each beam is treated as a smooth peak with the stated beam angle: about 21 cd per emitted lumen for a 10° spot (15 at 12°, 33 at 8°), and about 3.75 cd/lm for the 44 × 13° flood. Two LEDs aimed the same way add.
+- ANSI throw = 2 × √(peak cd).
+- The biggest uncertainty is the spot's real beam angle with the XP-L HI. Carclo's photometric files would narrow it.
+
+For scale, a car's low beam peaks at roughly 15–20k cd and its high beam at roughly 40–100k cd. The mirror steers both beams ±15°, and the low-beam hotspot is calibrated to land 25–40 m ahead.
+
+**No cutoff yet.** Both optics give a beam with no sharp top edge. With the hotspot 30 m ahead, the top of the flood still reaches about 5° above horizontal and dazzles oncoming traffic, whatever the levelling does. See §10.
+
 ## 4. Power: external USB-C PD bank
 
 ```
@@ -261,3 +283,4 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - [ ] The 1N5822 dissipates ~1 W at 2 A inside the sealed head. Replace it with a P-MOSFET reverse-polarity stage?
 - [ ] P6KE27A clamps at ~37.5 V, above the BuckBlock's 32 V maximum. Low risk with a 20 V bank, but a lower-clamp TVS would cover it.
 - [x] Cost over the limit: about $290 core + $98 lidar ≈ $388, against a $350 ceiling. Resolved 2026-11-20: the owner raised the limit to $450, so no parts change.
+- [ ] **The flood has no cutoff.** TIR optics give no sharp top edge, so the low beam glares above horizontal, and many countries (ECE, StVZO) require a cutoff for a low beam. Options: a cutoff shield, a masked mirror edge, a cutoff optic, or aiming lower. (2026-11-21)
