@@ -290,6 +290,8 @@ v4 has fewer separate openings but about 80% more seal length, so more places fo
 - **Mass:** about **410 g** with the lidar, ~10 g over the limit. Limiting the swing to ±10° narrows the bar to ~211 mm and brings it to ~395 g, with smaller, warmer heatsinks.
 - **Checks:** C-PKG-01 to 16 pass for v4 (14–16 are v4-only: lidar height, inward beam clearing the lidar bay, gimbal frame clearing the bay).
 - **Trade against v3:** v4 gains steering into turns, a roughly levelled cutoff when leaning (raise the inside half, lower the outside), software-adjustable spread and a brow-free shape. It costs four servos, gimbals, more firmware and calibration, and ~80 mm more width.
+- **Turning behaviour (owner decision, 2026-11-21):** in a turn, only the beam on the turn side swings into the curve, up to 25° outward through the clear wraparound side. The other beam stays straight ahead, so the road being left and anything coming the other way stay lit. Both mirrors still tilt to undo the lean. The yaw target is to be specified in the firmware spec if v4 is adopted (the ride demo uses "aim at the road 20 m ahead along the curve").
+  - **Consequence:** no beam ever swings inward. The inward travel (beam 15° inward, which sets C-PKG-15 and part of the body width) could be removed, making the body narrower and simplifying the gimbal. To check in the CAD model if v4 is adopted.
 
 ## 6. Mounting
 
