@@ -54,6 +54,7 @@ Goal: the mirror size and window height are proven before CAD fixes them.
 
 - [ ] FILIPPA focus height and cutoff with XP-L HI (B-OPT-05, B-OPT-06, B-OPT-07)
 - [ ] Toe-out wedges and cornering lights: width, cutoff tilt, glare, heat (B-OPT-08, B-CRN-01, B-CRN-02)
+- [ ] Convex low-beam mirror against the wedges (B-OPT-09, options study)
 - [ ] Beam clipping across ±7.5° of mirror (B-OPT-02)
 - [ ] Mirror balance and ringing under vibration (B-MIR-04)
 - [ ] Light output, beam intensity and angles, heatsink temperature rise (B-OPT-03, B-OPT-04, B-THM-01, B-THM-02)

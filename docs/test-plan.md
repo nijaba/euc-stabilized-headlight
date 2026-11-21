@@ -173,6 +173,7 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | B-OPT-06 | Cutoff orientation with the orienting rib toward the front of the housing (LEDs facing up), through the mirror | Cutoff is at the top of the beam and horizontal within ±0.5° | – |
 | B-OPT-07 | Glare above the cutoff, lux on a wall at 10 m, aimed per calibration step D | ≤ 2 lux above 3.4° over the brightest point; ≥ 10 lux at the brightest point | – |
 | B-OPT-08 | Toed-out low beam (4° wedges): beam width, and cutoff tilt at both ends of the mirror's travel | Width ~30° FWHM; cutoff tilt ≤ 2° | – |
+| B-OPT-09 | Convex low-beam mirror (R ≈ 315 mm, reflective aluminium sheet on a printed former) against the 4° toe-out wedges, same lux grid as B-OPT-04 | Record width, peak and cutoff bow; adopt if as wide and as sharp | – |
 | B-CRN-01 | Cornering lights aimed 30° out, 10° down: lux on a wall at 10 m above horizontal | ≤ 2 lux above horizontal; ~10 lux at the peak | – |
 | B-CRN-02 | Cornering spreader plate temperature after 20 s at full power, then at 50% | Plate stays below 70 °C | – |
 

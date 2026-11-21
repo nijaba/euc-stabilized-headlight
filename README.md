@@ -64,6 +64,7 @@ Side view of the head (layout v2):
 |---|---|
 | [`docs/design.md`](docs/design.md) | Full hardware design: optics, mirror mechanism, power, housing, thermal, mounting, electronics, lidar |
 | [`docs/firmware-spec.md`](docs/firmware-spec.md) | Firmware behaviour: control loop, calibration, auto-off, thermal derating, BLE remote, lidar fusion |
+| [`docs/options-study.md`](docs/options-study.md) | Comparison of beam-shaping and steering alternatives (convex mirror, crossing beams, two 2-axis mirrors, masking, LCD) |
 | [`docs/build-plan.md`](docs/build-plan.md) | Phases in order, from bench firmware to ride tests, with checkboxes |
 | [`docs/test-plan.md`](docs/test-plan.md) | Every test by ID: automated firmware, bench, enclosure and ride tests |
 | [`hardware/BOM.md`](hardware/BOM.md) / [`BOM.csv`](hardware/BOM.csv) | Bill of materials with supplier links and cost summary |
