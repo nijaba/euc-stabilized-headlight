@@ -1,23 +1,28 @@
-Part                                   2F+2S+lidar     2F+1S+lidar           2F+2S           2F+1S     1F+1S+lidar
-Heatsink (aluminium, bottom)                    79              72              79              72              49
-Body shell (ASA)                               105              98             105              98              78
-Bezel, bosses, ribs (ASA)                       12              12              12              12              12
-Window (polycarbonate)                          24              22              24              22              16
-Mirror (front-surface glass)                    17              14              17              14               9
-Mirror cradle, shaft, bearings                  13              13              13              13              11
-Optic plate (ASA)                                6               6               6               6               6
-LEDs on 20 mm copper stars                      18              13              18              13               9
-FILIPPA-STVZO optics                            13              13              13              13               6
-Carclo 10003 + 10734 holders                     7               4               7               4               4
-Servo ES08MD II + linkage                       14              14              14              14              14
-XIAO, IMU, cable                                 6               6               6               6               6
-BuckBlocks, Pololu 5 V                          13              13              13              13              13
-Protoboard, passives, wiring                    20              20              20              20              20
-Screws + heat-set inserts                       14              14              14              14              14
-O-rings, window gasket                           5               5               5               5               4
-Mount boss + 1/4"-20 insert                     10              10              10              10              10
-Gland, vent, button, desiccant                  11              11              11              11              11
-TF02-Pro lidar                                  50              50               0               0              50
-Lidar pocket (ASA) + gasket                     27              27               0               0              27
-Total                                          463             435             386             358             368
-C-MASS-01 2F+2S+lidar: 463 g vs 350 g limit: FAIL
+Part                                   2F+2S+lidar           2F+2S           2F+1S     2F+1S+lidar
+Heatsink (aluminium, bottom)                    79              79              77              77
+Body shell (ASA)                               105             105             102             102
+Bezel, bosses, ribs (ASA)                       12              12              12              12
+Window (polycarbonate)                          24              24              23              23
+Mirror (front-surface glass)                    17              17              14              14
+Mirror cradle, shaft, bearings                  13              13              13              13
+Optic plate (ASA)                                6               6               6               6
+LEDs on 20 mm copper stars                      18              18              13              13
+FILIPPA-STVZO optics                            13              13              13              13
+Carclo 10003 + 10734 holders                     7               7               4               4
+Servo ES08MD II + linkage                       14              14              14              14
+XIAO, IMU, cable                                 6               6               6               6
+BuckBlocks, Pololu 5 V                          13              13              13              13
+Protoboard, passives, wiring                    20              20              20              20
+Screws + heat-set inserts                       14              14              14              14
+O-rings, window gasket                           5               5               5               5
+Mount boss + 1/4"-20 insert                     10              10              10              10
+Gland, vent, button, desiccant                  11              11              11              11
+FILIPPA toe-out wedges (aluminium)               4               4               4               4
+Top brow (ASA)                                  46              31              30              44
+2x cornering light (LED, optic, plate, window)              25              25              25              25
+2x cornering driver (700 mA buck)                4               4               4               4
+TF02-Pro lidar                                  50               0               0              50
+Lidar gasket + screws                            2               0               0               2
+Total                                          517             451             433             498
+C-MASS-01 2F+2S+lidar: 517 g vs 350 g limit: FAIL
+Variant one-fil-one-spot does not fit: C-PKG-09 cornering lights collide with the lidar

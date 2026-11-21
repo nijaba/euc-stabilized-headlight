@@ -28,6 +28,7 @@ An EUC pitches nose-down when it accelerates and nose-up when it brakes. A fixed
    │ fuse · reverse-polarity diode · TVS                          │
    │   ├─► BuckBlock #1 ─► 2× XP-L HI   (spot, Carclo 10003)      │
    │   ├─► BuckBlock #2 ─► 2× XP-L HI   (low, FILIPPA cutoff)     │
+   │   ├─► 2× 700 mA ─► cornering lights (IMU-switched, 30° out)  │
    │   └─► 5 V buck ─► servo ─► mirror (4:1 lever)                │
    │                 └─► XIAO ESP32-S3 ◄─I²C─► LSM6DSO32 IMU      │
    │                          ▲   └─I²C─► TF02-Pro lidar (opt.)   │
@@ -50,12 +51,12 @@ Side view of the head (layout v2):
 |---|---|---|
 | Emitted lumens | ~2400 lm | ~3100 lm |
 | Out-the-front lumens (after optics, mirror, window) | ~1800 lm | ~2400 lm |
-| Low beam (cutoff) at 10 m | ~73 lux | ~95 lux |
+| Low beam (cutoff, 4° toe-out) at 10 m | ~62 lux | ~81 lux |
 | Input power | ~21 W | ~30 W |
 | Runtime on a 20 Ah bank (~50 Wh usable at 15 V) | ~2.4 h | ~1.7 h |
-| Head weight (limit: 350 g with lidar) | ~386 g, ~463 g with lidar on the head (packaging study v2): over the limit, see design §10 | |
+| Head weight (limit: 350 g with lidar) | ~451 g, ~517 g with lidar on the head (packaging study v2, with cornering lights): over the limit, see design §10 | |
 | Head size | ~143 × 71 × 107 mm, rounded (+ ~44 mm lidar pocket on top) | |
-| Material cost per unit (limit: $450 with lidar) | ~$297 + power bank (+ ~$98 lidar) | |
+| Material cost per unit (limit: $450 with lidar) | ~$330 + power bank (+ ~$98 lidar) | |
 
 ## Repository layout
 

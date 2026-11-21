@@ -28,6 +28,12 @@ spot_d = 20;    spot_h = 14;       // Carclo 10003 in 10734 holder
 star_d = 20;    star_t = 1.6;      // 20 mm copper DTP board
 opt_gap = 2;
 fil_fwtm = 16.5;  spot_fwtm = 6;   // half-angles used for clearance
+toe = 4;                           // FILIPPA toe-out each side, on aluminium wedges (design §3)
+
+/* [Cornering lights] (design §3) */
+crn_yaw = 30;  crn_pitch = -10;    // aim: outward and down
+crn_d = 20;    crn_h = 14;         // XP-L HI + Carclo 10003-L25 in 10734 holder
+brow_d = 34;                       // depth of the top brow that holds them (and the lidar)
 
 /* [Mirror] (design §2) */
 mir_t = 1.1;                       // 1.1 mm front-surface glass
@@ -78,7 +84,10 @@ in_back  = -(mir_hy + elec_depth);
 win_d    = in_front;
 
 // Inner length: the mirror and its bearing bosses, or the beam's spread at the window, whichever is wider.
-function reach(o, x) = abs(x) + o[1]/2 + win_d*tan(o[0] == 1 ? fil_fwtm : spot_fwtm);
+// A toed-out FILIPPA also drifts sideways on its way up to the mirror.
+function reach(o, x) = o[0] == 1
+    ? abs(x) + o[1]/2 + win_d*tan(fil_fwtm + toe) + (mir_z - star_t - fil_h)*tan(toe)
+    : abs(x) + o[1]/2 + win_d*tan(spot_fwtm);
 beam_reach = max([for (i = [0:n_opt-1]) reach(optics_list[i], x_at(i))]);
 win_w    = 2*beam_reach + 2;
 in_L_min = max(mir_L + 2*(cradle_t + 3), win_w);
@@ -117,16 +126,24 @@ function rbox_area(L, D, H, r) = 2*((L-2*r)*(D-2*r) + (L-2*r)*(H-2*r) + (D-2*r)*
                                + 2*3.14159*r*((L-2*r) + (D-2*r) + (H-2*r))   // 12 quarter-cylinder edges
                                + 4*3.14159*r*r;                              // 8 sphere-eighth corners
 
-lidar_pod_area = lidar_on_head ? 2*(lidar[0]*lidar[2] + lidar[0]*lidar[1]) + 2*lidar[2]*lidar[1] : 0;
+// Top brow across the front: cornering lights at its ends, the lidar (if fitted) in the middle.
+brow_h  = lidar_on_head ? lidar[1] + 2*wall : crn_d + 6;
+brow_y0 = in_front + wall - brow_d;
+crn_x   = out_L/2 - 16;
+crn_z   = top_z + brow_h/2 - 2;
+crn_extent = (crn_d/2)*cos(crn_yaw) + crn_h*sin(crn_yaw);
+assert(crn_x - crn_extent >= (lidar_on_head ? lidar[0]/2 + wall : 0), "C-PKG-09 cornering lights collide with the lidar");
+assert(crn_x + crn_extent <= out_L/2 + 2, "C-PKG-10 cornering lights stick out past the end of the body");
+brow_area = rbox_area(out_L, brow_d, brow_h + r_edge, 6) - out_L*brow_d;
 echo(str("PKG config=", n_fil, "F+", n_spot, "S", lidar_on_head ? "+lidar" : "",
          " body_outer_mm=", out_L, "x", out_D, "x", out_H,
-         " head_height_mm=", out_H + hs_base + hs_fin_h + (lidar_on_head ? lidar[1] + wall : 0),
+         " head_height_mm=", out_H + hs_base + hs_fin_h + brow_h,
          " window_mm=", in_L, "x", 2*win_half, " mirror_mm=", mir_L, "x", mir_W,
          " heatsink_mm=", hs_L, "x", hs_D, " fins=", hs_fins, " fore-aft"));
 echo(str("MASS n_fil=", n_fil, " n_spot=", n_spot, " lidar=", lidar_on_head ? 1 : 0,
          " wall_mm=", wall,
          " shell_area_mm2=", rbox_area(out_L, out_D, out_H, r_edge) - hs_L*hs_D,
-         " lidar_pod_area_mm2=", lidar_pod_area,
+         " brow_area_mm2=", brow_area,
          " window_mm3=", (in_L + 2*bezel_lip)*(2*win_half + 2*bezel_lip)*win_t,
          " hs_mm3=", hs_L*hs_D*hs_base + hs_fins*hs_fin_t*hs_D*hs_fin_h,
          " mirror_mm3=", mir_L*mir_W*mir_t, " shaft_mm=", in_L,
@@ -172,10 +189,17 @@ module filippa(x) color(c_pmma) translate([x,0,star_t]) {
 
 module spot_optic(x) color(c_pmma) translate([x,0,star_t]) cylinder(d1=spot_d, d2=spot_d*0.75, h=spot_h, $fn=50);
 
+// FILIPPA optics lean outward by `toe` about the fore-aft axis; after the mirror that's a sideways swing.
+module toed(x) translate([x,0,0]) rotate([0, -sign(x)*toe, 0]) translate([-x,0,0]) children();
+module wedge(x) color(c_alu) translate([x,0,0]) hull() {
+    rotate([0, -sign(x)*toe, 0]) translate([-star_d/2, -star_d/2, -0.6]) cube([star_d, star_d, 0.6]);
+    translate([-star_d/2, -star_d/2, -0.1]) cube([star_d, star_d, 0.1]);
+}
 module optics() {
     for (i = [0:n_opt-1]) {
-        led_star(x_at(i));
-        if (optics_list[i][0] == 1) filippa(x_at(i)); else spot_optic(x_at(i));
+        x = x_at(i);
+        if (optics_list[i][0] == 1) { wedge(x); toed(x) translate([0,0,1.5]) { led_star(x); filippa(x); } }
+        else { led_star(x); spot_optic(x); }
     }
     color(c_asa_in) translate([-in_L/2, -fil_d/2-3, star_t + 2]) difference() {   // optic plate
         cube([in_L, fil_d+6, 2]);
@@ -242,19 +266,34 @@ module window() color([0.85,0.95,1,0.25])
     translate([0, in_front + wall/2, win_zc]) hull() for (x = [-win_w/2-bezel_lip+7, win_w/2+bezel_lip-7], z = [-win_half-bezel_lip+7, win_half+bezel_lip-7])
         translate([x, 0, z]) rotate([90,0,0]) cylinder(r=6.5, h=win_t, center=true, $fn=24);
 
-// Lidar in a pocket on top of the body, lenses forward, flush with the front.
-module lidar_pod() {
-    color(c_asa) translate([-lidar[0]/2 - wall, in_front + wall - lidar[2] - 2*wall, top_z - 8])
-        rbox([lidar[0] + 2*wall, lidar[2] + 2*wall, lidar[1] + wall + 8], 6);
-    color([0.3,0.3,0.35]) for (s=[-1,1]) translate([s*15, in_front + wall + 0.1, top_z + lidar[1]/2]) rotate([-90,0,0]) cylinder(d=18, h=0.5, $fn=32);
+// Rounded brow across the top front: lidar in the middle (if fitted), a cornering light at each end.
+module crn_aim(sx) translate([sx*crn_x, in_front + wall - 16, crn_z]) rotate([0,0,sx*-crn_yaw]) rotate([crn_pitch,0,0]) children();
+module cornering(sx) crn_aim(sx) {
+    color(c_alu) translate([-12, -10, -12]) cube([24, 2, 24]);                       // spreader plate
+    color(c_pcb) translate([0,-8,0]) rotate([-90,0,0]) cylinder(d=star_d, h=star_t, $fn=40);
+    color(c_pmma) translate([0,-6.4,0]) rotate([-90,0,0]) cylinder(d1=crn_d, d2=crn_d*0.8, h=crn_h, $fn=40);
+}
+module brow() {
+    color(c_asa) difference() {
+        translate([-out_L/2, brow_y0, top_z - r_edge]) rbox([out_L, brow_d, brow_h + r_edge], 6);
+        for (sx = [-1,1]) crn_aim(sx) translate([0, 4, 0]) rotate([-90,0,0]) cylinder(d=crn_d + 4, h=30, $fn=40);
+        if (lidar_on_head) translate([-lidar[0]/2, in_front + wall - lidar[2] - wall, top_z + wall]) cube([lidar[0], lidar[2] + 2*wall, lidar[1]]);
+    }
+    color([0.85,0.95,1,0.35]) for (sx = [-1,1]) crn_aim(sx) translate([0, 9.5, 0]) rotate([-90,0,0]) cylinder(d=crn_d + 6, h=1.5, $fn=40);
+    if (lidar_on_head) {
+        color([0.1,0.1,0.12]) translate([-lidar[0]/2, in_front + wall - lidar[2] - wall, top_z + wall]) cube([lidar[0], lidar[2], lidar[1]]);
+        color([0.3,0.3,0.35]) for (s2=[-1,1]) translate([s2*15, in_front + wall - wall + 0.1, top_z + wall + lidar[1]/2]) rotate([-90,0,0]) cylinder(d=18, h=0.5, $fn=32);
+    }
+    for (sx = [-1,1]) cornering(sx);
 }
 
 module beams() {
     for (i = [0:n_opt-1]) {
         o = optics_list[i];  lo = o[0] == 1;
         color(lo ? c_beam_lo : c_beam_hi) {
-            translate([x_at(i), 0, star_t + o[2]]) cylinder(d=o[1], h=mir_z - star_t - o[2], $fn=32);
-            translate([x_at(i), 0, mir_z]) rotate([-90 + 2*tilt, 0, 0])
+            t = lo ? toe : 0;  sx = sign(x_at(i));
+            translate([x_at(i), 0, star_t + o[2]]) rotate([0, -sx*t, 0]) cylinder(d=o[1], h=mir_z - star_t - o[2], $fn=32);
+            translate([x_at(i) - sx*(mir_z - star_t - o[2])*tan(t), 0, mir_z]) rotate([0, 0, sx*t]) rotate([-90 + 2*tilt, 0, 0])
                 cylinder(d1=o[1], d2=o[1] + 2*60*tan(lo ? fil_fwtm : spot_fwtm), h=win_d + 60, $fn=32);
         }
     }
@@ -267,12 +306,12 @@ module head(explode = 0) {
     translate([0,-explode*30,0]) { servo_and_link(); electronics(); }
     translate([0,0,explode*35]) body_shell();
     translate([0,explode*35,0]) window();
-    if (lidar_on_head) translate([0,0,explode*70]) lidar_pod();
+    translate([0,0,explode*70]) brow();
     if (show_beams && explode == 0) beams();
 }
 
 module cutaway() {
-    intersection() { union() { heatsink(); body_shell(); window(); if (lidar_on_head) lidar_pod(); }
+    intersection() { union() { heatsink(); body_shell(); window(); brow(); }
                      translate([0, -200, -300]) cube([400, 400, 600]); }
     optics(); mirror_assy(); bearings(); servo_and_link(); electronics();
     if (show_beams) beams();

@@ -57,6 +57,7 @@ These are the safety invariants from firmware-spec.md §1. Each one has tests in
 - Losing a sensor or the remote falls back to a safe state (lidar → IMU only; IMU → fixed mirror at the calibrated aim, reduced brightness; remote → keep the current mode).
 - All brightness changes are rate-limited.
 - If the MCU dies, the LED drivers run at full current (hardware failsafe).
+- The cornering lights only add light: they never dim or move the main beam, and any fault turns them off.
 
 ## How to work here
 

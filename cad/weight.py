@@ -46,10 +46,14 @@ def budget(g):
         "O-rings, window gasket": g["seal_mm"] * 3.14159 * 1.0**2 * CM3 * 1.2 + 2,
         "Mount boss + 1/4\"-20 insert": 10,
         "Gland, vent, button, desiccant": 4 + 2 + 3 + 2,
+        "FILIPPA toe-out wedges (aluminium)": g["n_fil"] * 2,
+        "Top brow (ASA)": g["brow_area_mm2"] * g["wall_mm"] * CM3 * ASA,
+        "2x cornering light (LED, optic, plate, window)": 2 * (4.5 + 3.5 + 3 + 1.5),
+        "2x cornering driver (700 mA buck)": 2 * 2,
     }
     if g["lidar"]:
         parts["TF02-Pro lidar"] = 50
-        parts["Lidar pocket (ASA) + gasket"] = g["lidar_pod_area_mm2"] * g["wall_mm"] * CM3 * ASA + 2
+        parts["Lidar gasket + screws"] = 2
     return parts
 
 

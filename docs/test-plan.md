@@ -107,6 +107,17 @@ Status is "–" until a test exists or has been run.
 | U-LID-05 | Healthy returns blend as `road_imu + k·(lidar_grade − road_imu)` | FW §8 | – |
 | U-LID-06 | With no lidar fitted, the output is identical to IMU-only | FW §8, CLAUDE.md | – |
 
+### Cornering lights
+
+| ID | What it checks | Spec | Status |
+|---|---|---|---|
+| U-CRN-01 | The lit side is the side the wheel turns toward; lean and yaw rate must agree | FW §10 | – |
+| U-CRN-02 | On above 8° lean or 20°/s yaw rate for 150 ms; off below 5° and 12°/s for 400 ms (hysteresis) | FW §10 | – |
+| U-CRN-03 | Brightness 40% at the threshold rising to 100% at 20°; fade in 0.2 s, out 0.6 s | FW §10 | – |
+| U-CRN-04 | Off when stationary, parked or on a sensor fault | FW §10 | – |
+| U-CRN-05 | After 20 s at full power, a side drops to 50% until it has been off for 20 s | FW §10 | – |
+| U-CRN-06 | Cornering lights never change the main beam's brightness or the mirror command | FW §1.6 | – |
+
 ### Safety invariants
 
 These run long randomised input sequences against the whole control and state logic.
@@ -132,7 +143,9 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | C-PKG-06 | The servo fits the back slot | Servo width ≤ slot depth − 2 mm | Pass (v2), 2026-11-21 |
 | C-PKG-07 | The bottom heatsink fits inside the floor | Heatsink depth ≤ inner depth | Pass (v2), 2026-11-21 |
 | C-PKG-08 | The window and bezel stay on the flat front, clear of the rounded bottom edge | Bezel bottom ≥ edge radius above the floor | Pass (v2), 2026-11-21 |
-| C-MASS-01 | Head mass of the current configuration (2 FILIPPA + 2 spot, lidar on the head), from model geometry and part masses | ≤ 350 g | **Fail: ~463 g** (v2 rounded; ~448 g square-edged, ~556 g in v1), 2026-11-21 |
+| C-PKG-09 | The cornering lights clear the lidar in the top brow | No overlap | Pass (2 FILIPPA + 2 spot); fails with 1 FILIPPA + 1 spot, 2026-11-21 |
+| C-PKG-10 | The cornering lights stay within the end of the body | At most 2 mm past the end | Pass, 2026-11-21 |
+| C-MASS-01 | Head mass of the current configuration (2 FILIPPA + 2 spot, lidar on the head), from model geometry and part masses | ≤ 350 g | **Fail: ~517 g** with cornering lights (v2 rounded; ~463 g before them, ~556 g in v1), 2026-11-21 |
 
 ## Bench tests (`B-`)
 
@@ -156,6 +169,9 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | B-OPT-05 | FILIPPA flange height above the XP-L HI board, set with printed spacers in 0.1 mm steps | Height recorded where the cutoff is sharpest on a wall at 10 m | – |
 | B-OPT-06 | Cutoff orientation with the orienting rib toward the front of the housing (LEDs facing up), through the mirror | Cutoff is at the top of the beam and horizontal within ±0.5° | – |
 | B-OPT-07 | Glare above the cutoff, lux on a wall at 10 m, aimed per calibration step D | ≤ 2 lux above 3.4° over the brightest point; ≥ 10 lux at the brightest point | – |
+| B-OPT-08 | Toed-out low beam (4° wedges): beam width, and cutoff tilt at both ends of the mirror's travel | Width ~30° FWHM; cutoff tilt ≤ 2° | – |
+| B-CRN-01 | Cornering lights aimed 30° out, 10° down: lux on a wall at 10 m above horizontal | ≤ 2 lux above horizontal; ~10 lux at the peak | – |
+| B-CRN-02 | Cornering spreader plate temperature after 20 s at full power, then at 50% | Plate stays below 70 °C | – |
 
 ### LED drivers
 
@@ -208,4 +224,5 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | R-OFF-02 | Parking for 2 and 10 min | Dims, then sleeps; wakes when moved | – |
 | R-THM-01 | Hour-long ride at night | Heatsink and internal temperatures stay below derating thresholds in normal mode | – |
 | R-RUN-01 | Runtime on a 20 Ah bank in normal mode | ≥ 2 h | – |
+| R-CRN-01 | Night ride through left and right turns and roundabouts | Inside of each turn lit; no flicker or false triggers on straights | – |
 | R-LID-01 | Crests, dips, and an obstacle ahead, with the lidar fitted | Beam leads crests and dips; an obstacle never lifts it | – |
