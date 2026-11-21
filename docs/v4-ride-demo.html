@@ -59,6 +59,7 @@ button:focus-visible, .chip:focus-visible, input:focus-visible, select:focus-vis
 #scrub { flex: 1; min-width: 0; accent-color: var(--beam); }
 #clock { font: 500 13px/1 var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; min-width: 6ch; text-align: right; }
 .opts { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: var(--muted); }
+.seg { display: flex; gap: 4px; width: 100%; }
 .opts label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
 select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 4px; padding: 3px 4px; }
 .readouts { display: grid; gap: 7px; font: 13px/1.2 var(--f-mono); font-variant-numeric: tabular-nums; }
@@ -86,9 +87,9 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">EUC stabilized headlight · layout v4 study · simulation</div>
+    <div class="eyebrow">EUC stabilized headlight · layout v4 · simulation</div>
     <h1>v4 Ride Demo</h1>
-    <p class="lede">A 45-second ride through the firmware's control loop: accelerating, braking, a hill with a crest, and two turns. The wheel pitches up to ±10°. Two mirrors, each on pitch and yaw, keep the <b>low-beam cutoff about 38 m ahead</b>, and in a turn the beam on that side swings into the curve while the other stays straight. The dashed red line is a light bolted to the wheel, for comparison.</p>
+    <p class="lede">A 45-second ride through the firmware's control loop: accelerating, braking, a hill with a crest, and two turns. The wheel pitches up to ±10°. Two mirrors, each on pitch and yaw, keep the <b>low-beam cutoff about 38 m ahead</b>, and in a turn the beam on that side swings into the curve while the other stays straight. The dashed red line is a light bolted to the wheel, for comparison. Switch between the <b>low beam</b>, with its cutoff, and the <b>high beam</b>, which adds the two spots.</p>
   </header>
 
   <div class="board">
@@ -128,7 +129,8 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
           <span id="clock">0.0 s</span>
         </div>
         <div class="opts">
-          <label><input type="checkbox" id="optLidar"> Lidar fitted</label>
+          <span class="seg" role="group" aria-label="Beam mode"><button class="chip" id="modeLow" aria-pressed="true">Low beam</button><button class="chip" id="modeHigh" aria-pressed="false">High beam</button></span>
+          <label><input type="checkbox" id="optLidar" checked> Lidar fitted</label>
           <label><input type="checkbox" id="optHill"> Old hill follower (4 s)</label>
           <label><input type="checkbox" id="optFixed" checked> Fixed light</label>
           <label>Speed <select id="optSpeed"><option value="0.5">0.5×</option><option value="1" selected>1×</option></select></label>
@@ -149,6 +151,7 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
         <li>With the lidar fitted, the road estimate blends 70% toward the slope it measures over the next 12 m, and ignores anything steeper than +12% (§8).</li>
         <li><b>Hill follower</b> (firmware-spec §2, adopted 2026-11-21) removes the pitch the measured acceleration explains, then follows the road with a 0.3 s time constant, so a grade change settles in under 1 s. It freezes for 0.3 s after anything harder than 1 m/s². Tick “Old hill follower” to compare with the earlier 4 s version.</li>
         <li>The wheel pitches up to ±10° when accelerating or braking (the balance angle for 1.7 m/s²). The servo moves the mirror at about 150°/s.</li>
+        <li><b>Beam modes</b> (firmware-spec §7: click toggles low and high, hold flashes high). Low beam: the two FILIPPA optics, cutoff 1.2° down. High beam: adds the two spots, about 10° wide, which have no cutoff and reach about 160 m to 1 lux; for use without oncoming traffic. Each spot shares its module's mirror, so it levels and swings with that module's low beam.</li>
         <li>Head 0.8 m above the road, cutoff 1.2° down, so it meets a flat road about 38 m ahead.</li>
         <li>Yaw limit from the CAD model: each beam swings up to 25° outward, through the clear wraparound side. With this rule no beam ever swings inward.</li>
       </ul>
@@ -159,6 +162,7 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
         <li>Yaw: the beam on the turn side swings into the curve and the other stays straight (owner, 2026-11-21). The swinging beam aims at the road 20 m ahead along the curve (yaw ≈ 20 m × yaw rate ÷ 2 × speed), up to 25°, rate-limited to 90°/s. The exact rule isn't in the firmware spec yet.</li>
         <li>Leaning is corrected by tilting each mirror so the middle of its cutoff sits where it would with the wheel upright. A tilt is left within each half.</li>
         <li>The IMU reading is perfect. The real gated filter adds a small lag and noise.</li>
+        <li>The spot's aim (its axis 1.2° above the cutoff, at the road's horizon) is an assumption; the design doesn't fix it yet.</li>
         <li>Servo speed, mirror ringing and the cutoff's compound-angle error are not modelled.</li>
       </ul>
     </section>
@@ -277,6 +281,10 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
   // world elevation of the v4 cutoff: mean of both modules' centre directions
   const beamElev = i => (toWorld(R.byL[i] + 5, 2 * R.mpL[i], R.pitch[i], R.lean[i])[1] + toWorld(R.byR[i] - 5, 2 * R.mpR[i], R.pitch[i], R.lean[i])[1]) / 2;
 
+  // high beam (spots): same mirrors, axis assumed 1.2° above the cutoff, i.e. at the road's horizon; ~±5° half-intensity
+  const SPOT_HALF = 5;
+  const spotElev = i => beamElev(i) - AIM;
+
   // distance along the road where a ray from the head at world elevation `a` meets it
   function throwAt(s0, a) {
     const z0 = zAt(s0) + H_HEAD, t = Math.tan(a * D);
@@ -341,6 +349,12 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
     };
     if (opt.fixed) ray(R.fix[i], col.fixed, true, false);
     ray(beamElev(i), col.beam, false, true);
+    if (opt.high) {
+      const a = spotElev(i) * D, ex = w, ey = hy - Math.tan(a) * (ex - hx) * VEX;
+      ctx.strokeStyle = rgba(col.beam, 0.22); ctx.lineWidth = 10; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(ex, ey); ctx.stroke();
+      ctx.strokeStyle = col.beam; ctx.lineWidth = 1.5; ctx.setLineDash([2, 4]); ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(ex, ey); ctx.stroke(); ctx.setLineDash([]);
+      ctx.font = MONO; ctx.fillStyle = col.beam; ctx.textAlign = "right"; ctx.fillText("high beam axis · ~160 m to 1 lux", w - 8, Math.max(28, ey - 8)); ctx.textAlign = "left";
+    }
     // wheel marker
     ctx.save(); ctx.translate(hx, py(z0)); ctx.rotate(-R.pitch[i] * D * VEX);
     ctx.fillStyle = col.fg; ctx.fillRect(-3, -(H_HEAD * sc * VEX), 6, H_HEAD * sc * VEX - 6);
@@ -395,6 +409,11 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
     ctx.strokeStyle = rgba(col.fg, 0.25); ctx.lineWidth = 1; ctx.setLineDash([5, 7]); edge(0); ctx.stroke(); ctx.setLineDash([]);
     // beams
     const thr = Math.min(throwAt(S[i], beamElev(i)), 60);
+    const spotWedge = az => {
+      const r = 70 * sc, a0 = (az - SPOT_HALF) * D, a1 = (az + SPOT_HALF) * D;
+      const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, r); gr.addColorStop(0, rgba(col.beam, 0.55)); gr.addColorStop(1, rgba(col.beam, 0.04));
+      ctx.beginPath(); ctx.moveTo(cx, cy); for (let a = a0; a <= a1 + 1e-6; a += (a1 - a0) / 8) ctx.lineTo(cx - Math.sin(a) * r, cy - Math.cos(a) * r); ctx.closePath(); ctx.fillStyle = gr; ctx.fill();
+    };
     const wedge = (az, color, len, dashed) => {
       const a0 = (az - HALF_W) * D, a1 = (az + HALF_W) * D, r = len * sc;
       const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, r); gr.addColorStop(0, rgba(color, 0.42)); gr.addColorStop(1, rgba(color, 0.02));
@@ -407,6 +426,7 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
     if (opt.fixed) wedge(0, col.fixed, Math.min(throwAt(S[i], R.fix[i]), 60), true);
     wedge(R.byL[i], col.left, thr, false);
     wedge(R.byR[i], col.right, thr, false);
+    if (opt.high) [R.byL[i], R.byR[i]].forEach(az => spotWedge(az));
     ctx.fillStyle = col.fg; ctx.beginPath(); ctx.arc(cx, cy, 4, 0, 7); ctx.fill();
     ctx.font = MONO; ctx.fillStyle = col.muted;
     ctx.fillText("10 m", 8, h - 10); ctx.strokeStyle = col.muted; ctx.beginPath(); ctx.moveTo(44, h - 14); ctx.lineTo(44 + 10 * sc, h - 14); ctx.stroke();
@@ -440,6 +460,12 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
     };
     cut(R.byL[i], 2 * R.mpL[i], col.left);
     cut(R.byR[i], 2 * R.mpR[i], col.right);
+    if (opt.high) [[R.byL[i], R.mpL[i]], [R.byR[i], R.mpR[i]]].forEach(([az, m]) => {
+      const [a, e] = toWorld(az, 2 * m - AIM, pitch, lean), x = px(a), y = py(e - g);
+      ctx.save(); ctx.translate(x, y); ctx.scale(SPOT_HALF * sx, SPOT_HALF * sy);
+      const gr = ctx.createRadialGradient(0, 0, 0, 0, 0, 1.6); gr.addColorStop(0, rgba(col.beam, 0.7)); gr.addColorStop(0.6, rgba(col.beam, 0.25)); gr.addColorStop(1, rgba(col.beam, 0));
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(0, 0, 1.6, 0, 7); ctx.fill(); ctx.restore();
+    });
     if (opt.fixed) {
       const pts = []; for (let hh = -HALF_W; hh <= HALF_W; hh += 1) pts.push(toWorld(hh, AIM, pitch, lean));
       ctx.setLineDash([6, 5]); ctx.strokeStyle = col.fixed; ctx.lineWidth = 2; ctx.beginPath();
@@ -475,11 +501,12 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
     const glareV = !isFinite(tv) || tv > 80, glareF = !isFinite(tf) || tf > 80;
     let html = `<span class="pill ${glareV ? "bad" : "ok"}">v4 cutoff ${fmt(tv)}</span>`;
     if (opt.fixed) html += `<span class="pill ${glareF ? "bad" : ""}">fixed ${fmt(tf)}</span>`;
+    html += opt.high ? `<span class="pill">high beam: spots on, no cutoff</span>` : `<span class="pill">low beam: cutoff only</span>`;
     stEl.innerHTML = html;
   }
 
   // ---------- controls ----------
-  const opt = { lidar: false, fixed: true, speed: 1, newHill: true };
+  const opt = { high: false, lidar: true, fixed: true, speed: 1, newHill: true };
   const chipsEl = document.getElementById("chips");
   CHAPTERS.forEach((c, k) => { const b = document.createElement("button"); b.className = "chip"; b.id = "chip" + k; b.textContent = c.name; b.setAttribute("aria-pressed", "false"); b.onclick = () => { t = c.t + 0.001; render(); }; chipsEl.appendChild(b); });
   const playBtn = document.getElementById("play"), scrub = document.getElementById("scrub"), clock = document.getElementById("clock");
@@ -491,6 +518,9 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
   scrub.oninput = () => { t = +scrub.value; render(); };
   document.getElementById("optLidar").onchange = e => { opt.lidar = e.target.checked; simulate(opt.lidar); render(); };
   document.getElementById("optHill").onchange = e => { opt.newHill = !e.target.checked; simulate(opt.lidar); render(); };
+  const setMode = h => { opt.high = h; document.getElementById("modeLow").setAttribute("aria-pressed", String(!h)); document.getElementById("modeHigh").setAttribute("aria-pressed", String(h)); render(); };
+  document.getElementById("modeLow").onclick = () => setMode(false);
+  document.getElementById("modeHigh").onclick = () => setMode(true);
   document.getElementById("optFixed").onchange = e => { opt.fixed = e.target.checked; render(); };
   document.getElementById("optSpeed").onchange = e => { opt.speed = +e.target.value; };
   document.addEventListener("keydown", e => { if (e.code === "Space" && e.target === document.body) { e.preventDefault(); setPlay(!playing); } });
@@ -515,7 +545,7 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
     }
     requestAnimationFrame(frame);
   }
-  simulate(false);
+  simulate(opt.lidar);
   fit(); render();
   new ResizeObserver(() => { fit(); render(); }).observe(document.querySelector(".board"));
   requestAnimationFrame(frame);
