@@ -35,3 +35,5 @@ To explore, open `headlight.scad` in OpenSCAD and change `view` (`assembly`, `cu
 ## Results (2026-11-21)
 
 Layout v3 (aerodynamic, lean): heatsink at the bottom with fins fore-aft, mount on the back, a tapered body with a sloping roof and a brow fairing for the lidar and cornering lights. All clearance checks pass. The head is about 401 g with the lidar against the 400 g limit; see `renders/mass.txt` and design.md §5 "Packaging study".
+
+`render.sh` also copies the v4 renders the project site shows into `../docs/img/`, so the GitHub Pages site stays current.
