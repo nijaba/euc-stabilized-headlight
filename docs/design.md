@@ -19,32 +19,41 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 ## 2. Optical concept: fixed LEDs, moving mirror
 
 ```
-          ┌──── finned aluminium lid = LED heatsink ───────┐
-          │  [spot][ low ][ low ][spot]  (row, left→right)  │
-          │   TIR  FILIPPA FILIPPA TIR   facing DOWN        │
-          │            ↓ ↓ ↓                                │
-  window  │     ╲  front-surface mirror @45°, pivots on     │
- ◄════════│      ╲ its long (left-right) axis ── pushrod ── servo
-          └─────────────────────────────────────────────────┘
+          ┌──── printed ASA cover (lidar pocket on top, optional) ──┐
+  window  │      ╱  front-surface mirror @45°, pivots on           │
+ ◄════════│     ╱   its long (left-right) axis ── pushrod ── servo  │ electronics
+          │            ↑ ↑ ↑                                       │ (back slot)
+          │   TIR  FILIPPA FILIPPA TIR   facing UP                 │
+          │  [spot][ low ][ low ][spot]  (row, left→right)         │
+          └──── aluminium heatsink = floor, fins below, fore-aft ──┘
 ```
+
+**Layout v2 (owner's requirements, 2026-11-21):** the heatsink sits at the **bottom** of the head, and its **fins run fore-aft**, in the direction of travel, so riding airflow passes between them. A heatsink on top with fins across the airflow (v1) cooled poorly. The LEDs face up into the mirror, which folds the beam forward. The **attachment point is on the back or the bottom, never the top**; v2 puts it on the back because the bottom is the heatsink.
 
 **Why a mirror:**
 - **Angle doubling.** Tilting the mirror by θ moves the beam by 2θ. Correcting ±15° of pitch needs only ±7.5° of mirror travel.
-- **Light moving part.** The mirror is about 30 g of glass, against 200–400 g for a whole lamp head. That means faster response, less servo power and less sensitivity to vibration.
+- **Light moving part.** The mirror is about 17 g of glass, against 200–400 g for a whole lamp head. That means faster response, less servo power and less sensitivity to vibration.
 - **Fixed LEDs.** The LEDs stay bolted to the heatsink. There are no flexing wires and no moving thermal joints.
 - **Costs:** about 5–8% of the light is lost at the mirror, and the fold makes the housing slightly larger.
 
 **Mirror geometry:**
-- The four optics sit in a row along the pivot axis: two 20 mm spot optics and two 33 mm FILIPPA low-beam optics, about 112 mm in all. The mirror is long and thin: about **115 × 55 mm**, about 30 g in 1.9 mm glass (1.1 mm glass would bring it to about 17 g).
+- The four optics sit in a row along the pivot axis: two 20 mm spot optics and two 33 mm FILIPPA low-beam optics, about 112 mm in all. The mirror is long and thin: about **114 × 55 mm**, about 17 g in **1.1 mm** front-surface glass.
 - The mirror must be **flat**: any curvature blurs the low-beam cutoff.
 - It rotates about its long axis, which gives it a very small moment of inertia.
 - Use a **front-surface** mirror (enhanced aluminium, R > 95% across the visible range). A normal back-silvered mirror produces ghost beams and absorbs light.
 - The pivot passes through the mirror's **centre of mass**. Bumps and acceleration then create no torque, and the servo only holds position.
 - **Pivot:** 2× MR63ZZ bearings on a 3 mm stainless shaft, pressed into printed bosses with CA glue.
 - **Linkage:** a pushrod at about 4:1. The servo sweeps ±30° for ±7.5° of mirror, which gives 4× the resolution and hides servo backlash. Response stays well under 50 ms.
-- **Window:** about 60 mm tall so the 33 mm low beam can sweep ±15° without clipping.
+- **Window:** about 124 × 61 mm, 2 mm polycarbonate, so the 33 mm low beam can sweep ±15° without clipping.
 
 **Limitation: pitch only.** A single fold mirror corrects pitch but not roll. In a turn, the low-beam cutoff tilts with the lean, so on one side it rises by the lateral angle × tan(lean). Motorcycle low beams have the same limitation. A two-axis mirror could add cornering (steering on yaw rate) later.
+
+**How cars and motorcycles do it (researched 2026-11-21):**
+- **Cars: automatic levelling.** UN ECE R48 requires automatic headlamp levelling when a light source exceeds 2000 lm, which this head does (~2400 lm emitted). Usually a stepper motor tilts the **whole lighting module** inside the headlamp, driven by a lighting ECU from suspension ride-height sensors. "Dynamic" systems react within fractions of a second to braking and acceleration; "semi-static" ones only correct for load. One research system computes pitch from vehicle acceleration instead of height sensors, which is close to what this head does with its IMU.
+- **Cars: matrix and pixel lights.** Matrix LED, DMD (Audi's 1.3 million micromirrors) and micro-LED arrays (Marelli h-Digi, Porsche HD Matrix with 16,384 pixels) switch segments to carve oncoming traffic out of the high beam. They shape the beam electronically, but the sources found don't show them replacing mechanical levelling. The parts aren't sold to hobbyists.
+- **Motorcycles.** Yamaha's Tracer 9 GT+ uses its 6-axis IMU to light extra matrix segments when the bike leans past about 7°. BMW has patented a gimballed headlight that counters pitch and lean from the IMU. Aftermarket "adaptive" lights add lean-activated LEDs.
+- **What this means here:** moving a light mirror instead of the whole module is unusual but keeps the LEDs and heat path fixed (a firm constraint). The motorcycle approach suggests a cheap answer to the pitch-only limitation: one or two small fixed LEDs aimed into each side of a corner, switched on by the IMU's roll angle, with no extra moving parts. That's a possible later addition.
+- Sources: [Hella: headlamp levelling](https://www.hella.com/techworld/us/technical/automotive-lighting/headlamp-levelling-system/), [Valeo: automatic levelling](https://www.valeoservice.com/en-com/passenger-car/car-lighting-headlamps-rear-lamps-fog-lamps/car-automatic-headlamps-levelling-device), [UNECE GRE-83-03](https://unece.org/fileadmin/DAM/trans/doc/2020/wp29gre/GRE-83-03e.pdf), [levelling from acceleration (paper)](https://www.researchgate.net/publication/365289462_An_Automatic_Headlamp_Leveling_System_Based_on_the_Vehicle_Acceleration_Information), [Audi digital matrix](https://www.audi-mediacenter.com/en/the-new-audi-q8-e-tron-15069/new-functions-digital-matrix-led-headlights-15081), [Marelli h-Digi microLED](https://www.marelli.com/en/news/marelli-launches-h-digi-microled.html), [Porsche HD Matrix](https://newsroom.porsche.com/dam/jcr:e403130d-8889-4a47-a745-24cacf547762/PM_HD%20Matrix%20LED%20headlights.pdf), [Yamaha Tracer 9 GT+](https://www.gearpatrol.com/motorcycles/yamaha-tracer-9-gt-plus-headlights/), [BMW gimbal patent](https://www.visordown.com/news/industry/bmw-developing-curious-%E2%80%98gimble%E2%80%99-headlight). Secondary sources; check the current R48 text before relying on the 2000 lm figure.
 
 **Alternative considered:** moving an aspheric lens sideways in front of a fixed LED (a decentred lens). It avoids the mirror losses but needs larger travel and distorts TIR beams. Rejected for v1.
 
@@ -57,7 +66,7 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 
 - **Low-beam decision (owner, 2026-11-21):** two FILIPPA-STVZO optics replace the Nichia 519A + Carclo 10003-L25 elliptical flood, which had no cutoff and glared above horizontal. All four LEDs are now XP-L HI. The high-CRI 519A is dropped because it isn't on LEDiL's compatible list.
 - **FILIPPA-STVZO** (LEDiL datasheet, simulated): Ø 32.9 mm, 18.5 mm tall, 6.3 g, PMMA, one LED per optic. With an XP-L HI: 7 cd/lm peak, FWHM 22° × 13°, FWTM 32° × 33°, 90% efficient. It mounts by its 1.5 mm flange, with no holder.
-- **Cutoff orientation.** The datasheet's beam sketch puts the flat cutoff edge on the same side as the flange's 3.1 mm **orienting rib**. The 45° fold sends light that leaves the optic toward the window downward, so the **rib must point to the back of the housing**, away from the window. The optic plate has a slot for the rib so the optic can't rotate: any rotation tilts the cutoff by the same angle. Confirm the orientation on the bench (B-OPT-06).
+- **Cutoff orientation.** The datasheet's beam sketch puts the flat cutoff edge on the same side as the flange's 3.1 mm **orienting rib**. With the LEDs facing up (layout v2), the 45° fold sends light that leaves the optic toward the window upward, so the **rib must point to the front of the housing**, toward the window. The optic plate has a slot for the rib so the optic can't rotate: any rotation tilts the cutoff by the same angle. Confirm the orientation on the bench (B-OPT-06).
 - **Focus height.** The datasheet gives the flange height above the PCB only for Luxeon Altilon (10.0 mm) and Osram Oslon (11 mm), not for the XP-L HI. Find it on the bench with printed spacers in 0.1 mm steps, choosing the sharpest cutoff (B-OPT-05).
 - **Brighter option to test.** LEDiL lists higher peaks for smaller or rectangular emitters (XP-LR 9.6, XP-GR 10.4, SFT-12R 11.1, Oslon Black Flat 12.6 cd/lm), usually with a sharper cutoff, but they emit fewer lumens than the XP-L HI.
 - **Each channel:** 2 LEDs in series (about 6.2 V) on its own BuckBlock driver.
@@ -165,15 +174,15 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - **Material: ASA.** It resists UV and its glass transition is about 100 °C.
   - PETG softens at about 75–80 °C and creeps.
   - Don't use PLA.
-- **Thermal path:** the LEDs screw onto a stock finned aluminium heatsink (about 120×60×20 mm, long enough for the 112 mm optic row) that forms the **lid**. Heat never passes through the plastic.
+- **Thermal path:** the LEDs screw onto a finned aluminium heatsink (about 128 × 45 mm, 3 mm base, 16 fins 1.2 × 14 mm, **fins fore-aft**) that forms the middle of the **floor**. Heat never passes through the plastic. The printed floor around it carries the rest.
 - **Print settings:**
   - 4–5 perimeters (≥ 2 mm walls), 0.2 mm layers.
   - Hotter nozzle for layer bonding, flow at about 103%.
   - Print the sealing face flat on the bed.
 - **Surface sealing:** acetone-vapour smoothing, or XTC-3D epoxy brushed inside and out.
-- **Lid seal:** 2 mm silicone O-ring cord in a printed groove. M3 screws into CNC Kitchen heat-set inserts about every 30 mm.
+- **Seals:** 2 mm silicone O-ring cord in printed grooves, around the heatsink opening in the floor and around the removable top cover. M3 screws into CNC Kitchen heat-set inserts about every 30 mm.
 - **Window:**
-  - 2–3 mm polycarbonate or tempered glass in a gasketed printed bezel.
+  - 2 mm polycarbonate in a gasketed printed bezel.
   - Treat the inside with anti-fog.
   - If you bond it, use **neutral-cure / sensor-safe** RTV only. Acetoxy silicone releases acetic acid, which tarnishes the mirror and LED phosphor.
 - **Vent:** an Amphenol LTW M8 ePTFE pressure vent plus desiccant. Without it, warm-up/cool-down cycles pull moisture past the seals and fog the window.
@@ -191,19 +200,32 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - optic plate
 - electronics tray
 - mount boss
-- lidar bracket (optional)
+- lidar pocket in the top cover (optional)
 - remote case
 
-**Packaging study (2026-11-21, `cad/headlight.scad`).** An OpenSCAD model with every part at datasheet size shows:
-- **Size:** body about 129 × 74 × 85 mm; about 103 mm tall with the heatsink fins; about 150 mm tall with the lidar pod underneath.
-- **Fit:** the optic row, mirror sweep (±7.5°), window aperture (124 × 64 mm), servo linkage and a vertical electronics board in a 20 mm slot at the back all fit (checks C-PKG-01 to C-PKG-06 pass).
-- **Mass:** about **466 g without the lidar and 556 g with it**, against the 350 g limit (C-MASS-01 fails). The earlier ~280 g estimate left out most of the shell, heatsink and window mass. The heaviest items are the heatsink (~118 g), the printed body (~113 g), the window and mirror (~30 g each). A lean variant (1.6 mm walls, 2 mm window, 1.1 mm mirror, a 40% lighter heatsink, the lidar inside the body) still comes to about 359 g, or 424 g with the lidar. Its lighter heatsink is unproven thermally.
-- **Lidar pod:** hanging under the front, it adds about 46 mm of height and sits close to the 1/4"-20 mount boss.
-- Renders and the full mass table are in `cad/renders/`.
+**Packaging study (2026-11-21, `cad/headlight.scad`).** An OpenSCAD model with every part at datasheet size. Renders and the full mass table are in `cad/renders/`.
+
+*v1 (heatsink lid on top):* everything fitted, but the head came to ~466 g, or ~556 g with the lidar pod hanging underneath.
+
+*v2 (heatsink at the bottom, fins fore-aft), with these weight savings:* 2.0 mm walls (the design's minimum), 2 mm window, 1.1 mm mirror, a heatsink only under the optic zone and sized for moving air (§8), the window 3 mm closer to the mirror, the lidar in a pocket in the top cover, the mount boss on the back, and a 12 mm sealed button instead of the 16 mm metal one.
+- **Size:** body about 128 × 71 × 84 mm; about 101 mm tall with the fins; about 145 mm with the lidar pocket on top.
+- **Fit:** checks C-PKG-01 to C-PKG-07 pass.
+- **Mass by configuration:**
+
+| Configuration | Mass | Within 350 g? |
+|---|---|---|
+| 2 FILIPPA + 2 spot, lidar on the head (current design) | ~448 g | No |
+| 2 FILIPPA + 1 spot, lidar on the head | ~413 g | No |
+| 2 FILIPPA + 2 spot, lidar mounted separately on the wheel | ~376 g | No |
+| 2 FILIPPA + 1 spot, lidar mounted separately on the wheel | ~341 g | Yes |
+| 1 FILIPPA + 1 spot, lidar on the head | ~348 g | Just |
+
+- The heaviest items are still the printed body (~98 g) and the heatsink (~79 g). A body with one FILIPPA is about 52 mm shorter because the optic row shrinks; the window stays as wide as the FILIPPA's 32° spread needs.
+- **Lidar off the head:** the IMU in the head still gives the lidar's true depression angle if both are fixed rigidly to the same part of the wheel, so the lidar can live in its own small housing on the shell, joined by a cable.
 
 ## 6. Mounting
 
-- **Interface:** a captive 1/4"-20 brass insert in a printed boss. This is the most universal standard, and it takes GoPro adaptors.
+- **Interface:** a captive 1/4"-20 brass insert in a printed boss **on the back** of the head (layout v2; the floor is the heatsink). This is the most universal standard, and it takes GoPro adaptors.
 - **Base options:**
   1. **Trolley-handle tube clamp.** The strongest option.
   2. **GoPro curved VHB bases** on the shell, above or below the stock light.
@@ -246,9 +268,11 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 ## 8. Thermal
 
 - **Heat:** about 12 W at normal output, roughly 65% of LED electrical power.
-- **Heatsink rise:**
-  - About 2.5 K/W in still air, so about 30 K above ambient when stationary.
-  - About 0.8 K/W at 25 km/h, so about 10 K above ambient.
+- **Heatsink (layout v2):** about 128 × 45 mm under the optics, fins fore-aft so riding air flows along them. Sized for moving air, with firmware derating when parked:
+  - About 0.9 K/W at 25 km/h, so about 11 K above ambient at 12 W (flat-plate laminar estimate over 45 mm fins).
+  - About 1.6 K/W at walking pace (2 m/s), so about 19 K above ambient.
+  - About 7–8 K/W in still air with the fins pointing down, which is too hot at full power. Firmware already dims to 20% after 2 min parked (about 2.4 W, ~18 K rise), and the heatsink's ~70 J/K of thermal mass gives about 1 min at full power before it warms by 10 K.
+  - Verify in B-THM-01, with airflow along the fins.
 - **Firmware derating** (thresholds in `firmware-spec.md`):
   - Spot dims before flood.
   - There's always a minimum brightness while moving.
@@ -258,7 +282,7 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 
 **Sensor: Benewake TF02-Pro**
 - IP65, 0.1–13.5 m at 10% reflectivity, 100 Hz, I²C/UART, 5–12 V.
-- Mounted on the **body** (never the mirror) in its own gasketed front cut-out, aimed about 3–5° below the beam axis.
+- Mounted on the **body** (never the mirror) in a gasketed pocket in the top cover, lenses flush with the front, aimed about 3–5° below the beam axis. To save about 72 g on the head, it can instead go in its own housing on the wheel shell (§5).
 - The TFmini Plus was rejected: only about 4 m range at 10% reflectivity.
 - Asphalt is dark in infrared and the ray hits it at a shallow angle, so expect real range below the spec. Start aiming about 8 m ahead and tune.
 
@@ -297,6 +321,7 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - [ ] P6KE27A clamps at ~37.5 V, above the BuckBlock's 32 V maximum. Low risk with a 20 V bank, but a lower-clamp TVS would cover it.
 - [x] Cost over the limit: about $290 core + $98 lidar ≈ $388, against a $350 ceiling. Resolved 2026-11-20: the owner raised the limit to $450, so no parts change.
 - [x] **The flood has no cutoff.** Resolved 2026-11-21: the owner chose two LEDiL FILIPPA-STVZO cutoff optics with XP-L HI as the low beam (§3). A shield or masked mirror edge was rejected because a TIR beam isn't an image, so blocking part of it only dims it without making a sharp edge.
-- [ ] **Head weight is well over 350 g.** The packaging study (§5) puts it at ~466 g, or ~556 g with the lidar; even the lean variant is ~424 g with the lidar. Needs the owner's decision: raise the limit, drop or shrink parts (lidar, one FILIPPA, a smaller window), or rethink the housing (for example, the aluminium lid forming more of the shell). (2026-11-21)
+- [ ] **Head weight is over 350 g.** Layout v2 brings it from ~556 g to ~448 g with the lidar on the head. Configurations that fit the limit: 2 FILIPPA + 1 spot with the lidar mounted separately (~341 g), or 1 FILIPPA + 1 spot with the lidar on the head (~348 g). Needs the owner's decision: one of those, or raise the limit. (2026-11-21)
+- [ ] Heatsink sized for moving air (§8): confirm the riding temperature and the parked derating on the bench (B-THM-01).
 - [ ] FILIPPA with XP-L HI: focus height, cutoff sharpness and cutoff orientation are not in LEDiL's data. Bench tests B-OPT-05 and B-OPT-06.
 - [ ] Larger mirror (115 × 55 mm, about 5× the moment of inertia): does the servo still settle in under 50 ms (B-MIR-01)?

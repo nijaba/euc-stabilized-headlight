@@ -47,14 +47,14 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Spot LEDs | Cree XP-L HI (3535) on 20 mm DTP copper, 5000–6500 K | 2 | 6.50 | 13.00 | [link](https://kaidomain.com/XP-L-HI-10W-3A-1095-Lumens-SMD-3535-LED) | Choose the '20mm DTP Copper' option (+$1.20). Swapped in for SFT-40 (5050 doesn't fit the XP holder) |
 | Low-beam LEDs | Cree XP-L HI (3535) on 20 mm DTP copper, about 5000 K | 2 | 6.50 | 13.00 | [link](https://kaidomain.com/XP-L-HI-10W-3A-1095-Lumens-SMD-3535-LED) | For the FILIPPA optics. Replaces the Nichia 519A, which isn't on LEDiL's compatible list |
 | Spot optics | Carclo 10003 narrow spot, 20 mm (~8–12°) | 2 | 2.75 | 5.50 | [link](https://www.ledsupply.com/led-optics/10003-carclo-lens-20mm-narrow-spot-led-optic) |  |
-| Low-beam optics | LEDiL FILIPPA-STVZO (C18612_FILIPPA-STVZO), Ø 32.9 mm cutoff optic | 2 | 3.52 | 7.04 | [link](https://www.mouser.com/en/ProductDetail/Ledil/C18612_FILIPPA-STVZO?qs=2SLPxufLcgCat%2F0uKWgVhA%3D%3D) | Mouser, Nov 2026: $3.52 each, $2.06 each for 10. LEDiL's own MOQ is 252. Flange mount; orienting rib toward the back of the housing |
+| Low-beam optics | LEDiL FILIPPA-STVZO (C18612_FILIPPA-STVZO), Ø 32.9 mm cutoff optic | 2 | 3.52 | 7.04 | [link](https://www.mouser.com/en/ProductDetail/Ledil/C18612_FILIPPA-STVZO?qs=2SLPxufLcgCat%2F0uKWgVhA%3D%3D) | Mouser, Nov 2026: $3.52 each, $2.06 each for 10. LEDiL's own MOQ is 252. Flange mount; orienting rib toward the front of the housing (LEDs face up) |
 | Optic holders | Carclo 10734, 20 mm, XP footprint | 2 | 0.80 | 1.60 | [link](https://www.digikey.com/en/products/detail/carclo-technical-plastics/10734/2641685) | Spot optics only |
-| Mirror | Front-surface (first-surface) glass mirror, enhanced Al, cut to ~115×55 mm, flat | 1 | 18.00 | 18.00 | [link](https://www.edmundoptics.com/f/first-surface-mirrors/12017/) | Edmund: precise, pricier. Budget: https://www.aliexpress.com/w/wholesale-front-surface-mirror-glass.html (glass, not acrylic). Score on the back face to cut. Price was for ~90×35 mm; recheck for the larger size. Flatness matters for a sharp cutoff |
+| Mirror | Front-surface (first-surface) glass mirror, enhanced Al, 1.1 mm, cut to ~114×55 mm, flat | 1 | 18.00 | 18.00 | [link](https://www.edmundoptics.com/f/first-surface-mirrors/12017/) | Edmund: precise, pricier. Budget: https://www.aliexpress.com/w/wholesale-front-surface-mirror-glass.html (glass, not acrylic). Score on the back face to cut. Price was for ~90×35 mm; recheck for the larger size. Flatness matters for a sharp cutoff |
 | Pivot bearings | MR63ZZ (3×6×2.5 mm), pack of 10 | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=MR63ZZ+bearing) |  |
 | Pivot shaft | 3 mm stainless steel rod, 100 mm | 1 | 6.00 | 6.00 | [search](https://www.amazon.com/s?k=3mm+stainless+steel+rod+100mm) |  |
 | Linkage | RC pushrod set: 1.2 mm Z-bend wire + clevis / EZ connector | 1 | 7.00 | 7.00 | [search](https://www.amazon.com/s?k=rc+pushrod+clevis+kit+1.2mm) | Gives the 4:1 lever ratio |
 | Servo | EMAX ES08MD II, digital, metal gear, 12–13 g | 1 | 14.00 | 14.00 | [link](https://www.readymaderc.com/products/details/emax-es08mdii-12g-digital-metal-gear-servo) | Also AMain Hobbies, RaceDayQuads |
-| Heatsink (= lid) | Finned aluminium heatsink ~120×60×20 mm | 1 | 9.00 | 9.00 | [search](https://www.amazon.com/s?k=aluminum+heatsink+120x60x20mm) | LED stars screw to the flat side; drill/tap M3 |
+| Heatsink (= floor) | Finned aluminium heatsink ~128×45 mm, ~3 mm base, ~14 mm fins, fins running fore-aft | 1 | 9.00 | 9.00 | [search](https://www.amazon.com/s?k=aluminum+heatsink+extrusion+50mm+wide) | Cut from extrusion; LED stars screw to the flat side; drill/tap M3. Fins must run front-to-back |
 | Thermal paste | Arctic MX-4 (or similar) | 1 | 7.00 | 7.00 | [search](https://www.amazon.com/s?k=Arctic+MX-4) | Skip if you have it |
 | **Subtotal** | | | | **109.14** | | |
 
@@ -63,7 +63,7 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Item | Part / spec | Qty | Unit $ | Ext $ | Source | Notes |
 |---|---|---|---|---|---|---|
 | Filament | ASA 1 kg (Polymaker / Prusament) – ~150 g used | 1 | 25.00 | 25.00 | [search](https://www.amazon.com/s?k=ASA+filament+1kg) | Black interior parts can be same spool |
-| Window | Polycarbonate sheet 2–3 mm (or 3 mm tempered glass), cut to ~125×65 mm | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=polycarbonate+sheet+3mm+8x10) |  |
+| Window | Polycarbonate sheet 2–3 mm (or 3 mm tempered glass), 2 mm, cut to ~124×61 mm | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=polycarbonate+sheet+3mm+8x10) |  |
 | Anti-fog | Rain-X Anti-Fog (inside of window) | 1 | 6.00 | 6.00 | [search](https://www.amazon.com/s?k=Rain-X+anti+fog) |  |
 | O-ring | Silicone O-ring cord, 2 mm, 2 m | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=silicone+o-ring+cord+2mm) | Glue the ends with CA glue |
 | Heat-set inserts | CNC Kitchen M3 short (M3×3.0), 100 pcs | 1 | 10.00 | 10.00 | [link](https://www.3djake.com/cnc-kitchen/threaded-inserts-m3-short) | Also at prusa3d.com |
@@ -130,11 +130,11 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Front bezel | ASA, clamps window with gasket |
 | Mirror cradle | ASA, pivots on MR63 bearings, balanced about the shaft |
 | Servo bracket + lever arm | ASA, sets the 4:1 ratio |
-| Optic plate | ASA, locates the 2 Carclo holders and 2 FILIPPA optics on the heatsink. Slots key the FILIPPA ribs toward the back; spacers set the FILIPPA focus height |
+| Optic plate | ASA, locates the 2 Carclo holders and 2 FILIPPA optics on the heatsink. Slots key the FILIPPA ribs toward the front; spacers set the FILIPPA focus height |
 | Electronics tray | ASA, holds the protoboard, BuckBlocks, Pololu |
-| Mount boss | ASA, holds the 1/4"-20 insert |
+| Mount boss | ASA, on the back of the body, holds the 1/4"-20 insert |
 | Remote case | ASA or TPU, 2 buttons + strap slots |
-| Lidar bracket (if section H) | ASA, fixed to the body (not the mirror), aims the lidar ~3–5° below the beam axis |
+| Lidar pocket (if section H) | ASA, in the top cover (not the mirror), aims the lidar ~3–5° below the beam axis; or a separate housing on the wheel shell |
 
 ## Cost summary
 

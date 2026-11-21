@@ -20,11 +20,12 @@ render() { # name view camera [extra args...]; a camera ending in ,0 means "fit 
 
 render three-quarter assembly 0,0,0,62,0,140,0
 render front          front    0,0,0,90,0,180,0  -D show_beams=false --projection=ortho
-render cutaway        cutaway  0,-10,-60,90,0,270,520 --projection=ortho
-render cutaway-up     cutaway  0,-10,-60,90,0,270,520 --projection=ortho  -D tilt=7.5
-render cutaway-down   cutaway  0,-10,-60,90,0,270,520 --projection=ortho  -D tilt=-7.5
+render under          under    0,0,0,140,0,150,0 -D show_beams=false
+render cutaway        cutaway  0,-10,45,90,0,270,520 --projection=ortho
+render cutaway-up     cutaway  0,-10,45,90,0,270,520 --projection=ortho  -D tilt=7.5
+render cutaway-down   cutaway  0,-10,45,90,0,270,520 --projection=ortho  -D tilt=-7.5
 render exploded       exploded 0,0,0,65,0,140,0
-render no-lidar       assembly 0,0,0,62,0,140,0  -D show_lidar=false
+render no-lidar       assembly 0,0,0,62,0,140,0  -D lidar_on_head=false
 render on-wheel       wheel    0,0,0,75,0,125,0  -D show_beams=false
 
 # Keep the measurements and any failed check (C-PKG) from the first run.
@@ -32,12 +33,23 @@ grep -m2 -E '^ECHO: "(PKG|MASS)' "$LOG.tmp" | sed 's/^ECHO: //' >> "$LOG"
 if grep -q 'C-PKG' "$LOG.tmp"; then
   grep 'C-PKG' "$LOG.tmp" | sort -u >> "$LOG"; rm -f "$LOG.tmp"; cat "$LOG"; exit 1
 fi
-echo "C-PKG-01..06 passed" >> "$LOG"
+echo "C-PKG-01..07 passed" >> "$LOG"
 rm -f "$LOG.tmp"
 
-# Mass budget (C-MASS-01). A failure is reported, and sets the exit status.
+# Mass budget (C-MASS-01) for the baseline, with lighter configurations for comparison.
+variant() { # name [-D args...]
+  name=$1; shift
+  "$OPENSCAD" -o "$OUT/$name.echo" "$@" headlight.scad 2>/dev/null
+}
+variant baseline
+variant one-spot            -D n_spot=1
+variant lidar-off-head      -D lidar_on_head=false
+variant one-spot-no-lidar   -D n_spot=1 -D lidar_on_head=false
+variant one-fil-one-spot    -D n_fil=1 -D n_spot=1
 status=0
-python3 -I weight.py > "$OUT/mass.txt" || status=$?
+python3 -I weight.py "$OUT"/baseline.echo "$OUT"/one-spot.echo "$OUT"/lidar-off-head.echo \
+  "$OUT"/one-spot-no-lidar.echo "$OUT"/one-fil-one-spot.echo > "$OUT/mass.txt" || status=$?
+rm -f "$OUT"/*.echo
 tail -1 "$OUT/mass.txt" >> "$LOG"
 cat "$LOG"
 exit $status

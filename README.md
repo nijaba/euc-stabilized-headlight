@@ -16,7 +16,7 @@ An EUC pitches nose-down when it accelerates and nose-up when it brakes. A fixed
 | Fits any EUC, keeps the stock light | 1/4"-20 insert, so GoPro mounts work. Clamp it to the trolley handle or stick it to the shell with curved VHB bases |
 | ≥ 2 h runtime | External 20 Ah USB-C PD power bank at 15 V: about 2.4 h in normal mode, about 1.7 h in boost |
 | USB-C charging | The power bank charges over USB-C. The head runs on 15 V DC from a PD trigger cable |
-| Waterproof | Printed ASA body, O-ring-sealed aluminium heatsink lid, gasketed window, ePTFE pressure vent, IP68 connector |
+| Waterproof | Printed ASA body, O-ring-sealed aluminium heatsink floor, gasketed window, ePTFE pressure vent, IP68 connector |
 | Mostly off-the-shelf | XIAO ESP32-S3, Adafruit IMU breakout, BuckBlock LED drivers, Carclo optics, hobby servo, GoPro mounts |
 
 ## Architecture
@@ -35,16 +35,13 @@ An EUC pitches nose-down when it accelerates and nose-up when it brakes. A fixed
    └──────────────────────────────────────────────────────────────┘
 ```
 
-Side view of the head:
+Side view of the head (layout v2):
 
 ```
-   ▲▲▲▲▲▲ finned aluminium heatsink = lid, LEDs screwed to underside
-  ═╤════════════════════════════╤═  ← O-ring, M3 into heat-set inserts
-   │ printed ASA body           │
-   │  LEDs + TIR optics ↓       │
- ◄─┤   ╲ mirror (balanced pivot)│── servo + 4:1 pushrod
-   │ bezel + window             │
-   └── cable gland ── vent ── 1/4"-20 insert ──┘
+   ┌── printed ASA cover (optional lidar pocket on top) ──┐
+ ◄─┤   ╱ mirror (balanced pivot)  ── servo + 4:1 pushrod  │ electronics
+   │ bezel + window   LEDs + optics ↑                     │ slot
+   └── aluminium heatsink floor, fins fore-aft ───────────┘ ← 1/4"-20 mount on the back
 ```
 
 ## Key figures (estimates)
@@ -56,8 +53,8 @@ Side view of the head:
 | Low beam (cutoff) at 10 m | ~73 lux | ~95 lux |
 | Input power | ~21 W | ~30 W |
 | Runtime on a 20 Ah bank (~50 Wh usable at 15 V) | ~2.4 h | ~1.7 h |
-| Head weight (limit: 350 g with lidar) | ~466 g, ~556 g with lidar (packaging study): over the limit, see design §10 | |
-| Head size | ~129 × 74 × 103 mm (+ ~46 mm lidar pod) | |
+| Head weight (limit: 350 g with lidar) | ~376 g, ~448 g with lidar on the head (packaging study v2): over the limit, see design §10 | |
+| Head size | ~128 × 71 × 101 mm (+ ~44 mm lidar pocket on top) | |
 | Material cost per unit (limit: $450 with lidar) | ~$297 + power bank (+ ~$98 lidar) | |
 
 ## Repository layout

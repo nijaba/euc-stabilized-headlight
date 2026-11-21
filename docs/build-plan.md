@@ -21,6 +21,8 @@ Goal: a parametric model and renders of the whole head prove it fits, sweeps and
 - [x] Clearance checks across the mirror's full sweep and the beam through the window (C-PKG)
 - [x] Mass budget from part masses and printed volumes (C-MASS-01): ~556 g with the lidar, over the limit
 - [x] Renders: three-quarter, front, side cut-away, exploded, on a generic wheel for scale
+- [x] Layout v2: heatsink at the bottom, fins fore-aft, mount on the back, weight savings (owner's requirements, 2026-11-21)
+- [ ] Owner decision on the weight: a configuration within 350 g, or a higher limit
 - [ ] Owner review of the renders; update the design doc with what the model shows
 
 ## Phase 2: Firmware core on the bench

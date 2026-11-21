@@ -10,15 +10,16 @@ Needs [OpenSCAD](https://openscad.org) (2021.01 or newer) and Python 3 (standard
 cad/render.sh
 ```
 
-It renders the views below to `renders/`, runs the clearance checks (C-PKG-01 to 06) and the mass budget (C-MASS-01, `weight.py`), and writes the results to `renders/checks.txt` and `renders/mass.txt`. The exit status is non-zero if any check fails. Set `OPENSCAD` if the binary isn't on your PATH.
+It renders the views below to `renders/`, runs the clearance checks (C-PKG-01 to 07) and the mass budget (C-MASS-01, `weight.py`, with lighter configurations for comparison), and writes the results to `renders/checks.txt` and `renders/mass.txt`. The exit status is non-zero if any check fails. Set `OPENSCAD` if the binary isn't on your PATH.
 
-To explore, open `headlight.scad` in OpenSCAD and change `view` (`assembly`, `cutaway`, `exploded`, `front`, `wheel`), `tilt` (−7.5 to 7.5), `show_lidar` and `show_beams`.
+To explore, open `headlight.scad` in OpenSCAD and change `view` (`assembly`, `cutaway`, `exploded`, `front`, `under`, `wheel`), `tilt` (−7.5 to 7.5), `n_fil`, `n_spot`, `lidar_on_head` and `show_beams`.
 
 ## Views
 
 | File | Shows |
 |---|---|
-| `three-quarter.png` | Assembled head with the lidar pod and the beams |
+| `three-quarter.png` | Assembled head with the lidar pocket and the beams |
+| `under.png` | From below: the heatsink fins running fore-aft |
 | `front.png` | Front, orthographic |
 | `cutaway.png`, `cutaway-up.png`, `cutaway-down.png` | Section through the middle at nominal and full mirror tilt |
 | `exploded.png` | Heatsink, optics, mirror, electronics, body, window, lidar pod |
@@ -27,4 +28,4 @@ To explore, open `headlight.scad` in OpenSCAD and change `view` (`assembly`, `cu
 
 ## Results (2026-11-21)
 
-See design.md §5 "Packaging study". In short: everything fits and sweeps, but the head is about 466 g, or 556 g with the lidar, against the 350 g limit.
+Layout v2 (heatsink at the bottom, fins fore-aft, mount on the back): all clearance checks pass. The current configuration (2 FILIPPA + 2 spot, lidar on the head) is about 448 g against the 350 g limit, so C-MASS-01 fails. `renders/mass.txt` compares lighter configurations; two of them fit. See design.md §5 "Packaging study".
