@@ -131,7 +131,8 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | C-PKG-05 | Every beam fits the window width (FWTM spread, ±15° steering) | Beam reach ≤ half the inner length | Pass (v2), 2026-11-21 |
 | C-PKG-06 | The servo fits the back slot | Servo width ≤ slot depth − 2 mm | Pass (v2), 2026-11-21 |
 | C-PKG-07 | The bottom heatsink fits inside the floor | Heatsink depth ≤ inner depth | Pass (v2), 2026-11-21 |
-| C-MASS-01 | Head mass of the current configuration (2 FILIPPA + 2 spot, lidar on the head), from model geometry and part masses | ≤ 350 g | **Fail: ~448 g** (v2; was ~556 g in v1), 2026-11-21 |
+| C-PKG-08 | The window and bezel stay on the flat front, clear of the rounded bottom edge | Bezel bottom ≥ edge radius above the floor | Pass (v2), 2026-11-21 |
+| C-MASS-01 | Head mass of the current configuration (2 FILIPPA + 2 spot, lidar on the head), from model geometry and part masses | ≤ 350 g | **Fail: ~463 g** (v2 rounded; ~448 g square-edged, ~556 g in v1), 2026-11-21 |
 
 ## Bench tests (`B-`)
 

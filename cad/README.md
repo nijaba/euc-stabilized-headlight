@@ -28,4 +28,4 @@ To explore, open `headlight.scad` in OpenSCAD and change `view` (`assembly`, `cu
 
 ## Results (2026-11-21)
 
-Layout v2 (heatsink at the bottom, fins fore-aft, mount on the back): all clearance checks pass. The current configuration (2 FILIPPA + 2 spot, lidar on the head) is about 448 g against the 350 g limit, so C-MASS-01 fails. `renders/mass.txt` compares lighter configurations; two of them fit. See design.md §5 "Packaging study".
+Layout v2 (heatsink at the bottom, fins fore-aft, mount on the back): all clearance checks pass. The current configuration (2 FILIPPA + 2 spot, lidar on the head) is about 463 g with the rounded exterior, against the 350 g limit, so C-MASS-01 fails. `renders/mass.txt` compares lighter configurations; none fits once rounded. See design.md §5 "Packaging study".

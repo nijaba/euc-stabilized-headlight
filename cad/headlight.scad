@@ -43,6 +43,7 @@ front_clear = 3;
 elec_depth = 20;
 win_t = 2.0;
 bezel_lip = 4;
+r_edge = 8;                        // external edge radius: rounded for safety and looks
 
 /* [Heatsink] sized for moving air; firmware derates when parked */
 hs_base = 3;  hs_fin_h = 14;  hs_fin_t = 1.2;  hs_pitch = 8;  hs_margin = 6;
@@ -79,20 +80,23 @@ win_d    = in_front;
 // Inner length: the mirror and its bearing bosses, or the beam's spread at the window, whichever is wider.
 function reach(o, x) = abs(x) + o[1]/2 + win_d*tan(o[0] == 1 ? fil_fwtm : spot_fwtm);
 beam_reach = max([for (i = [0:n_opt-1]) reach(optics_list[i], x_at(i))]);
-in_L     = max(mir_L + 2*(cradle_t + 3), 2*beam_reach + 2);
+win_w    = 2*beam_reach + 2;
+in_L_min = max(mir_L + 2*(cradle_t + 3), win_w);
 
 win_half = fil_d/2 + win_d*tan(steer) + win_d*tan(fil_fwtm);
 win_zc   = mir_z;
 win_top  = win_zc + win_half;
 win_bot  = win_zc - win_half;
-top_z    = max(win_top + bezel_lip, mir_z + half_z(tilt_max) + 2) + wall;
+// The window and bezel sit on the flat part of the front, inside the rounded edges.
+top_z    = max(win_top + bezel_lip + r_edge, mir_z + half_z(tilt_max) + 2 + wall);
 
-out_L = in_L + 2*wall;
+out_L = max(in_L_min + 2*wall, win_w + 2*bezel_lip + 2*r_edge);
+in_L  = out_L - 2*wall;
 out_D = in_front - in_back + 2*wall;
 out_H = top_z + wall;                                // floor wall below z=0
 
 // Heatsink: under the optic zone only; the rest of the floor is printed.
-hs_L = out_L;
+hs_L = out_L - 2*r_edge;                             // stays on the flat bottom, inside the rounded edges
 hs_D = fil_d + 2*hs_margin;
 hs_y0 = -hs_D/2;
 hs_fins = floor((hs_L - hs_fin_t) / hs_pitch) + 1;
@@ -106,8 +110,14 @@ assert(win_bot > wall + 1 && mir_low > star_t + max_h + 1, "C-PKG-04 window or m
 assert(beam_reach <= in_L/2,       str("C-PKG-05 beam wider than the window: ", 2*beam_reach));
 assert(servo[0] <= elec_depth - 2, "C-PKG-06 servo does not fit the back slot");
 assert(hs_D <= out_D - 2*wall,     "C-PKG-07 heatsink wider than the floor");
+assert(win_bot - bezel_lip >= -wall + r_edge, "C-PKG-08 window runs into the rounded bottom edge");
 
-lidar_pod_area = lidar_on_head ? 2*(lidar[0]*lidar[2] + lidar[0]*lidar[1]) : 0;
+// Surface area of a box with all edges rounded to radius r.
+function rbox_area(L, D, H, r) = 2*((L-2*r)*(D-2*r) + (L-2*r)*(H-2*r) + (D-2*r)*(H-2*r))
+                               + 2*3.14159*r*((L-2*r) + (D-2*r) + (H-2*r))   // 12 quarter-cylinder edges
+                               + 4*3.14159*r*r;                              // 8 sphere-eighth corners
+
+lidar_pod_area = lidar_on_head ? 2*(lidar[0]*lidar[2] + lidar[0]*lidar[1]) + 2*lidar[2]*lidar[1] : 0;
 echo(str("PKG config=", n_fil, "F+", n_spot, "S", lidar_on_head ? "+lidar" : "",
          " body_outer_mm=", out_L, "x", out_D, "x", out_H,
          " head_height_mm=", out_H + hs_base + hs_fin_h + (lidar_on_head ? lidar[1] + wall : 0),
@@ -115,7 +125,7 @@ echo(str("PKG config=", n_fil, "F+", n_spot, "S", lidar_on_head ? "+lidar" : "",
          " heatsink_mm=", hs_L, "x", hs_D, " fins=", hs_fins, " fore-aft"));
 echo(str("MASS n_fil=", n_fil, " n_spot=", n_spot, " lidar=", lidar_on_head ? 1 : 0,
          " wall_mm=", wall,
-         " shell_area_mm2=", out_L*out_D*2 - hs_L*hs_D + 2*out_L*out_H + 2*out_D*out_H,
+         " shell_area_mm2=", rbox_area(out_L, out_D, out_H, r_edge) - hs_L*hs_D,
          " lidar_pod_area_mm2=", lidar_pod_area,
          " window_mm3=", (in_L + 2*bezel_lip)*(2*win_half + 2*bezel_lip)*win_t,
          " hs_mm3=", hs_L*hs_D*hs_base + hs_fins*hs_fin_t*hs_D*hs_fin_h,
@@ -128,10 +138,25 @@ c_pmma = [0.85,0.92,1.0,0.75]; c_led = [0.95,0.85,0.3]; c_pcb = [0.1,0.45,0.25];
 c_mirror = [0.85,0.9,0.95]; c_beam_lo = [1,0.95,0.6,0.18]; c_beam_hi = [0.7,0.85,1,0.15];
 
 // ---------- parts ----------
+module rbox(size, r, $fn = 28) {           // box with every edge rounded, corner at origin
+    hull() for (x = [r, size[0]-r], y = [r, size[1]-r], z = [r, size[2]-r])
+        translate([x, y, z]) sphere(r = r);
+}
+module rrect_frame(w, h, t, r, lip) {       // rounded rectangular bezel frame, centred, normal along y
+    difference() {
+        hull() for (x = [-w/2-lip+r, w/2+lip-r], z = [-h/2-lip+r, h/2+lip-r]) translate([x, 0, z]) rotate([90,0,0]) cylinder(r=r, h=t, center=true, $fn=24);
+        hull() for (x = [-w/2+r, w/2-r], z = [-h/2+r, h/2-r]) translate([x, 0, z]) rotate([90,0,0]) cylinder(r=max(r-lip,1), h=t+2, center=true, $fn=24);
+    }
+}
+
 module heatsink() color(c_alu) {
     translate([-hs_L/2, hs_y0, -hs_base]) cube([hs_L, hs_D, hs_base]);
-    for (i = [0:hs_fins-1])                                   // fins run fore-aft (along y)
-        translate([-hs_L/2 + i*hs_pitch, hs_y0, -hs_base - hs_fin_h]) cube([hs_fin_t, hs_D, hs_fin_h]);
+    for (i = [0:hs_fins-1])                                   // fins run fore-aft (along y), rounded ends
+        translate([-hs_L/2 + i*hs_pitch, 0, -hs_base]) hull() for (y = [hs_y0 + hs_fin_h*0.7, -hs_y0 - hs_fin_h*0.7])
+            translate([0, y, 0]) intersection() {
+                rotate([0,90,0]) cylinder(r = hs_fin_h, h = hs_fin_t, $fn=32);
+                translate([0, -hs_fin_h, -hs_fin_h]) cube([hs_fin_t, 2*hs_fin_h, hs_fin_h]);
+            }
 }
 
 module led_star(x) {
@@ -197,15 +222,13 @@ module electronics() {
 
 module body_shell() {
     color(c_asa) difference() {
-        translate([-out_L/2, in_back - wall, -wall]) cube([out_L, out_D, out_H]);
-        translate([-in_L/2, in_back, 0]) cube([in_L, in_front - in_back, top_z - wall]);
+        translate([-out_L/2, in_back - wall, -wall]) rbox([out_L, out_D, out_H], r_edge);
+        translate([-in_L/2, in_back, 0]) rbox([in_L, in_front - in_back, top_z - wall], max(r_edge - wall, 1));
         translate([-hs_L/2 - 1, hs_y0, -wall - 1]) cube([hs_L + 2, hs_D, wall + 2]);       // heatsink opening
-        translate([-in_L/2 + 0.01, in_front - 1, win_bot]) cube([in_L - 0.02, wall + 2, 2*win_half]);
+        translate([0, in_front + wall/2, win_zc]) hull() for (x = [-win_w/2+6, win_w/2-6], z = [-win_half+6, win_half-6])
+            translate([x, 0, z]) rotate([90,0,0]) cylinder(r=6, h=wall+4, center=true, $fn=24);
     }
-    color(c_asa) translate([0, in_front + wall, win_zc]) difference() {                  // bezel
-        cube([in_L + 2*bezel_lip, 2.5, 2*win_half + 2*bezel_lip], center=true);
-        cube([in_L - 2, 4, 2*win_half - 2], center=true);
-    }
+    color(c_asa) translate([0, in_front + wall + 1, win_zc]) rrect_frame(win_w, 2*win_half, 2.5, 6, bezel_lip);   // bezel
     // mount boss with 1/4"-20 insert, on the back (faces the wheel)
     color(c_asa) translate([0, in_back - wall, top_z*0.45]) rotate([90,0,0]) cylinder(d=18, h=8, $fn=40);
     color([0.8,0.65,0.3]) translate([0, in_back - wall - 0.2, top_z*0.45]) rotate([90,0,0]) cylinder(d=8, h=8, $fn=24);
@@ -216,12 +239,13 @@ module body_shell() {
 }
 
 module window() color([0.85,0.95,1,0.25])
-    translate([0, in_front + wall/2, win_zc]) cube([in_L + 2*bezel_lip - 1, win_t, 2*win_half + 2*bezel_lip - 1], center=true);
+    translate([0, in_front + wall/2, win_zc]) hull() for (x = [-win_w/2-bezel_lip+7, win_w/2+bezel_lip-7], z = [-win_half-bezel_lip+7, win_half+bezel_lip-7])
+        translate([x, 0, z]) rotate([90,0,0]) cylinder(r=6.5, h=win_t, center=true, $fn=24);
 
 // Lidar in a pocket on top of the body, lenses forward, flush with the front.
 module lidar_pod() {
-    color(c_asa) translate([-lidar[0]/2 - wall, in_front + wall - lidar[2] - 2*wall, top_z])
-        cube([lidar[0] + 2*wall, lidar[2] + 2*wall, lidar[1] + wall]);
+    color(c_asa) translate([-lidar[0]/2 - wall, in_front + wall - lidar[2] - 2*wall, top_z - 8])
+        rbox([lidar[0] + 2*wall, lidar[2] + 2*wall, lidar[1] + wall + 8], 6);
     color([0.3,0.3,0.35]) for (s=[-1,1]) translate([s*15, in_front + wall + 0.1, top_z + lidar[1]/2]) rotate([-90,0,0]) cylinder(d=18, h=0.5, $fn=32);
 }
 

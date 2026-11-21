@@ -53,8 +53,8 @@ Side view of the head (layout v2):
 | Low beam (cutoff) at 10 m | ~73 lux | ~95 lux |
 | Input power | ~21 W | ~30 W |
 | Runtime on a 20 Ah bank (~50 Wh usable at 15 V) | ~2.4 h | ~1.7 h |
-| Head weight (limit: 350 g with lidar) | ~376 g, ~448 g with lidar on the head (packaging study v2): over the limit, see design §10 | |
-| Head size | ~128 × 71 × 101 mm (+ ~44 mm lidar pocket on top) | |
+| Head weight (limit: 350 g with lidar) | ~386 g, ~463 g with lidar on the head (packaging study v2): over the limit, see design §10 | |
+| Head size | ~143 × 71 × 107 mm, rounded (+ ~44 mm lidar pocket on top) | |
 | Material cost per unit (limit: $450 with lidar) | ~$297 + power bank (+ ~$98 lidar) | |
 
 ## Repository layout

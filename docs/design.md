@@ -28,7 +28,7 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
           └──── aluminium heatsink = floor, fins below, fore-aft ──┘
 ```
 
-**Layout v2 (owner's requirements, 2026-11-21):** the heatsink sits at the **bottom** of the head, and its **fins run fore-aft**, in the direction of travel, so riding airflow passes between them. A heatsink on top with fins across the airflow (v1) cooled poorly. The LEDs face up into the mirror, which folds the beam forward. The **attachment point is on the back or the bottom, never the top**; v2 puts it on the back because the bottom is the heatsink.
+**Layout v2 (owner's requirements, 2026-11-21):** the heatsink sits at the **bottom** of the head, and its **fins run fore-aft**, in the direction of travel, so riding airflow passes between them. A heatsink on top with fins across the airflow (v1) cooled poorly. The LEDs face up into the mirror, which folds the beam forward. The **attachment point is on the back or the bottom, never the top**; v2 puts it on the back because the bottom is the heatsink. The exterior is **rounded**, for safety (nothing sharp in a fall or against a leg) and for looks: the model uses an 8 mm radius on every body edge, rounded window and bezel corners, a rounded lidar pocket and rounded fin ends.
 
 **Why a mirror:**
 - **Angle doubling.** Tilting the mirror by θ moves the beam by 2θ. Correcting ±15° of pitch needs only ±7.5° of mirror travel.
@@ -189,6 +189,7 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - **Penetrations:**
   - M12 IP68 cable gland, or a panel-mount IP68 connector.
   - Adafruit 16 mm rugged button with an LED ring (comes with a gasket).
+- **Shape:** every external edge rounded, 8 mm radius on the body in the model. The window and bezel sit on the flat part of the front, inside the rounded edges.
 - **Interior:** printed matte black to kill stray light. A lighter colour outside reduces sun heating.
 - **Leak test:** submerge the empty housing with a tissue inside before any electronics go in.
 
@@ -208,19 +209,19 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 *v1 (heatsink lid on top):* everything fitted, but the head came to ~466 g, or ~556 g with the lidar pod hanging underneath.
 
 *v2 (heatsink at the bottom, fins fore-aft), with these weight savings:* 2.0 mm walls (the design's minimum), 2 mm window, 1.1 mm mirror, a heatsink only under the optic zone and sized for moving air (§8), the window 3 mm closer to the mirror, the lidar in a pocket in the top cover, the mount boss on the back, and a 12 mm sealed button instead of the 16 mm metal one.
-- **Size:** body about 128 × 71 × 84 mm; about 101 mm tall with the fins; about 145 mm with the lidar pocket on top.
-- **Fit:** checks C-PKG-01 to C-PKG-07 pass.
+- **Size (rounded, 8 mm edges):** body about 143 × 71 × 90 mm; about 107 mm tall with the fins; about 151 mm with the lidar pocket on top. Rounding adds about 15 mm of length, because the window has to sit on the flat part of the front, and about 15 g.
+- **Fit:** checks C-PKG-01 to C-PKG-08 pass.
 - **Mass by configuration:**
 
 | Configuration | Mass | Within 350 g? |
 |---|---|---|
-| 2 FILIPPA + 2 spot, lidar on the head (current design) | ~448 g | No |
-| 2 FILIPPA + 1 spot, lidar on the head | ~413 g | No |
-| 2 FILIPPA + 2 spot, lidar mounted separately on the wheel | ~376 g | No |
-| 2 FILIPPA + 1 spot, lidar mounted separately on the wheel | ~341 g | Yes |
-| 1 FILIPPA + 1 spot, lidar on the head | ~348 g | Just |
+| 2 FILIPPA + 2 spot, lidar on the head (current design) | ~463 g (~448 g square-edged) | No |
+| 2 FILIPPA + 1 spot, lidar on the head | ~435 g | No |
+| 2 FILIPPA + 2 spot, lidar mounted separately on the wheel | ~386 g | No |
+| 2 FILIPPA + 1 spot, lidar mounted separately on the wheel | ~358 g (~341 g square-edged) | No |
+| 1 FILIPPA + 1 spot, lidar on the head | ~368 g (~348 g square-edged) | No |
 
-- The heaviest items are still the printed body (~98 g) and the heatsink (~79 g). A body with one FILIPPA is about 52 mm shorter because the optic row shrinks; the window stays as wide as the FILIPPA's 32° spread needs.
+- The heaviest items are still the printed body (~105 g) and the heatsink (~79 g). A body with one FILIPPA is about 52 mm shorter because the optic row shrinks; the window stays as wide as the FILIPPA's 32° spread needs.
 - **Lidar off the head:** the IMU in the head still gives the lidar's true depression angle if both are fixed rigidly to the same part of the wheel, so the lidar can live in its own small housing on the shell, joined by a cable.
 
 ## 6. Mounting
@@ -321,7 +322,7 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - [ ] P6KE27A clamps at ~37.5 V, above the BuckBlock's 32 V maximum. Low risk with a 20 V bank, but a lower-clamp TVS would cover it.
 - [x] Cost over the limit: about $290 core + $98 lidar ≈ $388, against a $350 ceiling. Resolved 2026-11-20: the owner raised the limit to $450, so no parts change.
 - [x] **The flood has no cutoff.** Resolved 2026-11-21: the owner chose two LEDiL FILIPPA-STVZO cutoff optics with XP-L HI as the low beam (§3). A shield or masked mirror edge was rejected because a TIR beam isn't an image, so blocking part of it only dims it without making a sharp edge.
-- [ ] **Head weight is over 350 g.** Layout v2 brings it from ~556 g to ~448 g with the lidar on the head. Configurations that fit the limit: 2 FILIPPA + 1 spot with the lidar mounted separately (~341 g), or 1 FILIPPA + 1 spot with the lidar on the head (~348 g). Needs the owner's decision: one of those, or raise the limit. (2026-11-21)
+- [ ] **Head weight is over 350 g.** Layout v2 brings it from ~556 g to ~448 g with the lidar on the head, and the rounded exterior adds ~15 g (~463 g). Square-edged, two configurations fitted (~341 g and ~348 g); rounded, none do, the closest being 2 FILIPPA + 1 spot with the lidar on the wheel (~358 g). Needs the owner's decision: a configuration, a smaller edge radius, or a higher limit. (2026-11-21)
 - [ ] Heatsink sized for moving air (§8): confirm the riding temperature and the parked derating on the bench (B-THM-01).
 - [ ] FILIPPA with XP-L HI: focus height, cutoff sharpness and cutoff orientation are not in LEDiL's data. Bench tests B-OPT-05 and B-OPT-06.
 - [ ] Larger mirror (115 × 55 mm, about 5× the moment of inertia): does the servo still settle in under 50 ms (B-MIR-01)?

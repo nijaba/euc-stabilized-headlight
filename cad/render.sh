@@ -33,7 +33,7 @@ grep -m2 -E '^ECHO: "(PKG|MASS)' "$LOG.tmp" | sed 's/^ECHO: //' >> "$LOG"
 if grep -q 'C-PKG' "$LOG.tmp"; then
   grep 'C-PKG' "$LOG.tmp" | sort -u >> "$LOG"; rm -f "$LOG.tmp"; cat "$LOG"; exit 1
 fi
-echo "C-PKG-01..07 passed" >> "$LOG"
+echo "C-PKG-01..08 passed" >> "$LOG"
 rm -f "$LOG.tmp"
 
 # Mass budget (C-MASS-01) for the baseline, with lighter configurations for comparison.

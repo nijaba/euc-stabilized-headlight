@@ -1,10 +1,10 @@
 Part                                   2F+2S+lidar     2F+1S+lidar           2F+2S           2F+1S     1F+1S+lidar
-Heatsink (aluminium, bottom)                    79              69              79              69              48
-Body shell (ASA)                                98              88              98              88              68
+Heatsink (aluminium, bottom)                    79              72              79              72              49
+Body shell (ASA)                               105              98             105              98              78
 Bezel, bosses, ribs (ASA)                       12              12              12              12              12
-Window (polycarbonate)                          22              19              22              19              13
+Window (polycarbonate)                          24              22              24              22              16
 Mirror (front-surface glass)                    17              14              17              14               9
-Mirror cradle, shaft, bearings                  13              12              13              12              10
+Mirror cradle, shaft, bearings                  13              13              13              13              11
 Optic plate (ASA)                                6               6               6               6               6
 LEDs on 20 mm copper stars                      18              13              18              13               9
 FILIPPA-STVZO optics                            13              13              13              13               6
@@ -18,6 +18,6 @@ O-rings, window gasket                           5               5              
 Mount boss + 1/4"-20 insert                     10              10              10              10              10
 Gland, vent, button, desiccant                  11              11              11              11              11
 TF02-Pro lidar                                  50              50               0               0              50
-Lidar pocket (ASA) + gasket                     22              22               0               0              22
-Total                                          448             413             376             341             348
-C-MASS-01 2F+2S+lidar: 448 g vs 350 g limit: FAIL
+Lidar pocket (ASA) + gasket                     27              27               0               0              27
+Total                                          463             435             386             358             368
+C-MASS-01 2F+2S+lidar: 463 g vs 350 g limit: FAIL
