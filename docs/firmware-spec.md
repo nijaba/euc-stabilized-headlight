@@ -209,7 +209,7 @@ Options considered:
 
 **Tests:** U-CFG-01 to U-CFG-04 and B-CFG-01 in the test plan. The page itself is designed under the project's web rules when the firmware reaches it.
 
-## 12. High-beam width by speed (proposal, 2026-11-21, owner chose the approach; values to confirm)
+## 12. High-beam width by speed (proposal, 2026-11-21: owner chose the approach and the IMU speed source; values to confirm)
 
 The high beam is two narrow spots (Carclo 10003, ~8–12°, design §3): about 25,000 cd and ~160 m to 1 lux, but only ~5 m wide at 30 m. Each spot shares a mirror with one low beam, so in high-beam mode the firmware can **swing the two mirrors apart** to widen the high beam with no extra parts, and narrow it again as speed rises: wide when slow, where the rider needs to see the sides; a tight pencil beam when fast, where reach matters.
 
@@ -232,12 +232,31 @@ yaw_beam_right = clamp(turn_yaw_right - spread, -YAW_OUT, 0);
 
 - **Estimated effect** (two ~10° beams, design §3 figures): at full spread the high beam is ~20° wide with a flat top; the centre drops to about half the peak (~12,500 cd), so ANSI throw ~225 m instead of ~320 m (~110 m instead of ~160 m to 1 lux). At `V_NARROW` and above, unchanged.
 - **Low beam:** because each low beam shares its mirror with a spot, the low beams spread by the same angle in high-beam mode (about like v3's 4° toe-out at 29 km/h). The cutoff height is unchanged; the small compound-angle tilt is covered by B-OPT-08's measurement.
-- **Safety:** spreading only swings beams sideways, never up, so invariants 1–4 hold. In low-beam mode the spread is always 0. If the speed is unknown (see below), the spread holds at a middle value (2.5°) rather than guessing.
+- **Safety:** spreading only swings beams sideways, never up, so invariants 1–4 hold. In low-beam mode the spread is always 0. If the speed is unknown (see the speed source below), the spread holds at a middle value (2.5°) rather than guessing.
 
-**Speed source (open, owner to decide).** The head doesn't measure speed today; the IMU only tells moving from still. The turn-steering rule in the ride demo also uses speed (yaw ≈ look-ahead distance × yaw rate ÷ 2 × speed), so v4 needs one either way:
-1. **The wheel's own speed over BLE (recommended).** Most EUCs report speed to their phone apps over BLE, and the ESP32-S3 is already a BLE host for the remote. Needs per-brand protocol support and a connection the wheel allows alongside its app.
-2. **Estimated from the IMU:** integrate the measured longitudinal acceleration (§2, `a_long`) with a reset whenever the wheel is still, and correct it in turns from `speed ≈ g·tan(lean) / yaw rate`. No pairing, but drifts on long straights.
-3. **A GPS module:** accurate and brand-independent, but adds a part, ~$10 and a few grams (and the head has 1 g of weight margin).
+**Speed source: estimated from the IMU (owner's decision, 2026-11-21).** The head has no speed sensor, and v4's turn steering needs speed too. Of the options (the wheel's speed over BLE, an IMU estimate, a GPS module), the owner chose the IMU estimate: no pairing with each wheel brand, no extra part or weight.
+
+```c
+// speed estimate, m/s: integrate the longitudinal acceleration, reset when still, correct in steady turns
+speed += a_long * dt;                                        // a_long from §2
+if (still_for(0.5f)) { speed = 0; last_fix = now; }          // zero-velocity update (the auto-off "still" test, §4)
+if (fabsf(yaw_rate) > 0.15f && fabsf(lean) > 5 && sign(lean) == sign(yaw_rate)) {
+    float v_turn = G * tanf(fabsf(lean)) / fabsf(yaw_rate);  // balance in a steady turn: tan(lean) = v·ω / g
+    speed += (v_turn - speed) * dt / 1.0f;  last_fix = now;  // blend toward it over ~1 s
+}
+speed = clamp(speed, 0, 70 / 3.6f);
+bool speed_ok = (now - last_fix) < 60.0f;                    // otherwise: unknown, spread holds at 2.5°
+```
+
+- **Why it can work:** drift builds only between corrections. A 0.02 m/s² bias in `a_long` adds ~1.2 m/s (~4 km/h) per minute; every stop resets the estimate, and every steady turn pulls it back to the balance speed.
+- **Where it's weak:** long straights with no stops or turns. After 60 s without a correction the estimate counts as unknown, and the spread holds at 2.5°. The high-beam width only needs speed to within a few km/h.
+- **Turn steering:** in a turn the balance speed is available directly, so the yaw rule doesn't depend on the integrated estimate.
+- **Speed tests:**
+  - U-SPD-01: integrating a known acceleration profile gives the right speed.
+  - U-SPD-02: the estimate resets to 0 when the wheel is still for 0.5 s.
+  - U-SPD-03: in a steady turn it converges to g·tan(lean) ÷ yaw rate within about 1 s.
+  - U-SPD-04: after 60 s without a correction it reports unknown.
+  - R-SPD-01: on a 10-minute mixed ride, the estimate stays within ±5 km/h of the wheel's own speed (from its app) whenever it reports a value.
 
 **Tests if adopted:**
 - U-HB-01: the spread follows the table: `SPREAD_MAX` at ≤ `V_WIDE`, 0 at ≥ `V_NARROW`, linear between, rate-limited to 10°/s.

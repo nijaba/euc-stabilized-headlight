@@ -5,7 +5,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ## [Unreleased]
 
 ### Added
-- Proposal: high beam widened at low speed by swinging the two spots apart (up to 5° each, narrowing by 40 km/h), firmware-spec §12; speed source to decide. Ride demo shows it.
+- Proposal: high beam widened at low speed by swinging the two spots apart (up to 5° each, narrowing by 40 km/h), firmware-spec §12; speed estimated from the IMU (owner's decision), with resets when still and corrections in turns. Ride demo shows it.
 - Site and README say the project is a concept design and invite ideas as GitHub issues rather than builds.
 - GitHub Pages serves `docs/`, so the README's demo link opens the live page (`docs/.nojekyll` serves the files as they are).
 - Project site home page (`docs/index.html`): the problem, how it works, the embedded ride demo, renders, anticipated spec, limits, parts, safety rules, roadmap and links. Its renders live in `docs/img/`, refreshed by `cad/render.sh`.
