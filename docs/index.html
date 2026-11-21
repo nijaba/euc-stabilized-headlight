@@ -62,7 +62,7 @@ h1 .lit { color: var(--beam); }
 .render figcaption { position: absolute; left: 12px; bottom: 10px; font: 500 12px/1.2 var(--f-mono); color: #3a4452; }
 
 /* sections */
-section { padding-block: 64px; border-top: 1px solid var(--line); }
+section { scroll-margin-top: 56px; padding-block: 64px; border-top: 1px solid var(--line); }
 h2 { font: 600 clamp(32px, 4.4vw, 46px)/1 var(--f-display); margin: 10px 0 14px; letter-spacing: .005em; text-wrap: balance; }
 h3 { font: 600 22px/1.15 var(--f-display); letter-spacing: .02em; margin: 0 0 6px; }
 .intro { color: var(--muted); max-width: 64ch; margin: 0 0 32px; }
@@ -209,7 +209,7 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
         <circle cx="540" cy="190" r="4" fill="#ffeec2"/>
         <line x1="100" y1="102" x2="540" y2="20" stroke="#ff6b6b" stroke-width="2.5" stroke-dasharray="7 6"/>
         <g font-family="IBM Plex Mono, monospace" font-size="12">
-          <text x="380" y="30" fill="#ff6b6b">fixed light: above the road</text>
+          <text x="320" y="56" fill="#ff6b6b">fixed light: above the road</text>
           <text x="330" y="176" fill="#ffeec2">levelled cutoff: road, ~38 m</text>
           <text x="22" y="226" fill="#8a97a9">braking: wheel 10° nose-up</text>
           <text x="420" y="226" fill="#8a97a9">not to scale</text>
@@ -273,8 +273,8 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
     <h2>A rounded light bar, 200 mm wide</h2>
     <p class="intro">The packaging model checks that everything fits, sweeps and stays under the weight limit before any part is bought. Layout v4 was chosen on 2026-11-21 over a narrower single-mirror head (v3) with fixed cornering lights.</p>
     <div class="gallery">
-      <figure><div class="shot"><img src="img/v4-wrap-turning.png" alt="Model with both mirrors yawed outward" loading="lazy" width="1600" height="1200"></div><figcaption><b>Turning.</b> Mirrors yawed outward; the beam leaves through the clear side.</figcaption></figure>
-      <figure><div class="shot"><img src="img/v4-wrap-top.png" alt="Top view of the head with beams yawed" loading="lazy" width="1600" height="1200"></div><figcaption><b>From above.</b> Two modules, lidar bay between them, servos in the back slot.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-wrap-turning.png" alt="Model with both mirrors yawed outward" loading="lazy" width="1600" height="1200"></div><figcaption><b>Full outward swing.</b> Both mirrors at 25° to show the travel; in a turn only the turn-side one swings.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-wrap-top.png" alt="Top view of the head with beams yawed" loading="lazy" width="1600" height="1200"></div><figcaption><b>From above.</b> Two modules, lidar bay between them, servos in the back slot; both beams at full outward swing.</figcaption></figure>
       <figure><div class="shot"><img src="img/v4-cutaway.png" alt="Cut-away side view showing LED, optic, mirror and heatsink" loading="lazy" width="1600" height="1200"></div><figcaption><b>Cut-away.</b> LED facing up, optic, 45° mirror, heatsink floor (flat-front variant).</figcaption></figure>
       <figure><div class="shot"><img src="img/v4-under.png" alt="Underside with two finned heatsinks" loading="lazy" width="1600" height="1200"></div><figcaption><b>Underneath.</b> Two aluminium heatsinks, fins fore-aft in the airflow (flat-front variant).</figcaption></figure>
       <figure><div class="shot"><img src="img/v4-on-wheel.png" alt="The head mounted on a generic wheel for scale" loading="lazy" width="1600" height="1200"></div><figcaption><b>On a wheel.</b> Generic 16-inch shell, for scale (flat-front variant).</figcaption></figure>
