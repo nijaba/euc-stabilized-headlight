@@ -5,6 +5,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ## [Unreleased]
 
 ### Added
+- Cornering lights and toe-out (owner, 2026-11-21): two IMU-switched XP-L HI + Carclo elliptical lights in a rounded top brow, aimed 30° out and 10° down (firmware-spec §10, safety invariant 6, U-CRN, B-CRN, R-CRN); FILIPPA optics toed out 4° on aluminium wedges for a ~30° low beam (B-OPT-08). BOM +$33; mass ~517 g with lidar.
 - Packaging study (new build-plan phase 1, before firmware): OpenSCAD model in `cad/`, renders, clearance checks C-PKG-01 to 06 (pass) and mass budget C-MASS-01 (fails: ~556 g with lidar against 350 g).
 - `CLAUDE.md` with the owner's firm constraints: mirror-only steering, external power only, ≤ $450 and ≤ 350 g with the lidar fitted, lidar optional.
 - `docs/build-plan.md` with phases 0–8.

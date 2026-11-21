@@ -8,6 +8,7 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 - **LED driver:** the Mean Well LDD-1500H is discontinued, so it's replaced by the **LEDdynamics BuckBlock A009-D-V-2100**. It's dimmable and rated 2.1 A. Firmware caps it at about 1.5 A in normal mode and allows 2.1 A in a time-limited boost mode.
 - **Dimming flicker:** BuckBlock PWM is specified at 200 Hz, which would flicker visibly on a moving wheel. Instead, the 2N3904 interface runs at about 20 kHz with a 10 µF cap on DIM, which turns it into smooth analog dimming. Verify this on the bench.
 - **Spot LED:** the SFT-40 is a 5050 package and doesn't fit the 20 mm XP-footprint optic holders, so it's swapped for the **Cree XP-L HI (3535)**.
+- **Cornering lights and toe-out (2026-11-21):** two IMU-switched cornering lights (XP-L HI + Carclo 10003-L25) with their own 700 mA drivers, and 4° aluminium wedges that toe the FILIPPA optics outward.
 - **Low beam (2026-11-21):** the Nichia 519A + Carclo 10003-L25 elliptical flood had no cutoff, so it's replaced by two **LEDiL FILIPPA-STVZO** cutoff optics with XP-L HI LEDs. All four LEDs are now XP-L HI; only the two spot optics use Carclo holders. The mirror, heatsink and window grow to fit the 33 mm optics.
 - **IMU:** the LSM6DSO32 (±32 g) is used, so crash detection doesn't saturate. Its on-chip temperature sensor replaces the internal NTC.
 - **Lidar:** a new optional section H. It shares the I²C bus, so it needs no extra pins.
@@ -36,9 +37,10 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Bulk caps | 220 µF 35 V (input) + 470 µF 10 V (servo rail), low-ESR electrolytic | 2 | 0.50 | 1.00 | [search](https://www.digikey.com/en/products/result?keywords=220uF+35V+low+ESR+radial) |  |
 | Thermistor | Vishay NTCLE100E3103JB0, 10 k NTC | 1 | 0.55 | 0.55 | [search](https://www.digikey.com/en/products/result?keywords=NTCLE100E3103JB0) | Heatsink only (internal temperature comes from the IMU); fix with paste + Kapton |
 | Resistors | 1/4 W kit (need 120 k, 15 k, 10 k, 1 k ×3, 100 Ω) | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=1/4W+metal+film+resistor+kit) | Skip if you have a kit |
+| Cornering LED drivers | 700 mA constant-current buck module with PWM input | 2 | 3.00 | 6.00 | [search](https://www.amazon.com/s?k=700mA+constant+current+LED+driver+module+PWM) | One per side; PWM on D3 and a back-pad GPIO |
 | Protoboard | Adafruit Perma-Proto half-size (#1609) | 1 | 4.50 | 4.50 | [link](https://www.adafruit.com/product/1609) | Custom PCB later |
 | Wire | Silicone wire 22 AWG + 26 AWG | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=silicone+wire+22+awg+26+awg+kit) |  |
-| **Subtotal** | | | | **92.70** | | |
+| **Subtotal** | | | | **98.70** | | |
 
 ## C. Optics & mechanism
 
@@ -48,7 +50,10 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Low-beam LEDs | Cree XP-L HI (3535) on 20 mm DTP copper, about 5000 K | 2 | 6.50 | 13.00 | [link](https://kaidomain.com/XP-L-HI-10W-3A-1095-Lumens-SMD-3535-LED) | For the FILIPPA optics. Replaces the Nichia 519A, which isn't on LEDiL's compatible list |
 | Spot optics | Carclo 10003 narrow spot, 20 mm (~8–12°) | 2 | 2.75 | 5.50 | [link](https://www.ledsupply.com/led-optics/10003-carclo-lens-20mm-narrow-spot-led-optic) |  |
 | Low-beam optics | LEDiL FILIPPA-STVZO (C18612_FILIPPA-STVZO), Ø 32.9 mm cutoff optic | 2 | 3.52 | 7.04 | [link](https://www.mouser.com/en/ProductDetail/Ledil/C18612_FILIPPA-STVZO?qs=2SLPxufLcgCat%2F0uKWgVhA%3D%3D) | Mouser, Nov 2026: $3.52 each, $2.06 each for 10. LEDiL's own MOQ is 252. Flange mount; orienting rib toward the front of the housing (LEDs face up) |
-| Optic holders | Carclo 10734, 20 mm, XP footprint | 2 | 0.80 | 1.60 | [link](https://www.digikey.com/en/products/detail/carclo-technical-plastics/10734/2641685) | Spot optics only |
+| Cornering LEDs | Cree XP-L HI (3535) on 20 mm DTP copper, about 4000 K | 2 | 6.50 | 13.00 | [link](https://kaidomain.com/XP-L-HI-10W-3A-1095-Lumens-SMD-3535-LED) | Run at ~0.7 A |
+| Cornering optics | Carclo 10003-L25 elliptical, 20 mm (~44×13°) | 2 | 3.25 | 6.50 | [link](https://www.ledsupply.com/led-optics/10003-l25-carclo-lens-20mm-elliptical-spot-led-optic) | Wide axis horizontal; aimed 30° out, 10° down |
+| Toe-out wedges + spreader plates | Aluminium flat bar ~3 × 25 mm, cut to 2 × 4° wedges and 2 × 24×24 mm plates | 1 | 6.00 | 6.00 | [search](https://www.amazon.com/s?k=aluminum+flat+bar+3mm+x+25mm) | Wedges under the FILIPPA boards; plates under the cornering boards. Thermal paste both faces |
+| Optic holders | Carclo 10734, 20 mm, XP footprint | 4 | 0.80 | 3.20 | [link](https://www.digikey.com/en/products/detail/carclo-technical-plastics/10734/2641685) | Spot and cornering optics |
 | Mirror | Front-surface (first-surface) glass mirror, enhanced Al, 1.1 mm, cut to ~114×55 mm, flat | 1 | 18.00 | 18.00 | [link](https://www.edmundoptics.com/f/first-surface-mirrors/12017/) | Edmund: precise, pricier. Budget: https://www.aliexpress.com/w/wholesale-front-surface-mirror-glass.html (glass, not acrylic). Score on the back face to cut. Price was for ~90×35 mm; recheck for the larger size. Flatness matters for a sharp cutoff |
 | Pivot bearings | MR63ZZ (3×6×2.5 mm), pack of 10 | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=MR63ZZ+bearing) |  |
 | Pivot shaft | 3 mm stainless steel rod, 100 mm | 1 | 6.00 | 6.00 | [search](https://www.amazon.com/s?k=3mm+stainless+steel+rod+100mm) |  |
@@ -56,7 +61,7 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Servo | EMAX ES08MD II, digital, metal gear, 12–13 g | 1 | 14.00 | 14.00 | [link](https://www.readymaderc.com/products/details/emax-es08mdii-12g-digital-metal-gear-servo) | Also AMain Hobbies, RaceDayQuads |
 | Heatsink (= floor) | Finned aluminium heatsink ~128×45 mm, ~3 mm base, ~14 mm fins, fins running fore-aft | 1 | 9.00 | 9.00 | [search](https://www.amazon.com/s?k=aluminum+heatsink+extrusion+50mm+wide) | Cut from extrusion; LED stars screw to the flat side; drill/tap M3. Fins must run front-to-back |
 | Thermal paste | Arctic MX-4 (or similar) | 1 | 7.00 | 7.00 | [search](https://www.amazon.com/s?k=Arctic+MX-4) | Skip if you have it |
-| **Subtotal** | | | | **109.14** | | |
+| **Subtotal** | | | | **136.24** | | |
 
 ## D. Housing & sealing
 
@@ -134,18 +139,19 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Electronics tray | ASA, holds the protoboard, BuckBlocks, Pololu |
 | Mount boss | ASA, on the back of the body, holds the 1/4"-20 insert |
 | Remote case | ASA or TPU, 2 buttons + strap slots |
-| Lidar pocket (if section H) | ASA, in the top cover (not the mirror), aims the lidar ~3–5° below the beam axis; or a separate housing on the wheel shell |
+| Top brow | ASA, rounded, across the top front: cornering lights at the ends, lidar pocket in the middle (if section H) |
+| Lidar pocket (if section H) | ASA, in the top brow (not the mirror), aims the lidar ~3–5° below the beam axis; or a separate housing on the wheel shell |
 
 ## Cost summary
 
 | | USD |
 |---|---|
-| Core build, cash outlay (sections A–G, excluding the 2 optional items) | **474** |
+| Core build, cash outlay (sections A–G, excluding the 2 optional items) | **507** |
 | Optional extras (XTC-3D coating, magnetic breakaway) | +35 |
 | Road-slope lidar (section H) | +98 |
 | Subtract if you already own a power bank, filament, resistor kit, wire, paste | −100 |
 | Packs and spools left over after one unit (inserts, screws, O-ring cord, bearings, mounts…) | ≈ 129 |
-| **Material actually used per unit, without lidar or power bank** | **≈ 297** |
+| **Material actually used per unit, without lidar or power bank** | **≈ 330** |
 
 Tools not included: 3D printer, soldering iron with a heat-set insert tip, multimeter, glass cutter, drill and M3 tap.
 
@@ -156,7 +162,8 @@ Tools not included: 3D printer, soldering iron with a heat-set insert tip, multi
 | D0 | 1 | Input voltage sense (120 k / 15 k) |
 | D1 | 2 | Heatsink NTC |
 | D2 | 3 | IMU INT1 (wake-on-motion) |
-| D3 | 4 | Spare |
+| D3 | 4 | Left cornering light driver PWM |
+| back pad | 41 | Right cornering light driver PWM (e.g. MTDI; confirm on Seeed's pinout) |
 | D4 | 5 | I²C SDA (IMU + lidar) |
 | D5 | 6 | I²C SCL |
 | D6 | 43 | Status / button ring LED (via 2N3904) |

@@ -52,6 +52,7 @@ Goal: the protoboard powers both channels safely and dims them smoothly.
 Goal: the mirror size and window height are proven before CAD fixes them.
 
 - [ ] FILIPPA focus height and cutoff with XP-L HI (B-OPT-05, B-OPT-06, B-OPT-07)
+- [ ] Toe-out wedges and cornering lights: width, cutoff tilt, glare, heat (B-OPT-08, B-CRN-01, B-CRN-02)
 - [ ] Beam clipping across ±7.5° of mirror (B-OPT-02)
 - [ ] Mirror balance and ringing under vibration (B-MIR-04)
 - [ ] Light output, beam intensity and angles, heatsink temperature rise (B-OPT-03, B-OPT-04, B-THM-01, B-THM-02)
@@ -63,6 +64,7 @@ Goal: the mirror size and window height are proven before CAD fixes them.
 - [ ] Thermal derating and boost limits (U-THM)
 - [ ] Input-voltage handling (U-VIN)
 - [ ] BLE remote, head button (U-REM, B-REM-01, B-REM-02)
+- [ ] Cornering lights (U-CRN)
 - [ ] Safety invariant tests (U-SAFE)
 - [ ] DIY remote firmware (XIAO nRF52840)
 
@@ -76,7 +78,7 @@ Goal: the mirror size and window height are proven before CAD fixes them.
 ## Phase 7: Integration and ride tests
 
 - [ ] Full assembly, calibration on the wheel
-- [ ] Ride tests: aim, hills, auto-off, temperature, runtime (R-AIM, R-OFF, R-THM, R-RUN)
+- [ ] Ride tests: aim, hills, auto-off, temperature, runtime, turns (R-AIM, R-OFF, R-THM, R-RUN, R-CRN)
 - [ ] Filter tuning from logged rides
 - [ ] User guide: mounting, calibration, remote
 

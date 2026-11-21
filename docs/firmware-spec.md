@@ -15,6 +15,7 @@
    - remote → keep the current mode
 4. All brightness changes are rate-limited, so there are no visible steps or flicker.
 5. If the MCU dies, the BuckBlock DIM inputs float and the light runs at full current (hardware failsafe).
+6. The cornering lights only add light. They never dim or move the main beam, and any fault turns them off.
 
 ## 2. Control loop (200–400 Hz)
 
@@ -126,3 +127,16 @@ If the remote disconnects, the light keeps its current mode. The button on the h
 
 - Serial log over the XIAO's USB-C: pitch, mirror command, temperatures, input voltage, state.
 - Optional: log to flash at 50 Hz for analysing rides afterwards.
+
+## 10. Cornering lights
+
+Two fixed lights aimed 30° outward and 10° down (design §3). Left on D3, right on a back-pad GPIO, each through a 700 mA driver's PWM input.
+
+- **Inputs:** lean angle (roll about the learned forward axis, from the same gated filter as pitch) and yaw rate (gyro about the learned vertical axis). `now` is passed in.
+- **Side:** the side the wheel turns toward: the sign of the yaw rate, which must agree with the lean direction.
+- **On:** while moving, when |lean| > 8° **or** |yaw rate| > 20°/s for 150 ms.
+- **Off:** when |lean| < 5° **and** |yaw rate| < 12°/s for 400 ms, when stationary or parked, or on any sensor fault.
+- **Brightness:** 40% at the threshold, rising linearly to 100% at 20° of lean.
+- **Fades:** in over 0.2 s, out over 0.6 s.
+- **Thermal cap:** after 20 s continuously at full power on one side, that side falls to 50% until it has been off for 20 s.
+- Only one side is lit at a time. If the inputs flip side, the old side fades out as the new one fades in.

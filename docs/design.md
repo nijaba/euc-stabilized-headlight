@@ -46,7 +46,7 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 - **Linkage:** a pushrod at about 4:1. The servo sweeps ±30° for ±7.5° of mirror, which gives 4× the resolution and hides servo backlash. Response stays well under 50 ms.
 - **Window:** about 124 × 61 mm, 2 mm polycarbonate, so the 33 mm low beam can sweep ±15° without clipping.
 
-**Limitation: pitch only.** A single fold mirror corrects pitch but not roll. In a turn, the low-beam cutoff tilts with the lean, so on one side it rises by the lateral angle × tan(lean). Motorcycle low beams have the same limitation. A two-axis mirror could add cornering (steering on yaw rate) later.
+**Limitation: pitch only.** A single fold mirror corrects pitch but not roll. In a turn, the low-beam cutoff tilts with the lean: the side on the inside of the turn drops toward the road, shortening reach exactly where the rider needs to look. Motorcycle low beams have the same limitation. The answer here (owner's decision, 2026-11-21) is a wider low beam plus IMU-switched cornering lights (§3), not a second mirror axis.
 
 **How cars and motorcycles do it (researched 2026-11-21):**
 - **Cars: automatic levelling.** UN ECE R48 requires automatic headlamp levelling when a light source exceeds 2000 lm, which this head does (~2400 lm emitted). Usually a stepper motor tilts the **whole lighting module** inside the headlamp, driven by a lighting ECU from suspension ride-height sensors. "Dynamic" systems react within fractions of a second to braking and acceleration; "semi-static" ones only correct for load. One research system computes pitch from vehicle acceleration instead of height sensors, which is close to what this head does with its IMU.
@@ -68,6 +68,7 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 - **FILIPPA-STVZO** (LEDiL datasheet, simulated): Ø 32.9 mm, 18.5 mm tall, 6.3 g, PMMA, one LED per optic. With an XP-L HI: 7 cd/lm peak, FWHM 22° × 13°, FWTM 32° × 33°, 90% efficient. It mounts by its 1.5 mm flange, with no holder.
 - **Cutoff orientation.** The datasheet's beam sketch puts the flat cutoff edge on the same side as the flange's 3.1 mm **orienting rib**. With the LEDs facing up (layout v2), the 45° fold sends light that leaves the optic toward the window upward, so the **rib must point to the front of the housing**, toward the window. The optic plate has a slot for the rib so the optic can't rotate: any rotation tilts the cutoff by the same angle. Confirm the orientation on the bench (B-OPT-06).
 - **Focus height.** The datasheet gives the flange height above the PCB only for Luxeon Altilon (10.0 mm) and Osram Oslon (11 mm), not for the XP-L HI. Find it on the bench with printed spacers in 0.1 mm steps, choosing the sharpest cutoff (B-OPT-05).
+- **Toe-out (owner's decision, 2026-11-21):** each FILIPPA leans **4° outward** on a 4° aluminium wedge under its LED board (thermal paste on both faces; a printed wedge would block the heat). Under the mirror, leaning an optic sideways becomes a sideways swing of its beam, so the cutoff stays horizontal. The low beam widens from about 22° to about 30° (FWHM). Side effects: about 15% less peak intensity in the centre, the window grows by a few millimetres, and the cutoffs of the toed-out beams may tilt slightly (estimated 1–2°) when the mirror is at the ends of its travel (B-OPT-08).
 - **Brighter option to test.** LEDiL lists higher peaks for smaller or rectangular emitters (XP-LR 9.6, XP-GR 10.4, SFT-12R 11.1, Oslon Black Flat 12.6 cd/lm), usually with a sharper cutoff, but they emit fewer lumens than the XP-L HI.
 - **Each channel:** 2 LEDs in series (about 6.2 V) on its own BuckBlock driver.
   - Drivers: 10–32 V input, 2.1 A, buck topology, dimming input.
@@ -80,6 +81,13 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
   - Instead, drive the 2N3904 at about 20 kHz with a 10 µF capacitor from DIM to ground, which gives smooth analog dimming. **Verify this on the bench.**
 - **DIM failsafe:** with the DIM input left open, the BuckBlock runs at its full rated current. If the MCU dies, the light stays **on**. This is intentional, but thermal derating is lost in that state.
 - **The Mean Well LDD-1500H** from the first draft is discontinued.
+
+**Cornering lights (owner's decision, 2026-11-21).** One fixed light at each end of a rounded brow across the top front of the head, aimed **30° outward and 10° down**, lit by the IMU when the wheel leans or turns that way (firmware-spec §10). It lights the inside of a turn, where the low beam drops.
+- **Each light:** a Cree XP-L HI (about 4000 K) on a 20 mm copper board, a Carclo 10003-L25 elliptical optic (~44 × 13°, wide axis horizontal) in a Carclo 10734 holder, behind a small polycarbonate window in the brow's corner. About 0.7 A, ~2.2 W, ~300 lm, roughly 1,000 cd (~10 lux at 10 m).
+- **Glare:** aimed 10° down, the half-intensity top edge of the 13° beam stays about 3.5° below horizontal; only the faint outer fringe reaches the horizon. B-CRN-01 checks it against the 2 lux limit.
+- **Heat:** each LED sits on a 24 × 24 × 2 mm aluminium spreader plate. They're only on in turns, and firmware caps continuous full power at 20 s.
+- **Drivers:** one small 700 mA constant-current buck module per side with a PWM input, on D3 and one more GPIO (§7).
+- **Cost and weight:** about $33 and about 33 g for the pair, wedges and drivers included, plus the brow (§5).
 
 **Output estimate:**
 
@@ -94,13 +102,13 @@ About 600 lm per XP-L HI in normal mode and 780 lm in boost. Out the front assum
 
 | | Spot (2× XP-L HI, Carclo 10003) | Low beam (2× XP-L HI, FILIPPA-STVZO) |
 |---|---|---|
-| Beam angle | ~8–12° round | 22° wide × 13° tall, sharp top edge |
-| Peak intensity, normal (1.5 A) | ~25,000 cd (18–40k) | ~7,300 cd (~73 lux at 10 m) |
-| Peak intensity, boost (2.1 A) | ~33,000 cd | ~9,500 cd (~95 lux at 10 m) |
+| Beam angle | ~8–12° round | ~30° wide × 13° tall with toe-out, sharp top edge |
+| Peak intensity, normal (1.5 A) | ~25,000 cd (18–40k) | ~6,200 cd (~62 lux at 10 m) with 4° toe-out (~7,300 cd without) |
+| Peak intensity, boost (2.1 A) | ~33,000 cd | ~8,100 cd (~81 lux at 10 m) |
 | ANSI throw (to 0.25 lux), normal | ~320 m (270–400 m) | ~170 m |
 | ANSI throw, boost | ~360 m | ~195 m |
 | Distance to 1 lux, normal | ~160 m | ~85 m |
-| Beam width at 30 m | ~5 m | ~12 m |
+| Beam width at 30 m | ~5 m | ~16 m |
 
 How it's estimated:
 - **Spot:** each beam is treated as a smooth peak with the stated beam angle, about 21 cd per emitted lumen for a 10° spot (15 at 12°, 33 at 8°) after about 0.74 optical efficiency. The biggest uncertainty is the spot's real beam angle with the XP-L HI; Carclo's photometric files would narrow it.
@@ -128,6 +136,7 @@ power bank ──USB-C──► PD trigger cable (fixed 15 V, e-marked) ──�
 | Boost (both channels 2.1 A, at most 60 s at a time) | ~30 W | ~2.0 A | ~1.7 h |
 | Typical (low beam normal, spot 50%) | ~16 W | ~1.1 A | ~3 h |
 | Optional lidar | +~1 W | +~0.07 A | about 5% less |
+| Cornering lights (in turns only) | +~2.2 W per side | +~0.15 A per side | negligible |
 
 Where it goes in normal mode:
 - **LEDs:** 2 channels × ~6.2 V × 1.5 A ≈ 18.6 W. With the BuckBlocks at about 90% efficiency, that's ~20.5 W from the input.
@@ -222,6 +231,7 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 | 1 FILIPPA + 1 spot, lidar on the head | ~368 g (~348 g square-edged) | No |
 
 - The heaviest items are still the printed body (~105 g) and the heatsink (~79 g). A body with one FILIPPA is about 52 mm shorter because the optic row shrinks; the window stays as wide as the FILIPPA's 32° spread needs.
+- **Cornering lights and toe-out** (added later the same day) put both lights in a rounded brow across the top front, with the lidar in the middle when it's fitted. They add about 54 g: ~463 → **~517 g** with the lidar on the head, ~451 g with it on the wheel. With one FILIPPA and one spot, the brow is too short for the lidar and both lights (C-PKG-09).
 - **Lidar off the head:** the IMU in the head still gives the lidar's true depression angle if both are fixed rigidly to the same part of the wheel, so the lidar can live in its own small housing on the shell, joined by a cable.
 
 ## 6. Mounting
@@ -250,7 +260,8 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 | D0 | 1 | Input voltage sense (120 k / 15 k divider; 20 V → ~2.2 V) |
 | D1 | 2 | Heatsink NTC (10 k NTC + 10 k pull-up) |
 | D2 | 3 | IMU INT1: wake-on-motion |
-| D3 | 4 | Spare |
+| D3 | 4 | Left cornering light driver PWM |
+| back pad (e.g. MTDI, GPIO41) | 41 | Right cornering light driver PWM. Confirm on Seeed's pinout |
 | D4 | 5 | I²C SDA (IMU + lidar) |
 | D5 | 6 | I²C SCL |
 | D6 | 43 | Button ring LED (6 V LED from 5 V via 2N3904) |
@@ -322,7 +333,9 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - [ ] P6KE27A clamps at ~37.5 V, above the BuckBlock's 32 V maximum. Low risk with a 20 V bank, but a lower-clamp TVS would cover it.
 - [x] Cost over the limit: about $290 core + $98 lidar ≈ $388, against a $350 ceiling. Resolved 2026-11-20: the owner raised the limit to $450, so no parts change.
 - [x] **The flood has no cutoff.** Resolved 2026-11-21: the owner chose two LEDiL FILIPPA-STVZO cutoff optics with XP-L HI as the low beam (§3). A shield or masked mirror edge was rejected because a TIR beam isn't an image, so blocking part of it only dims it without making a sharp edge.
-- [ ] **Head weight is over 350 g.** Layout v2 brings it from ~556 g to ~448 g with the lidar on the head, and the rounded exterior adds ~15 g (~463 g). Square-edged, two configurations fitted (~341 g and ~348 g); rounded, none do, the closest being 2 FILIPPA + 1 spot with the lidar on the wheel (~358 g). Needs the owner's decision: a configuration, a smaller edge radius, or a higher limit. (2026-11-21)
+- [ ] **Head weight is over 350 g.** Layout v2 brought it from ~556 g to ~448 g with the lidar on the head; the rounded exterior adds ~15 g and the cornering lights with toe-out ~54 g, for **~517 g** (~451 g with the lidar on the wheel). Needs the owner's decision: lighter configuration, smaller edge radius, or a higher limit. (2026-11-21)
 - [ ] Heatsink sized for moving air (§8): confirm the riding temperature and the parked derating on the bench (B-THM-01).
 - [ ] FILIPPA with XP-L HI: focus height, cutoff sharpness and cutoff orientation are not in LEDiL's data. Bench tests B-OPT-05 and B-OPT-06.
 - [ ] Larger mirror (115 × 55 mm, about 5× the moment of inertia): does the servo still settle in under 50 ms (B-MIR-01)?
+- [ ] A second free GPIO for the right cornering light: the XIAO ESP32-S3's back pads (MTDI/GPIO41 and others) are the likely choice. Confirm on the board.
+- [ ] Cornering-light glare at the horizon (B-CRN-01) and the toed-out cutoff tilt across the mirror's travel (B-OPT-08).

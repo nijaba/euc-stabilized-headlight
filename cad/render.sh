@@ -33,23 +33,29 @@ grep -m2 -E '^ECHO: "(PKG|MASS)' "$LOG.tmp" | sed 's/^ECHO: //' >> "$LOG"
 if grep -q 'C-PKG' "$LOG.tmp"; then
   grep 'C-PKG' "$LOG.tmp" | sort -u >> "$LOG"; rm -f "$LOG.tmp"; cat "$LOG"; exit 1
 fi
-echo "C-PKG-01..08 passed" >> "$LOG"
+echo "C-PKG-01..10 passed" >> "$LOG"
 rm -f "$LOG.tmp"
 
 # Mass budget (C-MASS-01) for the baseline, with lighter configurations for comparison.
 variant() { # name [-D args...]
   name=$1; shift
-  "$OPENSCAD" -o "$OUT/$name.echo" "$@" headlight.scad 2>/dev/null
+  if ! "$OPENSCAD" -o "$OUT/$name.echo" "$@" headlight.scad 2>"$OUT/$name.err" || ! grep -q '"PKG ' "$OUT/$name.echo"; then
+    echo "Variant $name does not fit: $(cat "$OUT/$name.err" "$OUT/$name.echo" 2>/dev/null | grep -o 'C-PKG-[0-9]*[^"]*' | head -1)" >> "$OUT/variants.txt"
+    rm -f "$OUT/$name.echo"
+  fi
+  rm -f "$OUT/$name.err"
 }
+: > "$OUT/variants.txt"
 variant baseline
 variant one-spot            -D n_spot=1
 variant lidar-off-head      -D lidar_on_head=false
 variant one-spot-no-lidar   -D n_spot=1 -D lidar_on_head=false
 variant one-fil-one-spot    -D n_fil=1 -D n_spot=1
 status=0
-python3 -I weight.py "$OUT"/baseline.echo "$OUT"/one-spot.echo "$OUT"/lidar-off-head.echo \
-  "$OUT"/one-spot-no-lidar.echo "$OUT"/one-fil-one-spot.echo > "$OUT/mass.txt" || status=$?
-rm -f "$OUT"/*.echo
+# shellcheck disable=SC2046
+python3 -I weight.py $(ls "$OUT"/baseline.echo "$OUT"/one-spot.echo "$OUT"/lidar-off-head.echo \
+  "$OUT"/one-spot-no-lidar.echo "$OUT"/one-fil-one-spot.echo 2>/dev/null) > "$OUT/mass.txt" || status=$?
+cat "$OUT/variants.txt" >> "$OUT/mass.txt"; rm -f "$OUT"/*.echo "$OUT/variants.txt"
 tail -1 "$OUT/mass.txt" >> "$LOG"
 cat "$LOG"
 exit $status
