@@ -8,6 +8,8 @@ An EUC pitches nose-down when it accelerates and nose-up when it brakes. A fixed
 
 ![Packaging model of the head, three-quarter view](cad/renders/three-quarter.png)
 
+**[v4 ride demo](https://claude.ai/artifact/W2Fbpx3bwh4NMTwY7sH8hT):** an animated simulation of the firmware's levelling and turn steering for layout v4. It runs through accelerating, braking, a hill crest and two turns, compared with a fixed light.
+
 ## Goals
 
 | Requirement | How it is met |
