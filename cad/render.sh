@@ -44,11 +44,11 @@ status=0
 "$OPENSCAD" -o "$OUT/model.echo" headlight.scad 2>/dev/null
 "$OPENSCAD" -o "$OUT/shell.stl" -D 'view="stl_shell"' headlight.scad 2>/dev/null
 "$OPENSCAD" -o "$OUT/hood.stl"  -D 'view="stl_hood"'  headlight.scad 2>/dev/null
-python3 -I weight.py "$OUT/model.echo" "$OUT/shell.stl" "$OUT/hood.stl" > "$OUT/mass.txt" || status=$?
+python3 -I weight.py "$OUT/model.echo" "$OUT/shell.stl" "$OUT/hood.stl" > "$OUT/mass.txt" || true   # v3: earlier layout, reported only
 rm -f "$OUT/model.echo" "$OUT/shell.stl" "$OUT/hood.stl"
 tail -1 "$OUT/mass.txt" >> "$LOG"
 
-# Layout v4 study (two 2-axis mirrors, lidar between them): renders and mass, reported but not gating.
+# Layout v4, adopted 2026-11-21 (two 2-axis mirrors, lidar between them). Its C-PKG checks and the wrap variant's mass gate the exit status.
 render4() { name=$1; view=$2; cam=$3; shift 3
   fit=""; case "$cam" in *,0) fit="--viewall --autocenter" ;; esac
   # shellcheck disable=SC2086
@@ -64,20 +64,20 @@ render4 on-wheel      wheel    0,0,0,75,0,125,0 -D show_beams=false
 render4 wrap-three-quarter assembly 0,0,0,62,0,140,0 -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 -D show_beams=false
 render4 wrap-turning  assembly 0,0,0,62,0,140,0 -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 -D yaw=12.5
 render4 wrap-top      assembly 0,0,0,0,0,0,0 -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 -D yaw=12.5 --projection=ortho
-if grep -q 'C-PKG' "$LOG.v4"; then echo "v4: $(grep -o 'C-PKG[^"]*' "$LOG.v4" | sort -u | head -3)" >> "$LOG"; else echo "v4: C-PKG checks passed" >> "$LOG"; fi
+if grep -q 'C-PKG' "$LOG.v4"; then status=1; echo "v4: $(grep -o 'C-PKG[^"]*' "$LOG.v4" | sort -u | head -3)" >> "$LOG"; else echo "v4: C-PKG checks passed" >> "$LOG"; fi
 rm -f "$LOG.v4"
 "$OPENSCAD" -o "$OUT/v4.echo" headlight-v4.scad 2>/dev/null
 "$OPENSCAD" -o "$OUT/v4-shell.stl" -D 'view="stl_shell"' headlight-v4.scad 2>/dev/null
 python3 -I weight.py "$OUT/v4.echo" "$OUT/v4-shell.stl" > "$OUT/mass-v4.txt" || true
 grep '"PKG' "$OUT/v4.echo" | sed 's/^ECHO: /v4 /' >> "$LOG"
 rm -f "$OUT/v4.echo" "$OUT/v4-shell.stl"
-echo "v4 (study): $(tail -1 "$OUT/mass-v4.txt")" >> "$LOG"
+echo "v4 flat front (not built): $(tail -1 "$OUT/mass-v4.txt")" >> "$LOG"
 # v4 with one clear wraparound piece per side (front + corner + side, no pillar).
 "$OPENSCAD" -o "$OUT/v4w.echo" -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 headlight-v4.scad 2>/dev/null
 "$OPENSCAD" -o "$OUT/v4w-shell.stl" -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 -D 'view="stl_shell"' headlight-v4.scad 2>/dev/null
-python3 -I weight.py "$OUT/v4w.echo" "$OUT/v4w-shell.stl" > "$OUT/mass-v4-wrap.txt" || true
+python3 -I weight.py "$OUT/v4w.echo" "$OUT/v4w-shell.stl" > "$OUT/mass-v4-wrap.txt" || status=$?
 grep '"PKG' "$OUT/v4w.echo" | sed 's/^ECHO: /v4-wrap /' >> "$LOG"
 rm -f "$OUT/v4w.echo" "$OUT/v4w-shell.stl"
-echo "v4 with clear wraparound sides (study): $(tail -1 "$OUT/mass-v4-wrap.txt")" >> "$LOG"
+echo "v4 with clear wraparound sides (adopted): $(tail -1 "$OUT/mass-v4-wrap.txt")" >> "$LOG"
 cat "$LOG"
 exit $status

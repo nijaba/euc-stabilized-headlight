@@ -1,6 +1,6 @@
 # EUC Stabilized Headlight
 
-An open-hardware, self-levelling headlight for electric unicycles. A servo tilts a mirror to keep the beam level while the wheel pitches. The project covers the ESP32-S3 firmware, a 3D-printed housing and a bill of materials.
+An open-hardware, self-levelling headlight for electric unicycles. Two mirrors, each tilted by servos on two axes, keep the beam level while the wheel pitches and swing it into turns (layout v4). The project covers the ESP32-S3 firmware, a 3D-printed housing and a bill of materials.
 
 - `docs/design.md` is the source of truth for the hardware. `docs/firmware-spec.md` is the source of truth for firmware behaviour. Read the relevant section before changing anything.
 - `docs/build-plan.md` lists the phases in order. Work on the current phase only, and tick items as they pass.
@@ -10,14 +10,14 @@ An open-hardware, self-levelling headlight for electric unicycles. A servo tilts
 
 The owner decided these (2026-11-20). Ask before trading one away.
 
-- **Mirror steering.** The LEDs and heatsink never move. Only the mirror tilts to steer the beam.
+- **Mirror steering.** The LEDs and heatsinks never move. Only the mirrors tilt to steer the beams.
 - **External power only.** The head has no battery. USB-C PD is negotiated at the power bank, in its pouch, and only plain DC reaches the head.
-- **Material cost ≤ $450 per unit, with the optional lidar fitted** (raised from $350 on 2026-11-20). This excludes the power bank, tools, and packs left over after one unit. The current estimate is about $423.
+- **Material cost ≤ $450 per unit, with the optional lidar fitted** (raised from $350 on 2026-11-20). This excludes the power bank, tools, and packs left over after one unit. The current estimate is about $440 for layout v4.
 - **Head weight ≤ 400 g, with the optional lidar fitted** (raised from 350 g on 2026-11-21).
 - **The lidar stays optional.** The firmware and housing must work fully without it.
 - **No personal data in the repository:** no real names, hostnames, accounts or locations in code, docs, tests or commit messages. Personal build or ride notes go in `*.local.md`, which git ignores. The one approved exception is the repository's GitHub handle, in repository links and `CODEOWNERS`.
 
-Current choices that are not firm constraints (change them through the design doc): XIAO ESP32-S3, Arduino-ESP32 3.x under PlatformIO, NimBLE, BuckBlock drivers, a hobby servo, ASA housing.
+Current choices that are not firm constraints (change them through the design doc): XIAO ESP32-S3, Arduino-ESP32 3.x under PlatformIO, NimBLE, BuckBlock drivers, four hobby servos, ASA housing with thermoformed polycarbonate sides, layout v4 (adopted 2026-11-21).
 
 ## Commands
 

@@ -66,7 +66,7 @@ servo_write_deg(trim + mirror * LINKAGE_RATIO);                // ≈ 4:1
   - **If the wheel pitches 20% more or less than `K_TILT` assumes:** the cutoff stays between 31 and 50 m through hard acceleration and braking.
   - **Not fixable by the IMU:** before a crest, a beam parallel to the climbing road passes over the top; at the bottom of a hill, the rising road ahead catches the beam short (about 11 m). Only the lidar, which sees the road ahead, removes these.
   - **Tests:** U-ROAD-01 and U-ROAD-03 to 06, B-MIR-01, R-AIM-02 and R-ROAD-01 to 02 in the test plan. The thresholds (1 m/s², 0.2 g, 0.3 s) and `K_TILT` are starting values to tune with bench and ride logs.
-- **Servo output:** 50–333 Hz PWM from the ESP32's LEDC peripheral, clamped to the mechanical limits.
+- **Servo output (v4: four servos, pitch and yaw for each mirror, each with its own trim):** 50–333 Hz PWM from the ESP32's LEDC peripheral, clamped to the mechanical limits.
 
 ## 3. Calibration (saved in NVS)
 
@@ -160,7 +160,9 @@ If the remote disconnects, the light keeps its current mode. The button on the h
 - Serial log over the XIAO's USB-C: pitch, mirror command, temperatures, input voltage, state.
 - Optional: log to flash at 50 Hz for analysing rides afterwards.
 
-## 10. Cornering lights
+## 10. Cornering lights (v3 only)
+
+Layout v4 (adopted 2026-11-21) has no cornering lights: the beam on the turn side swings into the curve instead and the other stays straight (design §5). The yaw rule for v4 is still to be written here. This section and its tests (U-CRN) apply to v3.
 
 Two fixed lights aimed 30° outward and 10° down (design §3). Left on D3, right on a back-pad GPIO, each through a 700 mA driver's PWM input.
 

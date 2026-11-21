@@ -23,6 +23,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - `CONTRIBUTING.md` and `SECURITY.md` (private reporting for safety faults as well as security issues).
 
 ### Changed
+- Layout v4 adopted (owner, 2026-11-21): two mirrors on 2-axis gimbals, four servos, clear wraparound sides, lidar in the body, no cornering lights. Design, firmware spec, build plan, CLAUDE.md, BOM (≈ $440 per unit with the lidar, ~393 g) and README updated; `render.sh` now gates on v4.
 - Hill follower (firmware-spec §2, adopted 2026-11-21): removes the pitch the measured acceleration explains, then follows with τ = 0.3 s instead of 4 s, freezing 0.3 s after hard acceleration or a jolt. Fixes the beam dropping while accelerating and lagging over crests. U-ROAD-01 and R-AIM-02 now require 1 s.
 - Weight limit raised from 350 g to 400 g with the lidar (owner, 2026-11-21). Layout v3: aerodynamic shape (tapered, sloping roof, soft tail, brow fairing) and lean package (1.6 mm walls, smaller heatsink, 1.5 mm window, 5 g servo, fewer screws, M8 gland); printed parts now measured from STL volumes; ~401 g. Design §2 explains the mirror's size.
 - Layout v2 (owner's requirements, 2026-11-21): heatsink at the bottom with fins fore-aft, LEDs facing up, mount on the back (never the top), rounded exterior (8 mm edges), lidar in a top pocket, lighter walls, window and mirror. Mass ~556 → ~463 g with the lidar (~448 g before rounding); configurations compared in design §5. Design §2 adds how cars and motorcycles level their beams.
