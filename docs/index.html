@@ -276,7 +276,7 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
   <div class="wrap">
     <div class="eyebrow">Ride demo</div>
     <h2>Watch the control loop ride</h2>
-    <p class="intro">A 45-second simulation of the firmware: accelerating and braking at 10°, an 8% hill with a crest, and two turns, with low and high beam modes, the lidar on or off, and a fixed light for comparison. It runs the logic from the firmware spec with a perfect IMU.</p>
+    <p class="intro">A 52-second simulation of the firmware: accelerating and braking at 10°, an 8% hill with a crest, two turns and a slow street, with low and high beam modes (the high beam widens when slow), the lidar on or off, and a fixed light for comparison. It runs the logic from the firmware spec with a perfect IMU.</p>
     <div class="demo-frame">
       <div class="demo-bar"><span>v4-ride-demo.html</span><a href="v4-ride-demo.html">Open full page</a></div>
       <iframe src="v4-ride-demo.html" title="v4 ride demo" loading="lazy"></iframe>
@@ -311,7 +311,7 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
           <thead><tr><th>Beam</th><th>Low (cutoff)</th><th>High (spots)</th></tr></thead>
           <tbody>
             <tr><td>Optics</td><td>2 × LEDiL FILIPPA-STVZO</td><td>2 × Carclo 10003</td></tr>
-            <tr><td>Beam shape</td><td class="num">~22° × 13°<span class="sub">sharp top edge</span></td><td class="num">~8–12° round</td></tr>
+            <tr><td>Beam shape</td><td class="num">~22° × 13°<span class="sub">sharp top edge</span></td><td class="num">~8–12° round<span class="sub">~20° wide when slow (proposed)</span></td></tr>
             <tr><td>Peak, normal</td><td class="num">~6,200–7,300 cd<span class="sub">~62 lux at 10 m</span></td><td class="num">~25,000 cd</td></tr>
             <tr><td>To 1 lux</td><td class="num">~85 m</td><td class="num">~160 m</td></tr>
             <tr><td>ANSI throw</td><td class="num">~170 m</td><td class="num">~320 m</td></tr>

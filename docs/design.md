@@ -125,6 +125,8 @@ How it's estimated:
 - **Low beam:** LEDiL's 7 cd/lm for the XP-L HI, × 0.95 mirror × 0.92 window, × 600 lm per LED, × 2 optics.
 - Two LEDs aimed the same way add. ANSI throw = 2 × √(peak cd).
 
+**Wider high beam at low speed (v4, proposed 2026-11-21):** in high-beam mode the two mirrors swing the spots apart by up to 5° each, so the high beam is ~20° wide when slow and narrows to the full-reach pencil beam by 40 km/h (firmware-spec §12). Speed comes from an IMU estimate (owner's decision, 2026-11-21).
+
 For scale, good StVZO bicycle lights are about 70–150 lux at 10 m. A car's low beam peaks at roughly 15–20k cd and its high beam at roughly 40–100k cd. The spot has no cutoff by design: it's a high beam, like a car's, for use without oncoming traffic.
 
 **Cutoff and aim.**
@@ -405,5 +407,6 @@ Seven LEDC channels are used (four servos, two DIM, the ring LED) of the ESP32-S
 - [ ] Two free GPIO for the right mirror's servos (v4): the XIAO ESP32-S3's back pads MTDI/GPIO41 and MTMS/GPIO42. Confirm on the board.
 - [x] ~~Cornering-light glare and the toed-out cutoff tilt (B-CRN-01, B-OPT-08)~~ v3 only; v4 has neither (2026-11-21).
 - [ ] v4 turn steering: write the yaw rule into the firmware spec (the ride demo aims the turn-side beam at the road 20 m ahead, up to 25°) and the safety invariant that goes with it.
+- [x] Speed source for v4 (high-beam width and turn steering): estimated from the IMU, with resets when still and corrections in turns (owner's decision, 2026-11-21; firmware-spec §12). Its accuracy on long straights is checked in R-SPD-01.
 - [ ] v4 with no inward yaw: narrow the body and simplify the gimbals (§5), then re-run the checks and the mass budget.
 - [x] How calibration and settings are controlled: a calibration page over the head's own Wi-Fi, with the button and remote kept as a full fallback (decided 2026-11-21; firmware-spec §11).
