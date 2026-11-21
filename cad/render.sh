@@ -79,5 +79,7 @@ python3 -I weight.py "$OUT/v4w.echo" "$OUT/v4w-shell.stl" > "$OUT/mass-v4-wrap.t
 grep '"PKG' "$OUT/v4w.echo" | sed 's/^ECHO: /v4-wrap /' >> "$LOG"
 rm -f "$OUT/v4w.echo" "$OUT/v4w-shell.stl"
 echo "v4 with clear wraparound sides (adopted): $(tail -1 "$OUT/mass-v4-wrap.txt")" >> "$LOG"
+# The project site (GitHub Pages, docs/) shows these renders; keep its copies current.
+for f in v4-wrap-three-quarter v4-wrap-turning v4-wrap-top v4-cutaway v4-under v4-on-wheel v4-front; do cp "$OUT/$f.png" ../docs/img/; done
 cat "$LOG"
 exit $status
