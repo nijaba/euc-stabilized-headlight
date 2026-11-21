@@ -1,23 +1,24 @@
 #!/usr/bin/env python3
 """Mass budget for the headlight head (test C-MASS-01).
 
-Usage: weight.py BASELINE.echo [VARIANT.echo ...]
+Usage: weight.py MODEL.echo SHELL.stl HOOD.stl
 
-Each .echo file is OpenSCAD's echo output for one configuration of
-headlight.scad (render.sh writes them). The first file is the baseline that
-C-MASS-01 judges; the others are shown for comparison. Standard library only.
+MODEL.echo is OpenSCAD's echo output for headlight.scad; SHELL.stl and
+HOOD.stl are the printed body shell and brow fairing exported from it
+(render.sh writes all three). The printed parts' mass comes from the STL
+volumes, so the shaped body is measured, not approximated. Standard library only.
 """
 import re
 import sys
 from pathlib import Path
 
-LIMIT_G = 350  # firm constraint: head with the optional lidar fitted
+LIMIT_G = 400  # firm constraint: head with the optional lidar fitted (raised from 350 g, 2026-11-21)
 
 ASA, PC, GLASS, ALU, STEEL, COPPER = 1.07, 1.20, 2.50, 2.70, 7.90, 8.90  # g/cm³
 CM3 = 1e-3
 
 
-def read(path):
+def read_echo(path):
     text = Path(path).read_text()
     pkg = next(l for l in text.splitlines() if '"PKG ' in l)
     mass = next(l for l in text.splitlines() if '"MASS ' in l)
@@ -25,12 +26,24 @@ def read(path):
     return name, {k: float(v) for k, v in re.findall(r"(\w+)=([\d.]+)", mass)}
 
 
-def budget(g):
+def stl_volume_mm3(path):
+    """Volume of a closed ASCII STL mesh (OpenSCAD's default export), by signed tetrahedra."""
+    verts = [tuple(map(float, l.split()[1:4])) for l in Path(path).read_text().splitlines()
+             if l.strip().startswith("vertex")]
+    vol = 0.0
+    for i in range(0, len(verts) - 2, 3):
+        (ax, ay, az), (bx, by, bz), (cx, cy, cz) = verts[i:i + 3]
+        vol += ax * (by * cz - bz * cy) - ay * (bx * cz - bz * cx) + az * (bx * cy - by * cx)
+    return abs(vol) / 6.0
+
+
+def budget(g, shell_mm3, hood_mm3):
     n_led = g["n_fil"] + g["n_spot"]
     parts = {
         "Heatsink (aluminium, bottom)": g["hs_mm3"] * CM3 * ALU,
-        "Body shell (ASA)": g["shell_area_mm2"] * g["wall_mm"] * CM3 * ASA,
-        "Bezel, bosses, ribs (ASA)": 12,
+        "Body shell (ASA, measured)": shell_mm3 * CM3 * ASA,
+        "Brow fairing (ASA, measured)": hood_mm3 * CM3 * ASA,
+        "Bezel, bosses, ribs (ASA)": 10,
         "Window (polycarbonate)": g["window_mm3"] * CM3 * PC,
         "Mirror (front-surface glass)": g["mirror_mm3"] * CM3 * GLASS,
         "Mirror cradle, shaft, bearings": 5 + 3.14159 * 1.5**2 * g["shaft_mm"] * CM3 * STEEL + 0.6,
@@ -38,16 +51,15 @@ def budget(g):
         "LEDs on 20 mm copper stars": n_led * 3.14159 * 10**2 * 1.6 * CM3 * COPPER,
         "FILIPPA-STVZO optics": g["n_fil"] * 6.3,
         "Carclo 10003 + 10734 holders": g["n_spot"] * 3.5,
-        "Servo ES08MD II + linkage": 12 + 2,
+        "FILIPPA toe-out wedges (aluminium)": g["n_fil"] * 2,
+        "Servo (5 g class) + linkage": 5 + 2,
         "XIAO, IMU, cable": 3 + 1.5 + 1,
         "BuckBlocks, Pololu 5 V": (2 if g["n_spot"] else 1) * 5 + 3,
         "Protoboard, passives, wiring": 15 + 5,
-        "Screws + heat-set inserts": 14,
+        "Screws + heat-set inserts": 9,
         "O-rings, window gasket": g["seal_mm"] * 3.14159 * 1.0**2 * CM3 * 1.2 + 2,
         "Mount boss + 1/4\"-20 insert": 10,
-        "Gland, vent, button, desiccant": 4 + 2 + 3 + 2,
-        "FILIPPA toe-out wedges (aluminium)": g["n_fil"] * 2,
-        "Top brow (ASA)": g["brow_area_mm2"] * g["wall_mm"] * CM3 * ASA,
+        "Gland (M8), vent, button, desiccant": 2 + 2 + 3 + 2,
         "2x cornering light (LED, optic, plate, window)": 2 * (4.5 + 3.5 + 3 + 1.5),
         "2x cornering driver (700 mA buck)": 2 * 2,
     }
@@ -57,21 +69,20 @@ def budget(g):
     return parts
 
 
-def main(paths):
-    configs = [read(p) for p in paths]
-    budgets = [budget(g) for _, g in configs]
-    names = list(dict.fromkeys(k for b in budgets for k in b))
-    head = f"{'Part':34}" + "".join(f"{n:>16}" for n, _ in configs)
-    print(head)
-    for k in names:
-        print(f"{k:34}" + "".join(f"{b.get(k, 0):16.0f}" for b in budgets))
-    totals = [sum(b.values()) for b in budgets]
-    print(f"{'Total':34}" + "".join(f"{t:16.0f}" for t in totals))
-    base_name, base = configs[0]
-    ok = totals[0] <= LIMIT_G
-    print(f"C-MASS-01 {base_name}: {totals[0]:.0f} g vs {LIMIT_G} g limit: {'PASS' if ok else 'FAIL'}")
+def main(echo, shell, hood):
+    name, g = read_echo(echo)
+    parts = budget(g, stl_volume_mm3(shell), stl_volume_mm3(hood))
+    print(f"{'Part':48}{name:>14}")
+    for k, v in parts.items():
+        print(f"{k:48}{v:14.0f}")
+    total = sum(parts.values())
+    print(f"{'Total':48}{total:14.0f}")
+    ok = total <= LIMIT_G
+    print(f"C-MASS-01 {name}: {total:.0f} g vs {LIMIT_G} g limit: {'PASS' if ok else 'FAIL'}")
     return 0 if ok else 1
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    if len(sys.argv) != 4:
+        sys.exit(__doc__)
+    sys.exit(main(*sys.argv[1:]))

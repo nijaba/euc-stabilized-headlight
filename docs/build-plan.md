@@ -11,7 +11,7 @@ Phases in order. Work on the current phase only, and tick each item when it pass
 - [x] `CLAUDE.md`, build plan, test plan, changelog
 - [x] `CONTRIBUTING.md` and `SECURITY.md`
 - [x] Branch protection on `main` (signed commits, PR required)
-- [x] Material cost within the limit: ~$388 with the lidar (~$395 after the FILIPPA low beam), under the $450 limit set on 2026-11-20
+- [x] Material cost within the limit: ~$388 with the lidar (~$423 after the FILIPPA low beam, cornering lights and lean package), under the $450 limit set on 2026-11-20
 
 ## Phase 1: Packaging study
 
@@ -22,7 +22,8 @@ Goal: a parametric model and renders of the whole head prove it fits, sweeps and
 - [x] Mass budget from part masses and printed volumes (C-MASS-01): ~556 g with the lidar, over the limit
 - [x] Renders: three-quarter, front, side cut-away, exploded, on a generic wheel for scale
 - [x] Layout v2: heatsink at the bottom, fins fore-aft, mount on the back, weight savings (owner's requirements, 2026-11-21)
-- [ ] Owner decision on the weight: a configuration within 350 g, or a higher limit
+- [x] Owner decision on the weight: limit raised to 400 g, lidar stays on the head, two spots kept (2026-11-21)
+- [x] Layout v3: aerodynamic tapered shape and lean package; printed parts measured from the model
 - [ ] Owner review of the renders; update the design doc with what the model shows
 
 ## Phase 2: Firmware core on the bench

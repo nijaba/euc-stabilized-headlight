@@ -44,15 +44,19 @@ cradle_t = 2;
 mir_clear = 3;
 
 /* [Housing] (design §5) */
-wall = 2.0;
+wall = 1.6;                        // 4 perimeters (lean package, 2026-11-21)
 front_clear = 3;
 elec_depth = 20;
-win_t = 2.0;
+win_t = 1.5;
 bezel_lip = 4;
-r_edge = 8;                        // external edge radius: rounded for safety and looks
+r_edge = 6;                        // front edge radius: rounded for safety and looks
+taper = 14;                        // body narrows by this much each side toward the back (aerodynamic)
+roof_drop = 20;                    // roof slopes down this much from front to back
+r_tail = 14;                       // radius of the rounded tail edges
+hood_tail = 30;                    // how far back the brow fairing blends into the roof
 
 /* [Heatsink] sized for moving air; firmware derates when parked */
-hs_base = 3;  hs_fin_h = 14;  hs_fin_t = 1.2;  hs_pitch = 8;  hs_margin = 6;
+hs_base = 2.5;  hs_fin_h = 14;  hs_fin_t = 1.2;  hs_pitch = 10;  hs_margin = 6;
 
 /* [Bought parts] */
 servo = [12, 23, 24];              // EMAX ES08MD II: W(y) x L(z) x H(x)
@@ -103,9 +107,10 @@ out_L = max(in_L_min + 2*wall, win_w + 2*bezel_lip + 2*r_edge);
 in_L  = out_L - 2*wall;
 out_D = in_front - in_back + 2*wall;
 out_H = top_z + wall;                                // floor wall below z=0
+top_rear = top_z - roof_drop;
 
 // Heatsink: under the optic zone only; the rest of the floor is printed.
-hs_L = out_L - 2*r_edge;                             // stays on the flat bottom, inside the rounded edges
+hs_L = out_L - 2*(r_tail + 0.55*taper);              // stays on the flat bottom, inside the rounded, tapering edges
 hs_D = fil_d + 2*hs_margin;
 hs_y0 = -hs_D/2;
 hs_fins = floor((hs_L - hs_fin_t) / hs_pitch) + 1;
@@ -117,7 +122,6 @@ assert(mir_hy + 1 < in_front,      "C-PKG-02 mirror hits the front wall at full 
 assert(-mir_hy - 1 > in_back + 12, "C-PKG-03 mirror sweeps into the electronics slot");
 assert(win_bot > wall + 1 && mir_low > star_t + max_h + 1, "C-PKG-04 window or mirror runs into the optics or floor");
 assert(beam_reach <= in_L/2,       str("C-PKG-05 beam wider than the window: ", 2*beam_reach));
-assert(servo[0] <= elec_depth - 2, "C-PKG-06 servo does not fit the back slot");
 assert(hs_D <= out_D - 2*wall,     "C-PKG-07 heatsink wider than the floor");
 assert(win_bot - bezel_lip >= -wall + r_edge, "C-PKG-08 window runs into the rounded bottom edge");
 
@@ -134,7 +138,19 @@ crn_z   = top_z + brow_h/2 - 2;
 crn_extent = (crn_d/2)*cos(crn_yaw) + crn_h*sin(crn_yaw);
 assert(crn_x - crn_extent >= (lidar_on_head ? lidar[0]/2 + wall : 0), "C-PKG-09 cornering lights collide with the lidar");
 assert(crn_x + crn_extent <= out_L/2 + 2, "C-PKG-10 cornering lights stick out past the end of the body");
-brow_area = rbox_area(out_L, brow_d, brow_h + r_edge, 6) - out_L*brow_d;
+// Servo and electronics board must fit the narrower, lower tail.
+// The tail's corners are rounded in plan (radius r_tail), so the flat back is narrower than the tail.
+back_flat = out_L/2 - taper - r_tail;                 // half-width of the flat inner back wall
+function tail_half(d) = back_flat + sqrt(max(r_tail*r_tail - pow(max(r_tail - d, 0), 2), 0)) - wall;  // inner half-width d mm in front of the back
+servo_y0 = 4;                                          // servo starts this far in front of the back wall
+servo_x = in_L/2 - taper - servo[2]/2 - 6;
+board_x0 = -(back_flat - 2);
+board_x1 = servo_x - servo[2]/2 - 3;
+board_top = top_rear - wall - 6;
+assert(board_top - 6 >= 45, "C-PKG-11 sloping roof leaves the electronics board under 45 mm tall");
+assert(servo_x + servo[2]/2 <= tail_half(servo_y0), "C-PKG-12 servo hits the rounded, tapered tail");
+assert(board_x1 - board_x0 >= 55, "C-PKG-13 electronics board narrower than 55 mm in the tail");
+assert(servo_y0 + servo[0] <= elec_depth - 2, "C-PKG-06 servo does not fit the back slot");
 echo(str("PKG config=", n_fil, "F+", n_spot, "S", lidar_on_head ? "+lidar" : "",
          " body_outer_mm=", out_L, "x", out_D, "x", out_H,
          " head_height_mm=", out_H + hs_base + hs_fin_h + brow_h,
@@ -142,8 +158,6 @@ echo(str("PKG config=", n_fil, "F+", n_spot, "S", lidar_on_head ? "+lidar" : "",
          " heatsink_mm=", hs_L, "x", hs_D, " fins=", hs_fins, " fore-aft"));
 echo(str("MASS n_fil=", n_fil, " n_spot=", n_spot, " lidar=", lidar_on_head ? 1 : 0,
          " wall_mm=", wall,
-         " shell_area_mm2=", rbox_area(out_L, out_D, out_H, r_edge) - hs_L*hs_D,
-         " brow_area_mm2=", brow_area,
          " window_mm3=", (in_L + 2*bezel_lip)*(2*win_half + 2*bezel_lip)*win_t,
          " hs_mm3=", hs_L*hs_D*hs_base + hs_fins*hs_fin_t*hs_D*hs_fin_h,
          " mirror_mm3=", mir_L*mir_W*mir_t, " shaft_mm=", in_L,
@@ -224,7 +238,7 @@ module bearings() color([0.5,0.5,0.55]) for (s = [-1,1])
 function back_edge(a) = [mir_L/2 - 12, -cos(45 + a)*(mir_W/2 + 3), mir_z - sin(45 + a)*(mir_W/2 + 3)];
 
 module servo_and_link() {
-    sx = in_L/2 - servo[2]/2 - 6;  sy = in_back + servo[0]/2 + 1;  sz = mir_z - 4;
+    sx = servo_x;  sy = in_back + servo_y0 + servo[0]/2;  sz = mir_z - 4;
     color([0.15,0.15,0.6]) translate([sx - servo[2]/2, sy - servo[0]/2, sz - servo[1]/2]) cube([servo[2], servo[0], servo[1]]);
     color("white") translate([sx - servo[2]/2 - 2, sy, sz - servo[1]/2 + 6]) rotate([0,90,0]) cylinder(d=12, h=2, $fn=24);
     color("silver") hull() {
@@ -234,32 +248,58 @@ module servo_and_link() {
 }
 
 module electronics() {
-    by = in_back + 0.5;
-    color(c_pcb) translate([-in_L/2 + 4, by, 6]) cube([in_L - servo[2] - 22, 1.6, top_z - 14]);
-    parts = [[xiao, -0.35, 0.75], [bbk, -0.1, 0.45], [bbk, 0.15, 0.45], [pol, -0.35, 0.2], [imu, 0.15, 0.15]];
+    by = in_back + 0.5;  x0 = board_x0;  x1 = board_x1;  h = board_top - 6;
+    color(c_pcb) translate([x0, by, 6]) cube([x1 - x0, 1.6, h]);
+    parts = [[xiao, 0.15, 0.8], [bbk, 0.45, 0.55], [bbk, 0.8, 0.55], [pol, 0.15, 0.25], [imu, 0.6, 0.18]];
     for (p = parts) {
         d = p[0];
         color(p == parts[0] ? [0.1,0.1,0.1] : [0.2,0.25,0.3])
-            translate([p[1]*in_L - d[0]/2, by + 1.6, 6 + p[2]*(top_z - 14) - d[1]/2]) cube([d[0], d[2], d[1]]);
+            translate([x0 + p[1]*(x1 - x0) - d[0]/2, by + 1.6, 6 + p[2]*h - d[1]/2]) cube([d[0], d[2], d[1]]);
     }
 }
 
+// ---------- outer shapes: a rounded front that tapers and lowers toward a soft tail ----------
+module blob(pts) hull() for (p = pts) translate(p[0]) sphere(r = max(p[1], 0.5), $fn = 32);
+function body_pts(inset) = [
+    for (sx = [-1,1], z = [-wall + r_edge, top_z - r_edge]) [[sx*(out_L/2 - r_edge), in_front + wall - r_edge, z], r_edge - inset],
+    for (sx = [-1,1], z = [-wall + r_tail, top_rear - r_tail]) [[sx*(out_L/2 - taper - r_tail), in_back - wall + r_tail, z], r_tail - inset]];
+module body_outer() blob(body_pts(0));
+module body_inner() blob(body_pts(wall));
+
+function roof_z(y) = let(yf = in_front + wall - r_edge, yr = in_back - wall + r_tail)
+    top_rear + (top_z - top_rear) * (y - yr) / (yf - yr);
+hood_r = 6;
+function hood_pts(inset) = [
+    for (sx = [-1,1], z = [top_z - r_edge, top_z + brow_h - hood_r]) [[sx*(out_L/2 - hood_r), in_front + wall - hood_r, z], hood_r - inset],
+    for (sx = [-1,1], z = [top_z - r_edge, top_z + brow_h - hood_r]) [[sx*(out_L/2 - hood_r - 2), brow_y0 + hood_r, z], hood_r - inset],
+    for (sx = [-1,1]) [[sx*(out_L/2 - taper/2 - 22), brow_y0 - hood_tail, roof_z(brow_y0 - hood_tail) - 4], 4 - inset]];
+module hood_outer() blob(hood_pts(0));
+module hood_inner() blob(hood_pts(wall));
+
+module window_opening() translate([0, in_front + wall/2, win_zc]) hull() for (x = [-win_w/2+6, win_w/2-6], z = [-win_half+6, win_half-6])
+    translate([x, 0, z]) rotate([90,0,0]) cylinder(r=6, h=wall+4, center=true, $fn=24);
+module shell_solid() difference() {
+    body_outer(); body_inner();
+    translate([-hs_L/2, hs_y0, -wall - 1]) cube([hs_L, hs_D, wall + 2]);                 // heatsink opening
+    window_opening();
+}
+module crn_apertures() for (sx = [-1,1]) crn_aim(sx) translate([0, 4, 0]) rotate([-90,0,0]) cylinder(d=crn_d + 4, h=30, $fn=40);
+module lidar_cavity() translate([-lidar[0]/2, in_front + wall - lidar[2] - wall, top_z + wall]) cube([lidar[0], lidar[2] + 2*wall, lidar[1]]);
+module hood_solid() difference() {
+    hood_outer(); hood_inner(); body_outer(); crn_apertures();
+    if (lidar_on_head) lidar_cavity();
+}
+
 module body_shell() {
-    color(c_asa) difference() {
-        translate([-out_L/2, in_back - wall, -wall]) rbox([out_L, out_D, out_H], r_edge);
-        translate([-in_L/2, in_back, 0]) rbox([in_L, in_front - in_back, top_z - wall], max(r_edge - wall, 1));
-        translate([-hs_L/2 - 1, hs_y0, -wall - 1]) cube([hs_L + 2, hs_D, wall + 2]);       // heatsink opening
-        translate([0, in_front + wall/2, win_zc]) hull() for (x = [-win_w/2+6, win_w/2-6], z = [-win_half+6, win_half-6])
-            translate([x, 0, z]) rotate([90,0,0]) cylinder(r=6, h=wall+4, center=true, $fn=24);
-    }
+    color(c_asa) shell_solid();
     color(c_asa) translate([0, in_front + wall + 1, win_zc]) rrect_frame(win_w, 2*win_half, 2.5, 6, bezel_lip);   // bezel
     // mount boss with 1/4"-20 insert, on the back (faces the wheel)
-    color(c_asa) translate([0, in_back - wall, top_z*0.45]) rotate([90,0,0]) cylinder(d=18, h=8, $fn=40);
-    color([0.8,0.65,0.3]) translate([0, in_back - wall - 0.2, top_z*0.45]) rotate([90,0,0]) cylinder(d=8, h=8, $fn=24);
-    // gland and vent low on the back, button on the right end
-    color([0.1,0.1,0.1]) translate([-35, in_back - wall - 14, 12]) rotate([-90,0,0]) cylinder(d=15, h=14, $fn=6);
-    color([0.1,0.1,0.1]) translate([35, in_back - wall - 6, 12]) rotate([-90,0,0]) cylinder(d=12, h=6, $fn=24);
-    color([0.6,0.6,0.62]) translate([out_L/2, in_back + 12, top_z - 18]) rotate([0,90,0]) cylinder(d=12, h=3, $fn=32);
+    color(c_asa) translate([0, in_back - wall + 2, top_rear*0.45]) rotate([90,0,0]) cylinder(d=18, h=10, $fn=40);
+    color([0.8,0.65,0.3]) translate([0, in_back - wall - 7.8, top_rear*0.45]) rotate([90,0,0]) cylinder(d=8, h=0.5, $fn=24);
+    // gland and vent low on the back, button on the right side
+    color([0.1,0.1,0.1]) translate([-28, in_back - wall - 10, 12]) rotate([-90,0,0]) cylinder(d=12, h=12, $fn=6);
+    color([0.1,0.1,0.1]) translate([28, in_back - wall - 5, 12]) rotate([-90,0,0]) cylinder(d=12, h=6, $fn=24);
+    color([0.6,0.6,0.62]) translate([out_L/2 - 2, 2, top_z - 22]) rotate([0,90,0]) cylinder(d=12, h=3, $fn=32);
 }
 
 module window() color([0.85,0.95,1,0.25])
@@ -274,15 +314,11 @@ module cornering(sx) crn_aim(sx) {
     color(c_pmma) translate([0,-6.4,0]) rotate([-90,0,0]) cylinder(d1=crn_d, d2=crn_d*0.8, h=crn_h, $fn=40);
 }
 module brow() {
-    color(c_asa) difference() {
-        translate([-out_L/2, brow_y0, top_z - r_edge]) rbox([out_L, brow_d, brow_h + r_edge], 6);
-        for (sx = [-1,1]) crn_aim(sx) translate([0, 4, 0]) rotate([-90,0,0]) cylinder(d=crn_d + 4, h=30, $fn=40);
-        if (lidar_on_head) translate([-lidar[0]/2, in_front + wall - lidar[2] - wall, top_z + wall]) cube([lidar[0], lidar[2] + 2*wall, lidar[1]]);
-    }
+    color(c_asa) hood_solid();
     color([0.85,0.95,1,0.35]) for (sx = [-1,1]) crn_aim(sx) translate([0, 9.5, 0]) rotate([-90,0,0]) cylinder(d=crn_d + 6, h=1.5, $fn=40);
     if (lidar_on_head) {
         color([0.1,0.1,0.12]) translate([-lidar[0]/2, in_front + wall - lidar[2] - wall, top_z + wall]) cube([lidar[0], lidar[2], lidar[1]]);
-        color([0.3,0.3,0.35]) for (s2=[-1,1]) translate([s2*15, in_front + wall - wall + 0.1, top_z + wall + lidar[1]/2]) rotate([-90,0,0]) cylinder(d=18, h=0.5, $fn=32);
+        color([0.3,0.3,0.35]) for (s2=[-1,1]) translate([s2*15, in_front + 0.1, top_z + wall + lidar[1]/2]) rotate([-90,0,0]) cylinder(d=18, h=0.5, $fn=32);
     }
     for (sx = [-1,1]) cornering(sx);
 }
@@ -334,10 +370,12 @@ else if (view == "exploded") head(explode = 1);
 else if (view == "cutaway")  cutaway();
 else if (view == "front")    head();
 else if (view == "under")    head();
+else if (view == "stl_shell") shell_solid();
+else if (view == "stl_hood")  hood_solid();
 else if (view == "wheel") {
     generic_wheel();
     translate([0, 150 + 18 - (in_back - wall), 380]) {
         head();
-        color([0.3,0.3,0.3]) translate([-8, in_back - wall - 18, top_z*0.45 - 7]) cube([16, 10, 14]);
+        color([0.3,0.3,0.3]) translate([-8, in_back - wall - 18, top_rear*0.45 - 7]) cube([16, 10, 14]);
     }
 }

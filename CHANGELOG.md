@@ -14,6 +14,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - `CONTRIBUTING.md` and `SECURITY.md` (private reporting for safety faults as well as security issues).
 
 ### Changed
+- Weight limit raised from 350 g to 400 g with the lidar (owner, 2026-11-21). Layout v3: aerodynamic shape (tapered, sloping roof, soft tail, brow fairing) and lean package (1.6 mm walls, smaller heatsink, 1.5 mm window, 5 g servo, fewer screws, M8 gland); printed parts now measured from STL volumes; ~401 g. Design §2 explains the mirror's size.
 - Layout v2 (owner's requirements, 2026-11-21): heatsink at the bottom with fins fore-aft, LEDs facing up, mount on the back (never the top), rounded exterior (8 mm edges), lidar in a top pocket, lighter walls, window and mirror. Mass ~556 → ~463 g with the lidar (~448 g before rounding); configurations compared in design §5. Design §2 adds how cars and motorcycles level their beams.
 - Low beam: two LEDiL FILIPPA-STVZO cutoff optics with XP-L HI replace the Nichia 519A + Carclo elliptical flood (owner, 2026-11-21). Larger mirror, heatsink and window; BOM, calibration step D and tests B-OPT-05 to B-OPT-07 updated; B-OPT-01 retired. Weight estimate now over the 350 g limit with lidar (open question).
 - design.md §3: beam estimate (beam angles, peak intensity, throw) and a note that the flood has no cutoff; §10 open question; test B-OPT-04.
