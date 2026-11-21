@@ -163,6 +163,8 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | B-MIR-02 | Jitter and deadband after the 4:1 linkage | Spot jitter below 0.1° of beam at rest | – |
 | B-MIR-03 | Full travel | ±7.5° of mirror with no binding | – |
 | B-MIR-04 | Balance: shake the assembly at EUC vibration frequencies | No visible ringing of the spot | – |
+| B-MIR-05 | v4 only: each gimbal's backlash and ringing on both axes, laser on the mirror, with and without anti-backlash springs | Spot jitter below 0.1° of beam on both axes; settles in under 50 ms | – |
+| B-VIB-01 | Vibration on the wheel: log the IMU's acceleration spectrum while riding over rough road, with the head mounted | Record the main frequencies and peak g, to set B-MIR-04/05 and E-VIB-01 | – |
 
 ### Optics
 
@@ -218,6 +220,8 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | E-SEAL-01 | Empty housing submerged with a tissue inside | Tissue dry | – |
 | E-SEAL-02 | Repeat E-SEAL-01 after 10 hot–cold cycles | Tissue dry | – |
 | E-SEAL-03 | Window fogging after cooling from hot, with the vent and desiccant fitted | No fog | – |
+| E-SEAL-04 | Hose test, IPX5-style: water jet from all directions for 3 min, empty housing with tissue inside | Tissue dry | – |
+| E-VIB-01 | 30 min of vibration on a crude shaker (an orbital sander under the mount works), then a 1 m drop onto grass | No loosened screw, cracked seal, shifted optic or broken joint; E-SEAL-01 still passes | – |
 | E-MNT-01 | Head weight, fully assembled with the lidar | ≤ 400 g | – |
 | E-MNT-02 | Pull and shake test on each mount option | Mount holds; leash catches the head if it doesn't | – |
 

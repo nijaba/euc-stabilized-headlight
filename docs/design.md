@@ -210,6 +210,43 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - **Interior:** printed matte black to kill stray light. A lighter colour outside reduces sun heating.
 - **Leak test:** submerge the empty housing with a tissue inside before any electronics go in.
 
+**Waterproofing and vibration review (2026-11-21, v3 and v4).**
+
+*Why it can be sealed at all:* every moving part (mirrors, gimbals, servos, linkages) is inside the box. Nothing moving passes through a wall, so there are no shaft seals; every seal is static.
+
+*Seals by layout:*
+
+| Seal | v3 | v4 |
+|---|---|---|
+| Heatsink opening(s) in the floor, O-ring | 1 | 2 |
+| Service cover (top or back), O-ring | 1 | 1 |
+| Main window(s), gasket in bezel | 1 | 2 |
+| Lidar | in the brow, own gasket | lidar bay opening, gasket |
+| Cornering-light windows | 2 | 0 |
+| Gland, vent, button | 3 | 3 |
+| Total static seal length (model) | ~0.7 m | ~1.25 m |
+
+v4 has fewer separate openings but about 80% more seal length, so more places for a printing flaw to leak.
+
+*Measures for both:*
+- O-ring grooves designed for ~25% squeeze on 2 mm cord, with screw bosses that bottom out (heat-set inserts) so the squeeze can't be overdone.
+- Sealing faces printed flat on the bed, 100% infill within 5 mm of any seal, then XTC-3D epoxy or acetone-vapour smoothing. With 1.6 mm walls this matters more.
+- Windows bedded in neutral-cure RTV inside the bezel, never acetoxy.
+- ePTFE vent and desiccant, so warm-up and cool-down cycles don't pump moist air past the seals.
+- Electronics conformal-coated (acrylic), and the gland with a drip loop outside.
+- **Target IP65** (rain and wheel spray from any direction), verified by a submersion test (E-SEAL-01/02) and a hose test (E-SEAL-04).
+
+*Vibration (EUC road buzz ~10–200 Hz, kerb impacts of several g):*
+- **Mirrors:** each is balanced about its pivot(s), so straight-line shocks make no torque. Rotational vibration still reaches the servo through the linkage, and gear backlash shows up as beam jitter. Measures: the 4:1 lever, a light preload spring on each linkage to take up backlash, MR63 bearings preloaded with a wave washer, silicone grease in the pivots, soft bump stops at the ends of travel.
+- **v4's gimbals are harder:** each mirror must balance about two axes, the frame adds mass (lower natural frequency, more ringing), and there are twice as many linkages and bearings to rattle. Each linkage needs its own anti-backlash spring and preloaded ball links (B-MIR-05).
+- **5 g servos** have weaker, often plastic, gears. Metal-gear versions are preferred, with the 12 g ES08MD II as the fallback if B-MIR-02/05 show jitter.
+- **Electronics:** heavy parts (BuckBlocks, capacitors, the Pololu) held down with silicone; wires strain-relieved; the XIAO soldered rather than socketed; the STEMMA QT plug glued after test.
+- **Fasteners:** LED boards and metal parts with low-strength threadlocker. **Never threadlocker near the polycarbonate window or the PMMA optics**, because anaerobic threadlockers crack them; use nylon-insert nuts or screws with a nylon patch there.
+- **Lidar:** clamped on a foam gasket; it's IP65 itself.
+- **Mount:** the 1/4"-20 joint can loosen under vibration: a lock washer on the metal adapter, and the leash always.
+
+*Verdict:* both layouts can be made waterproof to IP65 and vibration-resistant, because nothing moving passes through a wall. v4 carries more risk on both counts (longer seals, two-axis gimbals) and needs its extra tests passed before a ride.
+
 **Printed parts:**
 - body
 - front bezel
@@ -335,6 +372,7 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - [ ] Does the ASA housing stay sealed over thermal cycles? Long-term creep at the screw bosses?
 - [ ] Real TF02-Pro range and dropout rate on wet and dry asphalt at about 4° grazing angle.
 - [ ] Head weight on VHB mounts. Is the leash mandatory?
+- [ ] Two-axis gimbal backlash and ringing under EUC vibration (v4, B-MIR-05); 5 g servo gear durability.
 - [ ] Power-on flash: DIM floats until the firmware drives the 2N3904s, so both channels start at 2.1 A. Base pull-ups would stop it, but they also turn the light off if the MCU dies, which loses the full-on failsafe. Accept the flash, or find a way to keep both (e.g. an RC that holds the transistor on only for the first second)?
 - [ ] Does the BuckBlock reach zero output with DIM at 0 V? The trolley-mode and crash "beam off" states assume it does.
 - [ ] PTC nuisance trips in boost: ~2 A input against an RXEF250 whose 2.5 A hold rating falls to roughly 2 A at 50 °C inside the head. Move to an RXEF300?
