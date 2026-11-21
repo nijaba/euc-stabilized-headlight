@@ -8,3 +8,4 @@
 .claude/
 .env
 __pycache__/
+export/
