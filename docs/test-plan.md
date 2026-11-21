@@ -8,6 +8,7 @@ Every test has an ID. This file is the full list of what's covered.
 | `B-` | Bench tests | By hand, on the bench | The Status column here: date and result |
 | `E-` | Enclosure and mount tests | By hand | The Status column here |
 | `R-` | Ride tests | On the wheel, with serial or flash logs | The Status column here |
+| `C-` | Packaging checks | `cad/render.sh`, against the OpenSCAD model | `cad/renders/checks.txt` and the Status column here |
 
 **Naming.** An automated test's function name starts with its ID, with `-` replaced by `_`. For example, `U-FILT-02` is `test_U_FILT_02_braking_does_not_tilt`. U-PLAN-01 checks that every `U-` ID in this file has a test and every test's ID is in this file.
 
@@ -116,6 +117,20 @@ These run long randomised input sequences against the whole control and state lo
 | U-SAFE-02 | No lidar input raises the beam above where the IMU alone would put it | FW §1.2 | – |
 | U-SAFE-03 | Losing the lidar falls back to IMU only; losing the IMU fixes the mirror at the calibrated aim with reduced brightness; losing the remote keeps the mode | FW §1.3 | – |
 | U-SAFE-04 | No brightness change, from any cause, steps faster than the rate limit | FW §1.4 | – |
+
+## Packaging checks (`C-`)
+
+Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its ID.
+
+| ID | What it checks | Pass if | Status |
+|---|---|---|---|
+| C-PKG-01 | The optic row fits along the mirror | Row length ≤ mirror length | Pass (112 ≤ 114 mm), 2026-11-21 |
+| C-PKG-02 | The mirror clears the front wall at full tilt | At least 1 mm | Pass, 2026-11-21 |
+| C-PKG-03 | The mirror stays out of the electronics slot at full tilt | At least 1 mm | Pass, 2026-11-21 |
+| C-PKG-04 | The window aperture stays below the lid | Top of aperture below the lid | Pass, 2026-11-21 |
+| C-PKG-05 | Every beam fits the window width (FWTM spread, ±15° steering) | Beam reach ≤ half the inner length | Pass (58.8 ≤ 62 mm), 2026-11-21 |
+| C-PKG-06 | The servo fits the back slot | Servo width ≤ slot depth − 2 mm | Pass, 2026-11-21 |
+| C-MASS-01 | Head mass with the lidar, from model geometry and part masses | ≤ 350 g | **Fail: ~556 g** (lean variant ~424 g), 2026-11-21 |
 
 ## Bench tests (`B-`)
 

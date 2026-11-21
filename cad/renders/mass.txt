@@ -1,0 +1,24 @@
+Part                                     Model    Lean
+Heatsink lid (aluminium)                   118      71
+Body shell (ASA)                           113      75
+Bezel, bosses, ribs (ASA)                   15      11
+Window (polycarbonate)                      30      24
+Mirror (front-surface glass)                30      17
+Mirror cradle, shaft, bearings              14      14
+Optic plate (ASA)                            8       8
+4x LED on 20 mm copper star                 18      18
+2x FILIPPA-STVZO                            13      13
+2x Carclo 10003 + 10734 holder               7       7
+Servo ES08MD II + linkage                   14      14
+XIAO, IMU, cable                             6       6
+2x BuckBlock, Pololu 5 V                    13      13
+Protoboard, passives, wiring                20      20
+Lid screws + heat-set inserts               17      17
+O-ring, window gasket                        4       4
+Mount boss + 1/4"-20 insert                 10      10
+Gland, vent, button, desiccant              18      18
+Head without lidar                         466     359
+TF02-Pro lidar                              50      50
+Lidar pod (ASA) + gasket                    40      15
+Head with lidar                            556     424
+C-MASS-01 head with lidar 556 g vs 350 g limit: FAIL (lean variant 424 g)
