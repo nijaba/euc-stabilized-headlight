@@ -83,28 +83,54 @@ The out-the-front figures assume about 0.75 total efficiency (TIR × mirror × w
 power bank ──USB-C──► PD trigger cable (fixed 15 V, e-marked) ──► IP68 2-pin ──► head
 ```
 
+### Consumption (estimates, to be measured in B-PWR-06 and R-RUN-01)
+
+| Mode | Input power | Input current at 15 V | Runtime (~50 Wh) |
+|---|---|---|---|
+| Normal (both channels 1.5 A) | ~21 W | ~1.4 A | ~2.4 h |
+| Boost (both channels 2.1 A, at most 60 s at a time) | ~30 W | ~2.0 A | ~1.7 h |
+| Typical (flood normal, spot 50%) | ~16 W | ~1.1 A | ~3 h |
+| Optional lidar | +~1 W | +~0.07 A | about 5% less |
+
+Where it goes in normal mode:
+- **LEDs:** 2 channels × ~6.2 V × 1.5 A ≈ 18.6 W. With the BuckBlocks at about 90% efficiency, that's ~20.5 W from the input.
+- **Electronics:** MCU, IMU, ring LED and a servo that is mostly holding position use well under 1 W. The servo draws brief peaks of up to ~1 A at 5 V, which the 470 µF capacitor on the 5 V rail absorbs.
+- **Heat:** about 12 W, shed by the aluminium lid (§8).
+- **Parked:** 20% brightness after 2 min still; near zero in sleep after 10 min.
+
+Cold weather cuts usable capacity by about 20%, so plan on about 2 h in normal mode in winter.
+
+### Supply
+
 - **PD at the dry end.** The PD negotiation happens at the bank, inside a pouch. Only plain DC reaches the head. Don't run exposed USB-C pins at 15–20 V in the rain, because they corrode quickly.
-- **Bank:** 20,000 mAh with 15 V ≥ 2 A on USB-C, for example Baseus Adaman 65 W, JSAUX PB6501 or Anker A1383.
+- **Bank:** 20,000 mAh that supplies **15 V at 2 A or more** on one USB-C port. **15 V at 3 A (45 W or more) is recommended** for margin in boost. Examples: Baseus Adaman 65 W, JSAUX PB6501, Anker A1383.
 - **Usable energy:** about 50 Wh at 15 V.
+- **Cable:** a USB-C PD trigger cable fixed at 15 V and e-marked, spliced to an IP68 2-pin connector at the head.
 - **Head input protection:**
-  - PTC fuse (2.5 A hold).
-  - 1N5822 Schottky for reverse polarity.
+  - PTC fuse (2.5 A hold). Marginal in boost when hot; see §10.
+  - 1N5822 Schottky for reverse polarity. Dissipates ~1 W at 2 A; see §10.
   - P6KE27A TVS diode.
   - 220 µF bulk capacitor.
-- **Voltage check:** firmware reads the input voltage. If the bank only supplies 9 V, it limits brightness, because 9 V is below the BuckBlock's input range.
+- **Voltage check:** firmware reads the input voltage. If the bank falls back to 12 V or 9 V, it limits brightness (firmware-spec §6). Below 10 V the BuckBlocks are out of their input range.
 - **Optional:** an IP67 magnetic breakaway connector, so the cable separates in a fall.
-
-| Mode | Input power | Runtime (~50 Wh) |
-|---|---|---|
-| Normal (both channels 1.5 A) | ~21 W | ~2.4 h |
-| Boost (both channels 2.1 A) | ~30 W | ~1.7 h |
-| Typical (flood normal, spot 50%) | ~16 W | ~3 h |
-
-Cold weather cuts usable capacity by about 20%.
 
 **Power bank gotchas:**
 1. Many banks briefly cut every port when you plug something into another port. **Never plug or unplug anything into the bank while riding.**
 2. Banks turn off at low current. After the head goes to sleep, press the bank's button to start the next ride, or pick a bank with a low-current mode.
+
+### Powering from the wheel (researched 2026-11-21)
+
+**Wheel USB ports can't run the head.** No EUC was found that is documented to supply 15 V at 2 A (30 W) from its USB port.
+- Wheel specs and manuals list USB-A and USB-C ports "for power output" or "phone charging" without a wattage (for example, the Inmotion V13).
+- Many wheels have no USB port at all (for example, one review lists none for the KingSong S22).
+- Forum reports put wheel USB ports at about 5 V and 1–2 A (5–10 W), with no mention of 15 V PD. That's a third or less of what the head needs in normal mode.
+- A wheel would qualify only if its USB-C port is measured with a USB power meter supplying 15 V at 2 A or more, continuously.
+
+**Other ways to use the wheel's power.** Both would break the "external power only" constraint, so they need the owner's decision:
+- **The wheel's 12 V light rail.** Some Leaperkim (Veteran) and Begode wheels have one; stock Begode lights draw about 20 W from it. The head would need about 1.75 A at 12 V in normal mode, more than a stock light, and no rated current for these rails was found. 12 V is inside the BuckBlock's input range, but firmware-spec §6 treats 10–13 V as a failing bank and caps brightness, so that rule would need to change.
+- **The main battery** (about 84–151 V, depending on the wheel) through a DC-DC converter. This means opening the wheel and working with high voltage, and may void the warranty.
+
+Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicycle.org/topic/21475-using-an-euc-to-charge-a-laptop/), [Inmotion V13 manual](https://device.report/manual/14117718), [KingSong S22 review](https://everythingelectricunicycle.com/kingsong-s22-review-best-suspension-euc-electric-unicycle/), [EUC forum: Sherman 12 V port USB install](https://forum.electricunicycle.org/topic/22791-veteran-sherman-dual-usb-port12v-voltmeter-install/), [EUC forum: Begode front light upgrade](https://forum.electricunicycle.org/topic/30127-upgrading-the-masters-front-light/).
 
 ## 5. Housing: 3D-printed ASA with a metal lid
 
