@@ -135,6 +135,7 @@ These run long randomised input sequences against the whole control and state lo
 | B-OPT-01 | The Nichia 519A dome fits the Carclo 10734 holder | Seats flat with no dome contact | – |
 | B-OPT-02 | Beam clipping at the mirror and window across ±7.5° | No visible clipping at either end | – |
 | B-OPT-03 | Light output (lux at a fixed distance, converted to lumens) | Within 20% of the design estimate | – |
+| B-OPT-04 | Peak intensity and beam angles of each channel (lux grid on a wall at 10 m, both modes) | Spot and flood within 30% of the design §3 beam estimate; record the real beam angles | – |
 
 ### LED drivers
 

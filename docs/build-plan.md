@@ -42,7 +42,7 @@ Goal: the mirror size and window height are proven before CAD fixes them.
 - [ ] 519A fits the Carclo 10734 holder (B-OPT-01)
 - [ ] Beam clipping across ±7.5° of mirror (B-OPT-02)
 - [ ] Mirror balance and ringing under vibration (B-MIR-04)
-- [ ] Light output and heatsink temperature rise (B-OPT-03, B-THM-01, B-THM-02)
+- [ ] Light output, beam intensity and angles, heatsink temperature rise (B-OPT-03, B-OPT-04, B-THM-01, B-THM-02)
 
 ## Phase 4: Firmware features
 
