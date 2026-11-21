@@ -124,13 +124,15 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 
 | ID | What it checks | Pass if | Status |
 |---|---|---|---|
-| C-PKG-01 | The optic row fits along the mirror | Row length ≤ mirror length | Pass (112 ≤ 114 mm), 2026-11-21 |
-| C-PKG-02 | The mirror clears the front wall at full tilt | At least 1 mm | Pass, 2026-11-21 |
-| C-PKG-03 | The mirror stays out of the electronics slot at full tilt | At least 1 mm | Pass, 2026-11-21 |
-| C-PKG-04 | The window aperture stays below the lid | Top of aperture below the lid | Pass, 2026-11-21 |
-| C-PKG-05 | Every beam fits the window width (FWTM spread, ±15° steering) | Beam reach ≤ half the inner length | Pass (58.8 ≤ 62 mm), 2026-11-21 |
-| C-PKG-06 | The servo fits the back slot | Servo width ≤ slot depth − 2 mm | Pass, 2026-11-21 |
-| C-MASS-01 | Head mass with the lidar, from model geometry and part masses | ≤ 350 g | **Fail: ~556 g** (lean variant ~424 g), 2026-11-21 |
+| C-PKG-01 | The optic row fits along the mirror | Row length ≤ mirror length | Pass (v2), 2026-11-21 |
+| C-PKG-02 | The mirror clears the front wall at full tilt | At least 1 mm | Pass (v2), 2026-11-21 |
+| C-PKG-03 | The mirror stays out of the electronics slot at full tilt | At least 1 mm | Pass (v2), 2026-11-21 |
+| C-PKG-04 | The window aperture stays above the floor, and the mirror clears the optics at full tilt | At least 1 mm each | Pass (v2), 2026-11-21 |
+| C-PKG-05 | Every beam fits the window width (FWTM spread, ±15° steering) | Beam reach ≤ half the inner length | Pass (v2), 2026-11-21 |
+| C-PKG-06 | The servo fits the back slot | Servo width ≤ slot depth − 2 mm | Pass (v2), 2026-11-21 |
+| C-PKG-07 | The bottom heatsink fits inside the floor | Heatsink depth ≤ inner depth | Pass (v2), 2026-11-21 |
+| C-PKG-08 | The window and bezel stay on the flat front, clear of the rounded bottom edge | Bezel bottom ≥ edge radius above the floor | Pass (v2), 2026-11-21 |
+| C-MASS-01 | Head mass of the current configuration (2 FILIPPA + 2 spot, lidar on the head), from model geometry and part masses | ≤ 350 g | **Fail: ~463 g** (v2 rounded; ~448 g square-edged, ~556 g in v1), 2026-11-21 |
 
 ## Bench tests (`B-`)
 
@@ -152,7 +154,7 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | B-OPT-03 | Light output (lux at a fixed distance, converted to lumens) | Within 20% of the design estimate | – |
 | B-OPT-04 | Peak intensity and beam angles of each channel (lux grid on a wall at 10 m, both modes) | Spot and low beam within 30% of the design §3 beam estimate; record the real beam angles | – |
 | B-OPT-05 | FILIPPA flange height above the XP-L HI board, set with printed spacers in 0.1 mm steps | Height recorded where the cutoff is sharpest on a wall at 10 m | – |
-| B-OPT-06 | Cutoff orientation with the orienting rib toward the back of the housing, through the mirror | Cutoff is at the top of the beam and horizontal within ±0.5° | – |
+| B-OPT-06 | Cutoff orientation with the orienting rib toward the front of the housing (LEDs facing up), through the mirror | Cutoff is at the top of the beam and horizontal within ±0.5° | – |
 | B-OPT-07 | Glare above the cutoff, lux on a wall at 10 m, aimed per calibration step D | ≤ 2 lux above 3.4° over the brightest point; ≥ 10 lux at the brightest point | – |
 
 ### LED drivers
@@ -179,7 +181,7 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 
 | ID | What it checks | Pass if | Status |
 |---|---|---|---|
-| B-THM-01 | Heatsink rise in still air and with airflow equal to 25 km/h | Within 25% of design §8 | – |
+| B-THM-01 | Heatsink rise in still air, at walking pace and at 25 km/h, with the airflow along the fins (fore-aft) | Within 25% of design §8 | – |
 | B-THM-02 | NTC reading against a thermocouple | Within 3 °C | – |
 | B-SLP-01 | Sleep current and wake on motion | Wakes on a nudge; sleep current recorded | – |
 | B-REM-01 | DIY nRF52840 remote | Press-to-action latency ≤ 100 ms; battery life estimate recorded | – |

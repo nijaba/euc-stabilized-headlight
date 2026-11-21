@@ -1,24 +1,23 @@
-Part                                     Model    Lean
-Heatsink lid (aluminium)                   118      71
-Body shell (ASA)                           113      75
-Bezel, bosses, ribs (ASA)                   15      11
-Window (polycarbonate)                      30      24
-Mirror (front-surface glass)                30      17
-Mirror cradle, shaft, bearings              14      14
-Optic plate (ASA)                            8       8
-4x LED on 20 mm copper star                 18      18
-2x FILIPPA-STVZO                            13      13
-2x Carclo 10003 + 10734 holder               7       7
-Servo ES08MD II + linkage                   14      14
-XIAO, IMU, cable                             6       6
-2x BuckBlock, Pololu 5 V                    13      13
-Protoboard, passives, wiring                20      20
-Lid screws + heat-set inserts               17      17
-O-ring, window gasket                        4       4
-Mount boss + 1/4"-20 insert                 10      10
-Gland, vent, button, desiccant              18      18
-Head without lidar                         466     359
-TF02-Pro lidar                              50      50
-Lidar pod (ASA) + gasket                    40      15
-Head with lidar                            556     424
-C-MASS-01 head with lidar 556 g vs 350 g limit: FAIL (lean variant 424 g)
+Part                                   2F+2S+lidar     2F+1S+lidar           2F+2S           2F+1S     1F+1S+lidar
+Heatsink (aluminium, bottom)                    79              72              79              72              49
+Body shell (ASA)                               105              98             105              98              78
+Bezel, bosses, ribs (ASA)                       12              12              12              12              12
+Window (polycarbonate)                          24              22              24              22              16
+Mirror (front-surface glass)                    17              14              17              14               9
+Mirror cradle, shaft, bearings                  13              13              13              13              11
+Optic plate (ASA)                                6               6               6               6               6
+LEDs on 20 mm copper stars                      18              13              18              13               9
+FILIPPA-STVZO optics                            13              13              13              13               6
+Carclo 10003 + 10734 holders                     7               4               7               4               4
+Servo ES08MD II + linkage                       14              14              14              14              14
+XIAO, IMU, cable                                 6               6               6               6               6
+BuckBlocks, Pololu 5 V                          13              13              13              13              13
+Protoboard, passives, wiring                    20              20              20              20              20
+Screws + heat-set inserts                       14              14              14              14              14
+O-rings, window gasket                           5               5               5               5               4
+Mount boss + 1/4"-20 insert                     10              10              10              10              10
+Gland, vent, button, desiccant                  11              11              11              11              11
+TF02-Pro lidar                                  50              50               0               0              50
+Lidar pocket (ASA) + gasket                     27              27               0               0              27
+Total                                          463             435             386             358             368
+C-MASS-01 2F+2S+lidar: 463 g vs 350 g limit: FAIL
