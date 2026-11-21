@@ -148,6 +148,9 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | C-PKG-11 | The sloping roof leaves the electronics board at least 45 mm tall | Board height ≥ 45 mm | Pass (v3), 2026-11-21 |
 | C-PKG-12 | The servo fits inside the rounded, tapered tail | Servo inside the tail's inner wall | Pass (v3), 2026-11-21 |
 | C-PKG-13 | The electronics board fits the flat part of the tail | Board width ≥ 55 mm | Pass (v3), 2026-11-21 |
+| C-PKG-14 | v4 only: the lidar on its side fits inside the body | Lidar top below the inner roof | Pass (v4 study), 2026-11-21 |
+| C-PKG-15 | v4 only: each module's beam clears the lidar bay at full inward yaw | Inner beam edge outside the bay | Pass (v4 study), 2026-11-21 |
+| C-PKG-16 | v4 only: the gimbal frames clear the lidar bay | No overlap | Pass (v4 study), 2026-11-21 |
 | C-MASS-01 | Head mass with the lidar, printed parts measured from the model's STL volumes, bought parts from datasheets | ≤ 400 g | See `cad/renders/checks.txt`; ~401 g in v3, 2026-11-21 |
 
 ## Bench tests (`B-`)

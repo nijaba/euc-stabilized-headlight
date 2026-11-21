@@ -15,11 +15,11 @@ Scores: ●●●●● best, ● worst. "Mass" and "cost" are changes against t
 | **Cutoff** | Sharp (FILIPPA) | Stays sharp; may bow slightly at the edges | Stays sharp | Stays sharp; differential pitch roughly levels it when leaning | Does **not** make a sharp cutoff: only dims | Does **not** make a sharp cutoff unless rebuilt as a projector |
 | **Light lost** | Mirror ~5% | Same | Same | Same | Up to the masked fraction | 55–70% (polarisers) |
 | **Turns** | Fixed cornering lights | Same | Same | Low beam swings into the turn; could replace the cornering lights | — | In theory, pixel shaping; not practical here |
-| **Mass** | ~401 g | −10 g if the mirror is aluminium sheet; 0 g in glass | ~0 g | +30 to +60 g (net of dropping the cornering lights) | 0 g | +40 g or more; far more as a projector |
+| **Mass** | ~401 g | −10 g if the mirror is aluminium sheet; 0 g in glass | ~0 g | ~410 g modelled (v4, ±15° swing); ~395 g with ±10° | 0 g | +40 g or more; far more as a projector |
 | **Cost** | — | +$10–20 (sheet + former) | $0 | +$30–40 | $0 | +$30–150 |
 | **Complexity / risk** | ●●●● | ●●● custom curved mirror | ●●●● | ●● 4 servos, gimbals, firmware | ●●●●● trivial | ● new optical architecture |
 | **Parts availability** | ●●●●● | ●●●● (MIRO-type reflective aluminium sheet) | ●●●●● | ●●●● | ●●●●● | ●● |
-| **Verdict** | Keep | **Worth a bench test** as a replacement for the toe-out wedges | **Skip**: no real gain | **Best upgrade path** if weight allows; build as v2 | **Skip** (5-minute bench test to confirm) | **Skip** |
+| **Verdict** | Keep | **Worth a bench test** as a replacement for the toe-out wedges | **Skip**: no real gain | **Strong candidate**: modelled as v4 at ~410 g | **Skip** (5-minute bench test to confirm) | **Skip** |
 
 ## 1a. Convex mirror for the low beam
 
@@ -58,7 +58,9 @@ Scores: ●●●●● best, ● worst. "Mass" and "cost" are changes against t
 - Firmware: coordinated 4-axis control, calibration of both mirrors, failure handling.
 - Two-axis motion on one mirror means the cutoff tilts slightly when pitch and yaw combine (compound angle), which needs a correction table.
 
-**Verdict.** The most capable option and the natural "v2" headlight. It belongs after v1 is proven, and needs a higher weight limit (~430–460 g).
+**Modelled (v4, 2026-11-21).** `cad/headlight-v4.scad`: with the lidar on its side between the two modules and no brow, the head is a ~221 × 70 × 108 mm light bar of about **410 g** (±15° swing), or ~211 mm and ~395 g with ±10° of swing. That's much better than the +30–60 g first estimated here, because dropping the brow and the cornering lights offsets the extra servos and gimbals. See design §5.
+
+**Verdict.** The most capable option. At ~410 g it's close to the 400 g limit, so it's a real candidate rather than only a future "v2".
 
 ## 3. Masking tape on the mirror for the cutoff
 
@@ -84,5 +86,5 @@ Scores: ●●●●● best, ● worst. "Mass" and "cost" are changes against t
 
 1. **Keep the baseline for v1.**
 2. **Bench-test the convex low-beam mirror (1a)** against the 4° toe-out wedges when the optics are on the bench (build-plan phase 4, test B-OPT-09). If it's as good, it removes the wedges and may save ~10 g with an aluminium mirror.
-3. **Plan two 2-axis mirrors (2) as the v2 headlight**, once v1 has ride data. It could replace the cornering lights and partly level the cutoff in turns.
+3. **Decide between v3 and v4 (2).** v4 models at ~410 g, close to the limit, and replaces the cornering lights and brow; it adds four servos and gimbal firmware.
 4. **Drop crossing beams, masking and LCD.**

@@ -28,6 +28,10 @@ To explore, open `headlight.scad` in OpenSCAD and change `view` (`assembly`, `cu
 | `rear-quarter.png` | From behind: tail, mount boss, gland and vent |
 | `on-wheel.png` | On a generic 16" wheel for scale (not any real model) |
 
+## Layout v4 study
+
+`headlight-v4.scad` models the alternative with two independent 2-axis mirror modules and the lidar on its side between them, with no cornering lights or brow. `render.sh` renders it as `renders/v4-*.png` and writes its mass to `renders/mass-v4.txt`; its results are reported but don't affect the exit status. Extra variables: `yaw` (−7.5 to 7.5) and `yaw_max`.
+
 ## Results (2026-11-21)
 
 Layout v3 (aerodynamic, lean): heatsink at the bottom with fins fore-aft, mount on the back, a tapered body with a sloping roof and a brow fairing for the lidar and cornering lights. All clearance checks pass. The head is about 401 g with the lidar against the 400 g limit; see `renders/mass.txt` and design.md §5 "Packaging study".

@@ -2,3 +2,6 @@
 "MASS n_fil=2 n_spot=2 lidar=1 wall_mm=1.6 window_mm3=14863.9 hs_mm3=18276.2 mirror_mm3=6884.9 shaft_mm=135.817 seal_mm=698.736"
 C-PKG-01..13 passed
 C-MASS-01 2F+2S+lidar: 401 g vs 400 g limit: FAIL
+v4: C-PKG checks passed
+v4 "PKG config=v4-2x2axis+lidar body_outer_mm=220.774x69.8344x91.7816 head_height_mm=108.282 windows_mm=2x78.0369x60.9019 mirrors_mm=2x56.9x55 heatsinks_mm=2x60.45x32 fins=2x6 beam_yaw=+-15"
+v4 (study): C-MASS-01 v4-2x2axis+lidar: 410 g vs 400 g limit: FAIL
