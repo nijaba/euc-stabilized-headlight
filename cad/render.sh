@@ -61,6 +61,9 @@ render4 cutaway       cutaway  0,-10,45,90,0,270,520 --projection=ortho
 render4 top           assembly 0,0,0,0,0,0,0 -D show_beams=false --projection=ortho
 render4 under         under    0,0,0,140,0,150,0 -D show_beams=false
 render4 on-wheel      wheel    0,0,0,75,0,125,0 -D show_beams=false
+render4 wrap-three-quarter assembly 0,0,0,62,0,140,0 -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 -D show_beams=false
+render4 wrap-turning  assembly 0,0,0,62,0,140,0 -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 -D yaw=12.5
+render4 wrap-top      assembly 0,0,0,0,0,0,0 -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 -D yaw=12.5 --projection=ortho
 if grep -q 'C-PKG' "$LOG.v4"; then echo "v4: $(grep -o 'C-PKG[^"]*' "$LOG.v4" | sort -u | head -3)" >> "$LOG"; else echo "v4: C-PKG checks passed" >> "$LOG"; fi
 rm -f "$LOG.v4"
 "$OPENSCAD" -o "$OUT/v4.echo" headlight-v4.scad 2>/dev/null
@@ -69,5 +72,12 @@ python3 -I weight.py "$OUT/v4.echo" "$OUT/v4-shell.stl" > "$OUT/mass-v4.txt" || 
 grep '"PKG' "$OUT/v4.echo" | sed 's/^ECHO: /v4 /' >> "$LOG"
 rm -f "$OUT/v4.echo" "$OUT/v4-shell.stl"
 echo "v4 (study): $(tail -1 "$OUT/mass-v4.txt")" >> "$LOG"
+# v4 with one clear wraparound piece per side (front + corner + side, no pillar).
+"$OPENSCAD" -o "$OUT/v4w.echo" -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 headlight-v4.scad 2>/dev/null
+"$OPENSCAD" -o "$OUT/v4w-shell.stl" -D wrap_sides=true -D taper=8 -D hs_margin=3 -D r_tail=10 -D 'view="stl_shell"' headlight-v4.scad 2>/dev/null
+python3 -I weight.py "$OUT/v4w.echo" "$OUT/v4w-shell.stl" > "$OUT/mass-v4-wrap.txt" || true
+grep '"PKG' "$OUT/v4w.echo" | sed 's/^ECHO: /v4-wrap /' >> "$LOG"
+rm -f "$OUT/v4w.echo" "$OUT/v4w-shell.stl"
+echo "v4 with clear wraparound sides (study): $(tail -1 "$OUT/mass-v4-wrap.txt")" >> "$LOG"
 cat "$LOG"
 exit $status

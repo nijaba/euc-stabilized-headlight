@@ -210,6 +210,17 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - **Interior:** printed matte black to kill stray light. A lighter colour outside reduces sun heating.
 - **Leak test:** submerge the empty housing with a tissue inside before any electronics go in.
 
+*v4 with clear wraparound sides (study, 2026-11-21, `wrap_sides = true`).* The owner's idea: on each side, **one thermoformed clear piece** runs from the lidar bay across the front, round an 18 mm-radius corner and 30 mm back along the side, so there's **no pillar** between front and side glass.
+- **Why it helps:** the outward beam no longer has to leave through the flat front, so the head's width is set by the mirror modules instead of the beam. The outward swing can grow from ±15° to **±25°** (outward only; inward is still limited by the lidar bay).
+- **Model result:** about **200 × 70 × 96 mm** (v4 flat-front: 221 mm) and **~393 g** with the lidar, within the 400 g limit. To keep the heatsinks on the flat floor of the narrower body, the taper drops to 8 mm and the tail radius to 10 mm.
+- **Thermoforming the pieces:**
+  - **Material:** UV-stabilised polycarbonate, 1.5 mm. PETG forms at 120–160 °C without drying and is easier, but it's less impact- and UV-resistant.
+  - **Drying:** PC must be dried first (about 120 °C for several hours for 1.5 mm sheet) or it bubbles when heated.
+  - **Forming temperature:** PC forms at about 170–190 °C, above ASA's ~100 °C softening point. An ASA buck would deform or mark the sheet. Use a buck of plaster, MDF, cast resin or aluminium, or an ASA print skinned with plaster or high-temperature epoxy.
+  - **Method:** drape or vacuum forming (a shop-vac box) over the buck, or a heat gun and a simple frame for small pieces. The shape is a simple L with a rounded corner, so it drapes well.
+  - **Optics:** a uniform thin shell barely bends the beam, but any mould marks scatter light, which shows as glare. Keep the buck's surface smooth and polished, or form with the inner face off the buck.
+  - **Sealing:** each piece sits in a printed groove along its top, bottom and both ends with a neutral-cure RTV bead. There's no bezel across the view.
+
 **Waterproofing and vibration review (2026-11-21, v3 and v4).**
 
 *Why it can be sealed at all:* every moving part (mirrors, gimbals, servos, linkages) is inside the box. Nothing moving passes through a wall, so there are no shaft seals; every seal is static.
