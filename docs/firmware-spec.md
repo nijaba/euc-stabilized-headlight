@@ -140,3 +140,34 @@ Two fixed lights aimed 30° outward and 10° down (design §3). Left on D3, righ
 - **Fades:** in over 0.2 s, out over 0.6 s.
 - **Thermal cap:** after 20 s continuously at full power on one side, that side falls to 50% until it has been off for 20 s.
 - Only one side is lit at a time. If the inputs flip side, the old side fades out as the new one fades in.
+
+## 11. Calibration and settings: how they're controlled (proposal, 2026-11-21, owner to decide)
+
+Today the spec drives calibration (§3) with the head's button and the remote, with feedback from the ring LED. That works but gives little feedback. Options:
+
+| Option | What the rider uses | Works on | Extra parts | Effort | Notes |
+|---|---|---|---|---|---|
+| A. Button and remote only (current) | Button holds and clicks, ring-LED blinks | — | None | Low | Hard to see what's happening; no logs |
+| **B. Calibration page over the head's own Wi-Fi (recommended)** | Any phone's browser, joined to the head's hotspot | iPhone and Android, no install | None (the ESP32-S3 has Wi-Fi) | Medium | Live pitch and aim, guided steps, settings, ride-log download |
+| C. Web Bluetooth page | A browser page talking Bluetooth to the head | Android and desktop Chrome only; **not iPhone** | None | Medium | Rules out iPhone riders |
+| D. Native phone app | An app from the app stores | iPhone and Android | None | High | Store accounts, reviews and upkeep; overkill |
+
+**Recommendation: B, with A kept as the fallback.**
+- **Starting it:** hold the button 5 s while stationary (or a remote combo). The head starts a hotspot named `EUC-Light-` plus a random 4-character suffix, with a random WPA2 password generated on first boot and shown in the serial log and on a printed label. No personal data.
+- **It stops** after 10 min idle, or as soon as the wheel moves. The hotspot is never on while riding.
+- **The page,** served from the ESP32's flash:
+  - live pitch and roll
+  - guided calibration steps A–D with a mirror-trim slider and an aim slider
+  - settings: modes, brightness levels, cornering thresholds or, for v4, yaw limits
+  - ride-log download as CSV
+  - over-the-air updates possibly later
+- **Safety:** the firmware validates every setting and clamps it to safe ranges. No setting can break a safety invariant (§1); for example, the minimum brightness while moving has a floor.
+- **Security, from the project rules:**
+  - a strict Content Security Policy, with no external scripts or fonts
+  - every displayed value escaped
+  - writes as POST with a JSON body and a request ID applied once
+  - a rate limit on writes
+  - the password changeable from the page
+- **Dependencies:** Arduino-ESP32's built-in Wi-Fi and WebServer, so no new libraries. Wi-Fi draws ~100 mA, only while calibrating.
+
+**If adopted:** add tests U-CFG-01 (settings clamped to safe ranges), U-CFG-02 (hotspot off when moving or after 10 min), U-CFG-03 (writes applied once per request ID) and B-CFG-01 (page works on an iPhone and an Android phone), and design the page under the project's web rules.
