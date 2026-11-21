@@ -21,12 +21,18 @@ Current choices that are not firm constraints (change them through the design do
 
 ## Commands
 
-There's no firmware code yet. These are planned for when `firmware/` has a PlatformIO project (build plan phase 1):
+There's no firmware code yet. These are planned for when `firmware/` has a PlatformIO project (build plan phase 2):
 
 ```bash
 pio test -e native          # automated firmware tests on the host, including the test-plan ID check
 pio run -e xiao_esp32s3     # build for the board
 pio run -e xiao_esp32s3 -t upload && pio device monitor   # flash and watch the serial log
+```
+
+Packaging model (needs OpenSCAD; set `OPENSCAD` if it isn't on the PATH):
+
+```bash
+cad/render.sh               # renders to cad/renders/, runs C-PKG and C-MASS checks
 ```
 
 ## Layout
@@ -39,7 +45,7 @@ docs/build-plan.md   phases in order, with checkboxes
 docs/test-plan.md    every test by ID, with its status
 hardware/BOM.md/.csv bill of materials (keep the two in sync)
 firmware/            ESP32-S3 firmware (to do)
-cad/                 parametric housing CAD (to do)
+cad/                 OpenSCAD packaging model, render script, mass budget
 ```
 
 ## Rules that must always hold

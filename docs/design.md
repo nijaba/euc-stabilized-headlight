@@ -194,6 +194,13 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - lidar bracket (optional)
 - remote case
 
+**Packaging study (2026-11-21, `cad/headlight.scad`).** An OpenSCAD model with every part at datasheet size shows:
+- **Size:** body about 129 × 74 × 85 mm; about 103 mm tall with the heatsink fins; about 150 mm tall with the lidar pod underneath.
+- **Fit:** the optic row, mirror sweep (±7.5°), window aperture (124 × 64 mm), servo linkage and a vertical electronics board in a 20 mm slot at the back all fit (checks C-PKG-01 to C-PKG-06 pass).
+- **Mass:** about **466 g without the lidar and 556 g with it**, against the 350 g limit (C-MASS-01 fails). The earlier ~280 g estimate left out most of the shell, heatsink and window mass. The heaviest items are the heatsink (~118 g), the printed body (~113 g), the window and mirror (~30 g each). A lean variant (1.6 mm walls, 2 mm window, 1.1 mm mirror, a 40% lighter heatsink, the lidar inside the body) still comes to about 359 g, or 424 g with the lidar. Its lighter heatsink is unproven thermally.
+- **Lidar pod:** hanging under the front, it adds about 46 mm of height and sits close to the 1/4"-20 mount boss.
+- Renders and the full mass table are in `cad/renders/`.
+
 ## 6. Mounting
 
 - **Interface:** a captive 1/4"-20 brass insert in a printed boss. This is the most universal standard, and it takes GoPro adaptors.
@@ -290,6 +297,6 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - [ ] P6KE27A clamps at ~37.5 V, above the BuckBlock's 32 V maximum. Low risk with a 20 V bank, but a lower-clamp TVS would cover it.
 - [x] Cost over the limit: about $290 core + $98 lidar ≈ $388, against a $350 ceiling. Resolved 2026-11-20: the owner raised the limit to $450, so no parts change.
 - [x] **The flood has no cutoff.** Resolved 2026-11-21: the owner chose two LEDiL FILIPPA-STVZO cutoff optics with XP-L HI as the low beam (§3). A shield or masked mirror edge was rejected because a TIR beam isn't an image, so blocking part of it only dims it without making a sharp edge.
-- [ ] **Head weight may exceed 350 g with the lidar.** The larger mirror (+~15 g), longer heatsink (+~18 g), larger housing (+~8 g) and FILIPPA optics (+~6 g) add roughly 47 g, taking the estimate from ~280 g to ~327 g, or ~377 g with the lidar (about 50 g). Options: 1.1 mm mirror glass (−13 g), a lighter heatsink, thinner walls away from the seals. (2026-11-21)
+- [ ] **Head weight is well over 350 g.** The packaging study (§5) puts it at ~466 g, or ~556 g with the lidar; even the lean variant is ~424 g with the lidar. Needs the owner's decision: raise the limit, drop or shrink parts (lidar, one FILIPPA, a smaller window), or rethink the housing (for example, the aluminium lid forming more of the shell). (2026-11-21)
 - [ ] FILIPPA with XP-L HI: focus height, cutoff sharpness and cutoff orientation are not in LEDiL's data. Bench tests B-OPT-05 and B-OPT-06.
 - [ ] Larger mirror (115 × 55 mm, about 5× the moment of inertia): does the servo still settle in under 50 ms (B-MIR-01)?

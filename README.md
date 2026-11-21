@@ -6,6 +6,8 @@ An EUC pitches nose-down when it accelerates and nose-up when it brakes. A fixed
 
 > **Status: design phase.** Nothing has been built or tested yet. All performance figures are estimates.
 
+![Packaging model of the head, three-quarter view](cad/renders/three-quarter.png)
+
 ## Goals
 
 | Requirement | How it is met |
@@ -54,7 +56,8 @@ Side view of the head:
 | Low beam (cutoff) at 10 m | ~73 lux | ~95 lux |
 | Input power | ~21 W | ~30 W |
 | Runtime on a 20 Ah bank (~50 Wh usable at 15 V) | ~2.4 h | ~1.7 h |
-| Head weight (limit: 350 g with lidar) | ~327 g (+ ~50 g lidar), so ~377 g with lidar: over the limit, see design §10 | |
+| Head weight (limit: 350 g with lidar) | ~466 g, ~556 g with lidar (packaging study): over the limit, see design §10 | |
+| Head size | ~129 × 74 × 103 mm (+ ~46 mm lidar pod) | |
 | Material cost per unit (limit: $450 with lidar) | ~$297 + power bank (+ ~$98 lidar) | |
 
 ## Repository layout
@@ -69,7 +72,7 @@ Side view of the head:
 | [`CHANGELOG.md`](CHANGELOG.md) | Notable changes |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) / [`SECURITY.md`](SECURITY.md) | How to contribute; how to report safety and security faults privately |
 | `firmware/` | ESP32-S3 firmware (to do) |
-| `cad/` | Parametric housing CAD (to do) |
+| [`cad/`](cad/) | OpenSCAD packaging model, renders and mass budget |
 
 ## Roadmap
 
