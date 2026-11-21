@@ -24,6 +24,8 @@ Goal: a parametric model and renders of the whole head prove it fits, sweeps and
 - [x] Layout v2: heatsink at the bottom, fins fore-aft, mount on the back, weight savings (owner's requirements, 2026-11-21)
 - [x] Owner decision on the weight: limit raised to 400 g, lidar stays on the head, two spots kept (2026-11-21)
 - [x] Layout v3: aerodynamic tapered shape and lean package; printed parts measured from the model
+- [x] Layout v4 study: two 2-axis mirrors, lidar in the body, no cornering lights or brow (~410 g)
+- [ ] Owner decision: v3 or v4
 - [ ] Owner review of the renders; update the design doc with what the model shows
 
 ## Phase 2: Firmware core on the bench

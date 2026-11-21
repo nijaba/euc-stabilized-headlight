@@ -47,5 +47,27 @@ status=0
 python3 -I weight.py "$OUT/model.echo" "$OUT/shell.stl" "$OUT/hood.stl" > "$OUT/mass.txt" || status=$?
 rm -f "$OUT/model.echo" "$OUT/shell.stl" "$OUT/hood.stl"
 tail -1 "$OUT/mass.txt" >> "$LOG"
+
+# Layout v4 study (two 2-axis mirrors, lidar between them): renders and mass, reported but not gating.
+render4() { name=$1; view=$2; cam=$3; shift 3
+  fit=""; case "$cam" in *,0) fit="--viewall --autocenter" ;; esac
+  # shellcheck disable=SC2086
+  "$OPENSCAD" -o "$OUT/v4-$name.png" --imgsize=1600,1200 --colorscheme=Tomorrow $fit --camera="$cam" -D "view=\"$view\"" "$@" headlight-v4.scad 2>>"$LOG.v4"
+}
+render4 three-quarter assembly 0,0,0,62,0,140,0
+render4 front         front    0,0,0,90,0,180,0 -D show_beams=false --projection=ortho
+render4 turning       assembly 0,0,0,62,0,140,0 -D yaw=7.5
+render4 cutaway       cutaway  0,-10,45,90,0,270,520 --projection=ortho
+render4 top           assembly 0,0,0,0,0,0,0 -D show_beams=false --projection=ortho
+render4 under         under    0,0,0,140,0,150,0 -D show_beams=false
+render4 on-wheel      wheel    0,0,0,75,0,125,0 -D show_beams=false
+if grep -q 'C-PKG' "$LOG.v4"; then echo "v4: $(grep -o 'C-PKG[^"]*' "$LOG.v4" | sort -u | head -3)" >> "$LOG"; else echo "v4: C-PKG checks passed" >> "$LOG"; fi
+rm -f "$LOG.v4"
+"$OPENSCAD" -o "$OUT/v4.echo" headlight-v4.scad 2>/dev/null
+"$OPENSCAD" -o "$OUT/v4-shell.stl" -D 'view="stl_shell"' headlight-v4.scad 2>/dev/null
+python3 -I weight.py "$OUT/v4.echo" "$OUT/v4-shell.stl" > "$OUT/mass-v4.txt" || true
+grep '"PKG' "$OUT/v4.echo" | sed 's/^ECHO: /v4 /' >> "$LOG"
+rm -f "$OUT/v4.echo" "$OUT/v4-shell.stl"
+echo "v4 (study): $(tail -1 "$OUT/mass-v4.txt")" >> "$LOG"
 cat "$LOG"
 exit $status

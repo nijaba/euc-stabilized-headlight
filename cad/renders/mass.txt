@@ -6,12 +6,13 @@ Bezel, bosses, ribs (ASA)                                   10
 Window (polycarbonate)                                      18
 Mirror (front-surface glass)                                17
 Mirror cradle, shaft, bearings                              13
+Gimbal frames, yaw pins, bearings                            0
 Optic plate (ASA)                                            6
 LEDs on 20 mm copper stars                                  18
 FILIPPA-STVZO optics                                        13
 Carclo 10003 + 10734 holders                                 7
 FILIPPA toe-out wedges (aluminium)                           4
-Servo (5 g class) + linkage                                  7
+Servos (5 g class) + linkages                                7
 XIAO, IMU, cable                                             6
 BuckBlocks, Pololu 5 V                                      13
 Protoboard, passives, wiring                                20

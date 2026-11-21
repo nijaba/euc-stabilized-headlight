@@ -235,6 +235,14 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - **Mass:** the printed body and brow are now **measured from the model's geometry** (STL volumes), not approximated: body ~53 g, brow ~33 g. The head comes to **~401 g** with the lidar, right at the 400 g limit. The custom PCB (build-plan phase 9) should take off another ~20 g.
 - Further options if needed: foaming lightweight ASA for the brow and other non-sealing parts (~−15 g, material to verify), a LightWare LW20/C lidar (~−45 g but ~$187 more, over the cost limit).
 
+*v4 study (two 2-axis mirrors, 2026-11-21, `cad/headlight-v4.scad`).* Modelled at the owner's request; not adopted yet. v3 stays the design.
+- **Layout:** two mirror modules, each steering one FILIPPA and one spot, on a gimbal: pitch for levelling and yaw for swinging the beam ±15° into turns. Four 5 g-class servos sit in the back slot, two per side, stacked. The yaw steering replaces the cornering lights and the toe-out wedges, so there's no brow: the lidar sits on its side (~42 × 69 mm) in its own bay between the modules, behind a gasketed opening.
+- **Shape:** a low, wide light bar, about **221 × 70 × 108 mm** (v3: 139 × 70 × 149 mm). It's wider than first estimated because a module's beam must clear the lidar bay when it swings inward at full yaw. At 221 mm it's wider than a typical 16" wheel's shell (~190 mm in the generic scale model), so it sticks out ~15 mm each side when mounted on the front.
+- **Heatsinks:** two, one under each module's LED boards (~60 × 32 mm, 6 fins each), about 1.6 K/W together at 25 km/h (~19 K rise) and ~2.9 K/W at walking pace.
+- **Mass:** about **410 g** with the lidar, ~10 g over the limit. Limiting the swing to ±10° narrows the bar to ~211 mm and brings it to ~395 g, with smaller, warmer heatsinks.
+- **Checks:** C-PKG-01 to 16 pass for v4 (14–16 are v4-only: lidar height, inward beam clearing the lidar bay, gimbal frame clearing the bay).
+- **Trade against v3:** v4 gains steering into turns, a roughly levelled cutoff when leaning (raise the inside half, lower the outside), software-adjustable spread and a brow-free shape. It costs four servos, gimbals, more firmware and calibration, and ~80 mm more width.
+
 ## 6. Mounting
 
 - **Interface:** a captive 1/4"-20 brass insert in a printed boss **on the back** of the head (layout v2; the floor is the heatsink). This is the most universal standard, and it takes GoPro adaptors.
