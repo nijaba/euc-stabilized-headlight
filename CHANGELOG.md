@@ -5,6 +5,9 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ## [Unreleased]
 
 ### Added
+- Site and README say the project is a concept design and invite ideas as GitHub issues rather than builds.
+- GitHub Pages serves `docs/`, so the README's demo link opens the live page (`docs/.nojekyll` serves the files as they are).
+- Project site home page (`docs/index.html`): the problem, how it works, the embedded ride demo, renders, anticipated spec, limits, parts, safety rules, roadmap and links. Its renders live in `docs/img/`, refreshed by `cad/render.sh`.
 - Ride demo: low-beam and high-beam modes (the high beam adds the two spots), and the lidar fitted by default.
 - v4 ride demo page (`docs/v4-ride-demo.html`), linked from the README: a standalone simulation of the levelling loop and turn steering.
 - v4 turning behaviour decided: only the turn-side beam swings into the curve, the other stays straight (design §5).
@@ -24,6 +27,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - `CONTRIBUTING.md` and `SECURITY.md` (private reporting for safety faults as well as security issues).
 
 ### Changed
+- v4 model: the curved clear sides are now the only version (flat front dropped, owner 2026-11-21) and the default; `render.sh` renders only it. Per-side yaw (`yaw_l`, `yaw_r`) so the turn renders show only the turn-side beam swinging. Site headline mentions turns.
 - Layout v4 adopted (owner, 2026-11-21): two mirrors on 2-axis gimbals, four servos, clear wraparound sides, lidar in the body, no cornering lights. Design, firmware spec, build plan, CLAUDE.md, BOM (≈ $440 per unit with the lidar, ~393 g) and README updated; `render.sh` now gates on v4.
 - Hill follower (firmware-spec §2, adopted 2026-11-21): removes the pitch the measured acceleration explains, then follows with τ = 0.3 s instead of 4 s, freezing 0.3 s after hard acceleration or a jolt. Fixes the beam dropping while accelerating and lagging over crests. U-ROAD-01 and R-AIM-02 now require 1 s.
 - Weight limit raised from 350 g to 400 g with the lidar (owner, 2026-11-21). Layout v3: aerodynamic shape (tapered, sloping roof, soft tail, brow fairing) and lean package (1.6 mm walls, smaller heatsink, 1.5 mm window, 5 g servo, fewer screws, M8 gland); printed parts now measured from STL volumes; ~401 g. Design §2 explains the mirror's size.
@@ -33,5 +37,6 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - design.md §4: power breakdown, input current per mode, lidar draw, and a 15 V 3 A bank recommendation; why wheel USB ports can't power the head, and the wheel 12 V rail and main-battery alternatives.
 
 ### Fixed
+- v4 model with the curved clear sides: the front face was drawn ~12 mm too far back (corner spheres placed for an 18 mm corner but sized 6 mm), so the mirrors, optics and lidar poked through the skin and the shell measured light. Corner now an arc, 1 mm more front clearance for the mirror at full tilt and swing, new check C-PKG-18 (`cad/fit-v4.scad`). Mass ~393 → ~399 g with the lidar (limit 400 g).
 - BOM: one thermistor instead of two, one fewer 10 k resistor, totals updated.
 - Design: the heatsink lid is finned aluminium, not die-cast.

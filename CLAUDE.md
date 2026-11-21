@@ -41,6 +41,7 @@ cad/render.sh               # renders to cad/renders/, runs C-PKG and C-MASS che
 README.md            overview, goals, key figures
 docs/design.md       hardware design: optics, mirror, power, housing, thermal, electronics, lidar
 docs/firmware-spec.md firmware behaviour: control loop, calibration, auto-off, derating, remote, lidar
+docs/index.html      project site home (GitHub Pages serves docs/); keep its figures in step with the docs
 docs/v4-ride-demo.html animated simulation of the v4 levelling and turn steering (keep in step with firmware-spec §2)
 docs/build-plan.md   phases in order, with checkboxes
 docs/test-plan.md    every test by ID, with its status

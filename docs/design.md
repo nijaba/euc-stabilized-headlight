@@ -212,9 +212,9 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - **Interior:** printed matte black to kill stray light. A lighter colour outside reduces sun heating.
 - **Leak test:** submerge the empty housing with a tissue inside before any electronics go in.
 
-*v4 with clear wraparound sides (study, 2026-11-21, `wrap_sides = true`).* The owner's idea: on each side, **one thermoformed clear piece** runs from the lidar bay across the front, round an 18 mm-radius corner and 30 mm back along the side, so there's **no pillar** between front and side glass.
+*v4 with clear wraparound sides (2026-11-21, `wrap_sides = true`, now the model's default and the only v4 version: the flat front is dropped, owner, 2026-11-21).* The owner's idea: on each side, **one thermoformed clear piece** runs from the lidar bay across the front, round an 18 mm-radius corner and 30 mm back along the side, so there's **no pillar** between front and side glass.
 - **Why it helps:** the outward beam no longer has to leave through the flat front, so the head's width is set by the mirror modules instead of the beam. The outward swing can grow from ±15° to **±25°** (outward only; inward is still limited by the lidar bay).
-- **Model result:** about **200 × 70 × 96 mm** (v4 flat-front: 221 mm) and **~393 g** with the lidar, within the 400 g limit. To keep the heatsinks on the flat floor of the narrower body, the taper drops to 8 mm and the tail radius to 10 mm.
+- **Model result:** about **200 × 71 × 95 mm** body, 111 mm tall with the heatsink (v4 flat-front: 221 mm), and **~399 g** with the lidar, just within the 400 g limit. *(Corrected 2026-11-21: the first wrap model drew the front face ~12 mm too far back, so internal parts poked through the skin and the shell measured light at ~393 g. Fixed, with 1 mm more front clearance and a new skin check, C-PKG-18.)* To keep the heatsinks on the flat floor of the narrower body, the taper drops to 8 mm and the tail radius to 10 mm.
 - **Thermoforming the pieces:**
   - **Material:** UV-stabilised polycarbonate, 1.5 mm. PETG forms at 120–160 °C without drying and is easier, but it's less impact- and UV-resistant.
   - **Drying:** PC must be dried first (about 120 °C for several hours for 1.5 mm sheet) or it bubbles when heated.
@@ -398,7 +398,7 @@ Seven LEDC channels are used (four servos, two DIM, the ring LED) of the ESP32-S
 - [ ] P6KE27A clamps at ~37.5 V, above the BuckBlock's 32 V maximum. Low risk with a 20 V bank, but a lower-clamp TVS would cover it.
 - [x] Cost over the limit: about $290 core + $98 lidar ≈ $388, against a $350 ceiling. Resolved 2026-11-20: the owner raised the limit to $450, so no parts change.
 - [x] **The flood has no cutoff.** Resolved 2026-11-21: the owner chose two LEDiL FILIPPA-STVZO cutoff optics with XP-L HI as the low beam (§3). A shield or masked mirror edge was rejected because a TIR beam isn't an image, so blocking part of it only dims it without making a sharp edge.
-- [ ] **Head weight is close to the 400 g limit** (raised from 350 g, owner, 2026-11-21): ~393 g with the lidar for v4 with the clear wraparound sides (v3 was ~401 g). The custom PCB should add ~20 g of margin; the part masses are estimates until weighed (E-MNT-01).
+- [ ] **Head weight is close to the 400 g limit** (raised from 350 g, owner, 2026-11-21): ~399 g with the lidar for v4 with the clear wraparound sides, 1 g of margin (v3 was ~401 g). The custom PCB should add ~20 g of margin; the part masses are estimates until weighed (E-MNT-01).
 - [ ] Heatsink sized for moving air (§8): confirm the riding temperature and the parked derating on the bench (B-THM-01).
 - [ ] FILIPPA with XP-L HI: focus height, cutoff sharpness and cutoff orientation are not in LEDiL's data. Bench tests B-OPT-05 and B-OPT-06.
 - [ ] Larger mirror (115 × 55 mm, about 5× the moment of inertia): does the servo still settle in under 50 ms (B-MIR-01)?

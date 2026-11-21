@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EUC Stabilized Headlight</title>
+<meta name="description" content="An open-hardware, self-levelling headlight for electric unicycles: two servo-steered mirrors keep the beam on the road while the wheel pitches, and swing one beam into each turn.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a night-ride project page. One hero with the render, then sections that alternate text and instrument-like panels. Deliberately dark, matching the ride demo. */
+:root {
+  color-scheme: dark;
+  --bg: #0b0f15;
+  --panel: #121923;
+  --panel-2: #172130;
+  --line: #243041;
+  --fg: #dde4ec;
+  --muted: #8a97a9;
+  --beam: #ffeec2;
+  --left: #73c4ff;
+  --right: #ffae63;
+  --fixed: #ff6b6b;
+  --ok: #6fd39a;
+  --road: #2b3442;
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 var(--f-body); }
+a { color: var(--beam); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--left); outline-offset: 3px; border-radius: 4px; }
+img { max-width: 100%; height: auto; display: block; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+
+/* nav */
+nav { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+nav .wrap { display: flex; align-items: center; gap: 20px; padding-block: 12px; }
+nav .brand { font: 600 18px/1 var(--f-display); letter-spacing: .04em; text-transform: uppercase; color: var(--fg); text-decoration: none; white-space: nowrap; }
+nav ul { display: flex; gap: 18px; list-style: none; margin: 0 0 0 auto; padding: 0; overflow-x: auto; scrollbar-width: none; }
+nav ul a { color: var(--muted); text-decoration: none; font-size: 14px; white-space: nowrap; }
+nav ul a:hover { color: var(--fg); }
+
+/* hero */
+.hero { padding-block: 64px 40px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 40px; align-items: center; }
+.eyebrow { font: 500 12px/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+h1 { font: 700 clamp(44px, 7vw, 84px)/.92 var(--f-display); letter-spacing: -.005em; margin: 14px 0 18px; text-wrap: balance; }
+h1 .lit { color: var(--beam); }
+.lede { font-size: 19px; color: var(--muted); max-width: 34ch; margin: 0 0 26px; }
+.lede b { color: var(--fg); font-weight: 500; }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; border: 1px solid var(--line); color: var(--fg); }
+.btn.primary { background: var(--beam); color: #1b1608; border-color: var(--beam); }
+.btn:hover { border-color: var(--muted); }
+.status { margin-top: 22px; display: inline-flex; gap: 8px; align-items: center; font: 500 13px/1.2 var(--f-mono); color: var(--muted); }
+.status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--right); box-shadow: 0 0 0 4px color-mix(in srgb, var(--right) 22%, transparent); flex: none; }
+.render { background: radial-gradient(120% 90% at 50% 40%, #e9edf1 0%, #c9d0d8 70%, #aab3bd 100%); border-radius: 10px; overflow: hidden; position: relative; }
+.render img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.render figcaption { position: absolute; left: 12px; bottom: 10px; font: 500 12px/1.2 var(--f-mono); color: #3a4452; }
+
+/* sections */
+section { scroll-margin-top: 56px; padding-block: 64px; border-top: 1px solid var(--line); }
+h2 { font: 600 clamp(32px, 4.4vw, 46px)/1 var(--f-display); margin: 10px 0 14px; letter-spacing: .005em; text-wrap: balance; }
+h3 { font: 600 22px/1.15 var(--f-display); letter-spacing: .02em; margin: 0 0 6px; }
+.intro { color: var(--muted); max-width: 64ch; margin: 0 0 32px; }
+.intro b { color: var(--fg); font-weight: 500; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 20px; min-width: 0; }
+.panel p { margin: 0; color: var(--muted); font-size: 15px; }
+.panel p + p { margin-top: 8px; }
+.step-n { font: 500 12px/1 var(--f-mono); color: var(--beam); letter-spacing: .1em; display: block; margin-bottom: 10px; }
+
+/* problem diagram */
+.diagram { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
+.diagram svg { width: 100%; height: auto; display: block; }
+.diagram .cap { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 6px 10px 8px; font-size: 13px; color: var(--muted); }
+.k::before { content: ""; display: inline-block; width: 16px; border-top: 2px solid currentColor; vertical-align: middle; margin-right: 6px; }
+.k.fx { color: var(--fixed); } .k.fx::before { border-top-style: dashed; } .k.bm { color: var(--beam); }
+
+/* demo */
+.demo-frame { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--panel); }
+.demo-frame iframe { width: 100%; height: 900px; border: 0; display: block; background: var(--bg); }
+.demo-bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+
+/* gallery */
+.gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.gallery figure { margin: 0; min-width: 0; }
+.gallery .shot { background: #dfe4e9; border-radius: 8px; overflow: hidden; }
+.gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.gallery figcaption { font-size: 14px; color: var(--muted); padding-top: 8px; }
+.gallery figcaption b { color: var(--fg); font-weight: 500; }
+
+/* spec tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font: 500 12px/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: var(--panel-2); }
+td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--fg); }
+td .sub { display: block; color: var(--muted); font-size: 13px; }
+.budget { display: grid; gap: 18px; }
+.meter { display: grid; gap: 6px; }
+.meter .row { display: flex; justify-content: space-between; gap: 10px; font-size: 15px; }
+.meter .row span:last-child { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.meter .bar { position: relative; height: 10px; border-radius: 5px; background: var(--bg); border: 1px solid var(--line); }
+.meter .bar i { position: absolute; inset: 0 auto 0 0; border-radius: 5px; background: var(--beam); }
+.meter .bar b { position: absolute; top: -4px; bottom: -4px; right: 0; width: 2px; background: var(--fixed); }
+.meter small { color: var(--muted); font-size: 13px; }
+
+/* lists */
+ul.rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+ul.rules li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; color: var(--muted); font-size: 15px; }
+ul.rules li b { color: var(--fg); font-weight: 500; }
+ul.rules .n { font: 600 16px/1.5 var(--f-mono); color: var(--beam); }
+.parts { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.part { border: 1px solid var(--line); border-radius: 8px; padding: 14px; background: var(--panel); min-width: 0; }
+.part .role { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.part .name { font-weight: 600; margin: 6px 0 2px; }
+.part p { margin: 0; font-size: 14px; color: var(--muted); }
+
+/* roadmap */
+ol.phases { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+ol.phases li { display: grid; grid-template-columns: 70px minmax(0, 1fr) 120px; gap: 14px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+ol.phases .ph { font: 500 12px/1 var(--f-mono); color: var(--muted); letter-spacing: .08em; }
+ol.phases .t { font-weight: 500; }
+ol.phases .t small { display: block; color: var(--muted); font-weight: 400; font-size: 13px; }
+.prog { display: flex; align-items: center; gap: 8px; font: 12px/1 var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog .bar { flex: 1; height: 6px; border-radius: 3px; background: var(--bg); border: 1px solid var(--line); position: relative; overflow: hidden; }
+.prog .bar i { position: absolute; inset: 0 auto 0 0; background: var(--ok); }
+ol.phases li.now { border-color: color-mix(in srgb, var(--beam) 45%, var(--line)); }
+
+/* docs */
+.docs { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.doc { display: block; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); text-decoration: none; color: var(--fg); }
+.doc:hover { border-color: var(--muted); }
+.doc .path { font: 500 13px/1.2 var(--f-mono); color: var(--beam); }
+.doc p { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+
+.concept { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 32px; margin-bottom: 48px; padding: 22px 24px; border: 1px solid color-mix(in srgb, var(--right) 45%, var(--line)); border-radius: 10px; background: color-mix(in srgb, var(--right) 7%, var(--panel)); }
+.concept p { margin: 0; color: var(--muted); max-width: 70ch; }
+@media (max-width: 900px) { .concept { grid-template-columns: minmax(0, 1fr); } }
+footer { border-top: 1px solid var(--line); padding-block: 32px 48px; color: var(--muted); font-size: 14px; }
+footer p { margin: 0 0 8px; max-width: 80ch; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: minmax(0, 1fr); padding-block: 40px 28px; }
+  .grid2, .grid3, .gallery { grid-template-columns: minmax(0, 1fr); }
+  .demo-frame iframe { height: 1500px; }
+  ol.phases li { grid-template-columns: 56px minmax(0, 1fr); }
+  ol.phases .prog { grid-column: 2; }
+  nav ul { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav aria-label="Sections">
+  <div class="wrap">
+    <a class="brand" href="#top">EUC Headlight</a>
+    <ul>
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#design">Design</a></li>
+      <li><a href="#spec">Spec</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="https://github.com/nijaba/euc-stabilized-headlight">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="wrap hero" id="top">
+  <div>
+    <div class="eyebrow">Open hardware · GPL-3.0</div>
+    <h1>A headlight that <span class="lit">keeps its beam on the road</span> and looks into the turn</h1>
+    <p class="lede">An electric unicycle pitches up to <b>10°</b> every time you accelerate or brake. This head steers its beams with <b>two small mirrors</b>, so the cutoff stays about <b>38 m ahead</b>, and swings one beam into each turn.</p>
+    <div class="cta">
+      <a class="btn primary" href="v4-ride-demo.html">Try the ride demo</a>
+      <a class="btn" href="https://github.com/nijaba/euc-stabilized-headlight">Source on GitHub</a>
+    </div>
+    <div class="status">Concept design: nothing built or tested yet. Every figure is an estimate.</div>
+  </div>
+  <figure class="render" style="margin:0">
+    <img src="img/v4-three-quarter.png" alt="Packaging model of the head: a rounded light bar with a mirror module each side, the lidar in the middle and clear wraparound sides" width="1600" height="1200">
+    <figcaption>Packaging model, layout v4 · OpenSCAD</figcaption>
+  </figure>
+</header>
+
+<div class="wrap">
+  <aside class="concept" aria-label="Project status">
+    <div>
+      <div class="eyebrow" style="color:var(--right)">A concept, not a kit</div>
+      <h2 style="font-size:clamp(26px,3.4vw,34px);margin:8px 0 8px">Ideas welcome. Please don't build it yet.</h2>
+      <p>This is a concept design at the packaging-study stage: no prototype exists, the parts list hasn't been ordered, the firmware isn't written, and the numbers on this page come from datasheets and a CAD model. It will change. If you ride an EUC, know optics, servos or embedded firmware, or just see a better way, open an issue with your idea or doubt.</p>
+    </div>
+    <div class="cta" style="align-self:center">
+      <a class="btn primary" href="https://github.com/nijaba/euc-stabilized-headlight/issues/new">Suggest an idea</a>
+      <a class="btn" href="https://github.com/nijaba/euc-stabilized-headlight/issues">Browse issues</a>
+    </div>
+  </aside>
+</div>
+
+<section id="problem">
+  <div class="wrap grid2" style="align-items:center">
+    <div>
+      <div class="eyebrow">The problem</div>
+      <h2>Brake, and a fixed light blinds the driver ahead</h2>
+      <p class="intro">An EUC has no suspension to hide behind: the whole wheel pitches nose-down when you accelerate and nose-up when you brake. A light bolted to it swings with it. At 10° nose-up, a low beam aimed 1.2° down points almost 9° above the road, straight into oncoming eyes. Nose-down, it lights the ground a few metres ahead. Cars solve this with automatic levelling; EUC lights don't.</p>
+    </div>
+    <div class="diagram" role="img" aria-label="Side view: braking pitches the wheel up; a fixed light points above the road while the levelled beam still meets the road 38 metres ahead">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="560" height="240" fill="#121923"/>
+        <rect x="0" y="190" width="560" height="50" fill="#2b3442"/>
+        <line x1="0" y1="190" x2="560" y2="190" stroke="#dde4ec" stroke-opacity=".35" stroke-width="1.5"/>
+        <g transform="translate(70 190) rotate(-10)">
+          <circle cx="0" cy="-22" r="22" fill="none" stroke="#dde4ec" stroke-opacity=".6" stroke-width="7"/>
+          <rect x="-12" y="-78" width="24" height="56" rx="8" fill="#1c2633" stroke="#dde4ec" stroke-opacity=".4"/>
+          <rect x="6" y="-92" width="22" height="16" rx="5" fill="#26313f" stroke="#dde4ec" stroke-opacity=".4"/>
+        </g>
+        <path d="M100 102 L540 190 L540 190 L100 108 Z" fill="#ffeec2" fill-opacity=".14"/>
+        <line x1="100" y1="102" x2="540" y2="190" stroke="#ffeec2" stroke-width="2.5"/>
+        <circle cx="540" cy="190" r="4" fill="#ffeec2"/>
+        <line x1="100" y1="102" x2="540" y2="20" stroke="#ff6b6b" stroke-width="2.5" stroke-dasharray="7 6"/>
+        <g font-family="IBM Plex Mono, monospace" font-size="12">
+          <text x="320" y="56" fill="#ff6b6b">fixed light: above the road</text>
+          <text x="330" y="176" fill="#ffeec2">levelled cutoff: road, ~38 m</text>
+          <text x="22" y="226" fill="#8a97a9">braking: wheel 10° nose-up</text>
+          <text x="420" y="226" fill="#8a97a9">not to scale</text>
+        </g>
+      </svg>
+      <div class="cap"><span class="k fx">Fixed light, aimed 1.2° down when level</span><span class="k bm">Levelled beam</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="eyebrow">How it works</div>
+    <h2>The LEDs stay put. Only the mirrors move.</h2>
+    <p class="intro">Moving a whole lamp means moving its heatsink and wiring. Here the LEDs and heatsinks are fixed and face up; a <b>front-surface mirror at 45°</b> folds each beam forward. Tilt a mirror by θ and its beam moves by 2θ, so ±7.5° of mirror covers ±15° of wheel pitch.</p>
+    <div class="grid3">
+      <div class="panel">
+        <span class="step-n">1 · Measure</span>
+        <h3>An IMU reads pitch 200–400 times a second</h3>
+        <p>A gated filter trusts the accelerometer only when the wheel isn't accelerating, so braking isn't mistaken for tilting.</p>
+      </div>
+      <div class="panel">
+        <span class="step-n">2 · Correct</span>
+        <h3>The mirrors cancel it in about 0.05 s</h3>
+        <p>Each mirror moves by half the pitch error, the opposite way, through a 4:1 linkage on a 5 g servo.</p>
+      </div>
+      <div class="panel">
+        <span class="step-n">3 · Follow the road</span>
+        <h3>Hills settle in under a second</h3>
+        <p>The firmware removes the lean the measured acceleration explains, then follows the slope that's left. The optional lidar sees the road ahead and catches crests sooner.</p>
+      </div>
+    </div>
+    <div class="grid2" style="margin-top:24px">
+      <div class="panel">
+        <h3 style="color:var(--left)">Two modules, two axes each</h3>
+        <p>Each side has a FILIPPA cutoff optic for the low beam and a Carclo spot for the high beam, sharing one mirror on a two-axis gimbal: pitch for levelling, yaw for turns. Four servos in all.</p>
+      </div>
+      <div class="panel">
+        <h3 style="color:var(--right)">One beam into the turn, one straight</h3>
+        <p>In a turn, the beam on that side swings up to 25° into the curve, through a clear thermoformed side with no pillar. The other stays straight, so the road you're leaving stays lit. Both mirrors tilt to undo the lean.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="demo">
+  <div class="wrap">
+    <div class="eyebrow">Ride demo</div>
+    <h2>Watch the control loop ride</h2>
+    <p class="intro">A 45-second simulation of the firmware: accelerating and braking at 10°, an 8% hill with a crest, and two turns, with low and high beam modes, the lidar on or off, and a fixed light for comparison. It runs the logic from the firmware spec with a perfect IMU.</p>
+    <div class="demo-frame">
+      <div class="demo-bar"><span>v4-ride-demo.html</span><a href="v4-ride-demo.html">Open full page</a></div>
+      <iframe src="v4-ride-demo.html" title="v4 ride demo" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<section id="design">
+  <div class="wrap">
+    <div class="eyebrow">Design · layout v4</div>
+    <h2>A rounded light bar, 200 mm wide</h2>
+    <p class="intro">The packaging model checks that everything fits, sweeps and stays under the weight limit before any part is bought. Layout v4 was chosen on 2026-11-21 over a narrower single-mirror head (v3) with fixed cornering lights.</p>
+    <div class="gallery">
+      <figure><div class="shot"><img src="img/v4-turning.png" alt="Model in a left turn: the left beam swung outward, the right beam straight ahead" loading="lazy" width="1600" height="1200"></div><figcaption><b>Left turn.</b> The left beam swings 25° out through the clear side; the right one stays straight.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-top.png" alt="Top view in a left turn: left beam swung out, right beam straight" loading="lazy" width="1600" height="1200"></div><figcaption><b>From above, left turn.</b> Two modules with the lidar bay between them and the servos in the back slot.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-cutaway.png" alt="Cut-away side view showing LED, optic, mirror and heatsink" loading="lazy" width="1600" height="1200"></div><figcaption><b>Cut-away.</b> LED facing up, optic, 45° mirror, heatsink floor.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-under.png" alt="Underside with two finned heatsinks" loading="lazy" width="1600" height="1200"></div><figcaption><b>Underneath.</b> Two aluminium heatsinks, fins fore-aft in the airflow.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-on-wheel.png" alt="The head mounted on a generic wheel for scale" loading="lazy" width="1600" height="1200"></div><figcaption><b>On a wheel.</b> Generic 16-inch shell, for scale.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-front.png" alt="Front view of the head" loading="lazy" width="1600" height="1200"></div><figcaption><b>Front.</b> Low beam outside, spot inside, behind one curved clear piece per side.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="spec">
+  <div class="wrap">
+    <div class="eyebrow">Anticipated spec</div>
+    <h2>The numbers we're designing to</h2>
+    <p class="intro">Estimates from datasheets and the packaging model, to be measured on the bench and on the road. Normal mode runs the LEDs at about 1.5 A; boost at 2.1 A, limited by time and temperature.</p>
+    <div class="grid2" style="align-items:start">
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Beam</th><th>Low (cutoff)</th><th>High (spots)</th></tr></thead>
+          <tbody>
+            <tr><td>Optics</td><td>2 × LEDiL FILIPPA-STVZO</td><td>2 × Carclo 10003</td></tr>
+            <tr><td>Beam shape</td><td class="num">~22° × 13°<span class="sub">sharp top edge</span></td><td class="num">~8–12° round</td></tr>
+            <tr><td>Peak, normal</td><td class="num">~6,200–7,300 cd<span class="sub">~62 lux at 10 m</span></td><td class="num">~25,000 cd</td></tr>
+            <tr><td>To 1 lux</td><td class="num">~85 m</td><td class="num">~160 m</td></tr>
+            <tr><td>ANSI throw</td><td class="num">~170 m</td><td class="num">~320 m</td></tr>
+            <tr><td>Width at 30 m</td><td class="num">~16 m</td><td class="num">~5 m</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Head</th><th>Estimate</th></tr></thead>
+          <tbody>
+            <tr><td>Light out the front</td><td class="num">~1,800 lm<span class="sub">~2,400 lm in boost</span></td></tr>
+            <tr><td>Input power</td><td class="num">~21 W<span class="sub">~30 W in boost</span></td></tr>
+            <tr><td>Runtime, 20 Ah bank at 15 V</td><td class="num">~2.4 h<span class="sub">~1.7 h in boost</span></td></tr>
+            <tr><td>Levelling range</td><td class="num">±15° of pitch</td></tr>
+            <tr><td>Pitch correction</td><td class="num">~0.05 s</td></tr>
+            <tr><td>Hill follow</td><td class="num">&lt; 1 s</td></tr>
+            <tr><td>Turn swing</td><td class="num">up to 25°</td></tr>
+            <tr><td>Size</td><td class="num">~200 × 70 × 111 mm</td></tr>
+            <tr><td>Sealing target</td><td class="num">IP65</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="grid2" style="margin-top:24px">
+      <div class="panel budget">
+        <h3>Limits, with the lidar fitted</h3>
+        <div class="meter">
+          <div class="row"><span>Head weight</span><span>~399 / 400 g</span></div>
+          <div class="bar" role="img" aria-label="399 of 400 grams"><i style="width:99.75%"></i><b></b></div>
+          <small>Printed parts measured from the model; bought parts from datasheets. Only 1 g of margin: the custom PCB should win some back.</small>
+        </div>
+        <div class="meter">
+          <div class="row"><span>Material cost per unit</span><span>~$440 / $450</span></div>
+          <div class="bar" role="img" aria-label="440 of 450 dollars"><i style="width:97.8%"></i><b></b></div>
+          <small>Excludes the power bank, tools and leftover packs. About $342 without the lidar.</small>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Power</h3>
+        <p>No battery in the head. A 20 Ah USB-C PD power bank rides in a pouch; a PD trigger cable asks it for 15 V, and only plain DC reaches the head through an IP68 connector.</p>
+        <p>Inside: a fuse, reverse-polarity and surge protection, two BuckBlock LED drivers, and a 5 V regulator for the servos and the microcontroller.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="inside">
+  <div class="wrap">
+    <div class="eyebrow">Inside</div>
+    <h2>Mostly off-the-shelf</h2>
+    <p class="intro">Parts a hobbyist can order, plus a 3D-printed ASA body. The full list with links and prices is in the <a href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/hardware/BOM.md">bill of materials</a>.</p>
+    <div class="parts">
+      <div class="part"><div class="role">Brain</div><div class="name">Seeed XIAO ESP32-S3</div><p>Control loop, BLE remote, Wi-Fi calibration page.</p></div>
+      <div class="part"><div class="role">Sensor</div><div class="name">LSM6DSO32 IMU</div><p>6-axis, ±32 g, so crash detection doesn't saturate.</p></div>
+      <div class="part"><div class="role">Look-ahead</div><div class="name">Benewake TF02-Pro lidar</div><p>Measures the road slope ahead. Optional: everything works without it.</p></div>
+      <div class="part"><div class="role">Light</div><div class="name">4 × Cree XP-L HI</div><p>Two behind FILIPPA cutoff optics, two behind Carclo spots.</p></div>
+      <div class="part"><div class="role">Drivers</div><div class="name">2 × BuckBlock 2.1 A</div><p>Run at full current if the MCU dies: the light stays on.</p></div>
+      <div class="part"><div class="role">Steering</div><div class="name">4 × 5 g servos, 2 mirrors</div><p>Front-surface glass on printed two-axis gimbals.</p></div>
+      <div class="part"><div class="role">Housing</div><div class="name">ASA + thermoformed PC</div><p>Printed body, clear wraparound sides, aluminium heatsink floors.</p></div>
+      <div class="part"><div class="role">Remote</div><div class="name">XIAO nRF52840, 2 buttons</div><p>On the wrist: low/high, flash, brightness. A BLE shutter ring also works.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="safety">
+  <div class="wrap grid2" style="align-items:start">
+    <div>
+      <div class="eyebrow">Rules that always hold</div>
+      <h2>Safety comes first in the firmware</h2>
+      <p class="intro">These invariants are written into the firmware spec, and each one has tests. Calibration and settings go through a page served over the head's own Wi-Fi, which switches off as soon as the wheel moves, and every setting is clamped to a safe range.</p>
+    </div>
+    <ul class="rules">
+      <li><span class="n">1</span><span><b>Never dark while moving.</b> Neither the remote nor heat can switch the beam fully off while the wheel is moving.</span></li>
+      <li><span class="n">2</span><span><b>The lidar can only lower the beam.</b> An obstacle it detects can never raise it.</span></li>
+      <li><span class="n">3</span><span><b>Failures fall back safely.</b> Lidar lost: IMU only. IMU lost: mirrors fixed at the calibrated aim, reduced brightness. Remote lost: keep the current mode.</span></li>
+      <li><span class="n">4</span><span><b>No flicker or steps.</b> Every brightness change is rate-limited.</span></li>
+      <li><span class="n">5</span><span><b>Hardware failsafe.</b> If the microcontroller dies, the drivers run at full current.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="roadmap">
+  <div class="wrap">
+    <div class="eyebrow">Roadmap</div>
+    <h2>Where the project stands</h2>
+    <p class="intro">Phases run in order, each with its tests. Nothing past the packaging study has started, so this is the best time to change the design: <a href="https://github.com/nijaba/euc-stabilized-headlight/issues/new">open an issue</a>. The packaging study is nearly done; next is ordering a bench kit and writing the firmware core, with the pure logic tested on a computer first.</p>
+    <ol class="phases">
+      <li><span class="ph">PHASE 0</span><span class="t">Project setup and budget</span><span class="prog"><span class="bar"><i style="width:100%"></i></span>6/6</span></li>
+      <li class="now"><span class="ph">PHASE 1</span><span class="t">Packaging study<small>v4 chosen; renders to review</small></span><span class="prog"><span class="bar"><i style="width:90%"></i></span>9/10</span></li>
+      <li><span class="ph">PHASE 2</span><span class="t">Firmware core on the bench<small>Order the bench kit first (~$263, mostly parts reused in the build)</small></span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/7</span></li>
+      <li><span class="ph">PHASE 3</span><span class="t">Power and LED drivers on the bench</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/5</span></li>
+      <li><span class="ph">PHASE 4</span><span class="t">Optics and mirror mechanism</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/6</span></li>
+      <li><span class="ph">PHASE 5</span><span class="t">Firmware features</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/8</span></li>
+      <li><span class="ph">PHASE 6</span><span class="t">Housing</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/4</span></li>
+      <li><span class="ph">PHASE 7</span><span class="t">Integration and ride tests</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/4</span></li>
+      <li><span class="ph">PHASE 8</span><span class="t">Road-slope lidar</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/3</span></li>
+      <li><span class="ph">PHASE 9</span><span class="t">Custom PCB</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/2</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="docs">
+  <div class="wrap">
+    <div class="eyebrow">Read further</div>
+    <h2>Everything is in the repository</h2>
+    <div class="docs">
+      <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/docs/design.md"><span class="path">docs/design.md</span><p>Hardware design: optics, mirrors, power, housing, thermal, electronics, lidar, open questions.</p></a>
+      <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/docs/firmware-spec.md"><span class="path">docs/firmware-spec.md</span><p>Control loop, calibration, auto-off, derating, remote, lidar fusion, calibration page.</p></a>
+      <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/docs/test-plan.md"><span class="path">docs/test-plan.md</span><p>Every test by ID: automated, bench, enclosure and ride. 125 so far.</p></a>
+      <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/docs/build-plan.md"><span class="path">docs/build-plan.md</span><p>The phases in order, with checkboxes.</p></a>
+      <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/hardware/BOM.md"><span class="path">hardware/BOM.md</span><p>Parts, links, prices, the bench kit and the cost summary.</p></a>
+      <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/docs/options-study.md"><span class="path">docs/options-study.md</span><p>Alternatives weighed: convex mirror, crossing beams, masks, LCD, two 2-axis mirrors.</p></a>
+      <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/tree/main/cad"><span class="path">cad/</span><p>OpenSCAD packaging model, render script, clearance and mass checks.</p></a>
+      <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/CHANGELOG.md"><span class="path">CHANGELOG.md</span><p>Every notable change and decision, dated.</p></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b style="color:var(--fg);font-weight:500">A concept design.</b> Nothing here has been built or tested yet, so it isn't ready to build; ideas and doubts are welcome as <a href="https://github.com/nijaba/euc-stabilized-headlight/issues">GitHub issues</a>. Ride with a backup light until it's proven, and check your country's lighting rules: aim the low beam so it doesn't dazzle other road users. The optional TF02-Pro is a Class 1 (eye-safe) laser device.</p>
+    <p>Hardware and firmware under GPL-3.0. <a href="https://github.com/nijaba/euc-stabilized-headlight">github.com/nijaba/euc-stabilized-headlight</a></p>
+  </div>
+</footer>
+</body>
+</html>

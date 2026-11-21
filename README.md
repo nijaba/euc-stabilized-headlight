@@ -4,11 +4,13 @@ An open-hardware, self-levelling headlight for electric unicycles (EUCs).
 
 An EUC pitches nose-down when it accelerates and nose-up when it brakes, by up to about 10°. A fixed headlight swings with it, and when you brake it shines straight into oncoming drivers' eyes. This light keeps its beam level. A small IMU measures pitch, and servos tilt **two lightweight mirrors** that steer the two beams. In a turn, the beam on that side swings into the curve while the other stays straight. The LEDs and heatsinks never move.
 
-> **Status: design phase.** Layout v4 was chosen on 2026-11-21. Nothing has been built or tested yet. All performance figures are estimates.
+**Project site:** [nijaba.github.io/euc-stabilized-headlight](https://nijaba.github.io/euc-stabilized-headlight/): the idea, the ride demo, renders, the anticipated spec and the roadmap on one page.
 
-![Packaging model of layout v4, three-quarter view, with the clear wraparound sides](cad/renders/v4-wrap-three-quarter.png)
+> **Status: concept design.** Layout v4 was chosen on 2026-11-21. Nothing has been built or tested yet, all figures are estimates, and the design will change, so please don't start building from it. Ideas and doubts are welcome as [issues](https://github.com/nijaba/euc-stabilized-headlight/issues).
 
-**[v4 ride demo](docs/v4-ride-demo.html)** (download it and open it in a browser; GitHub shows only the source): an animated simulation of the firmware's levelling and turn steering. It runs through accelerating, braking, a hill crest and two turns, compared with a fixed light.
+![Packaging model of layout v4, three-quarter view, with the clear wraparound sides](cad/renders/v4-three-quarter.png)
+
+**[v4 ride demo](https://nijaba.github.io/euc-stabilized-headlight/v4-ride-demo.html)** ([source](docs/v4-ride-demo.html)): an animated simulation of the firmware's levelling and turn steering. It runs through accelerating, braking, a hill crest and two turns, compared with a fixed light.
 
 ## Goals
 
@@ -61,7 +63,7 @@ Top view of the head (layout v4, front at the top):
 | Low beam (cutoff) at 10 m | ~62 lux | ~81 lux |
 | Input power | ~21 W | ~30 W |
 | Runtime on a 20 Ah bank (~50 Wh usable at 15 V) | ~2.4 h | ~1.7 h |
-| Head weight (limit: 400 g with lidar) | ~393 g with lidar (packaging model, measured shell; see design §10) | |
+| Head weight (limit: 400 g with lidar) | ~399 g with lidar (packaging model, measured shell; 1 g of margin, see design §10) | |
 | Head size | ~200 × 70 × 111 mm, a rounded light bar | |
 | Material cost per unit (limit: $450 with lidar) | ~$440 with the lidar, + power bank (~$342 without the lidar) | |
 
@@ -73,7 +75,8 @@ The low-beam figures were estimated with v3's 4° toe-out; v4 aims both low beam
 |---|---|
 | [`docs/design.md`](docs/design.md) | Full hardware design: optics, mirror mechanism, power, housing, thermal, mounting, electronics, lidar |
 | [`docs/firmware-spec.md`](docs/firmware-spec.md) | Firmware behaviour: control loop, calibration, auto-off, thermal derating, BLE remote, lidar fusion, calibration page |
-| [`docs/v4-ride-demo.html`](docs/v4-ride-demo.html) | Animated simulation of the v4 levelling and turn steering; open in a browser |
+| [`docs/index.html`](docs/index.html) | Project site home page (GitHub Pages, from `docs/`); renders it shows are copied into `docs/img/` by `cad/render.sh` |
+| [`docs/v4-ride-demo.html`](docs/v4-ride-demo.html) | Animated simulation of the v4 levelling and turn steering; [open it live](https://nijaba.github.io/euc-stabilized-headlight/v4-ride-demo.html) (GitHub Pages, from `docs/`) |
 | [`docs/options-study.md`](docs/options-study.md) | Comparison of beam-shaping and steering alternatives (convex mirror, crossing beams, two 2-axis mirrors, masking, LCD) |
 | [`docs/build-plan.md`](docs/build-plan.md) | Phases in order, from bench firmware to ride tests, with checkboxes |
 | [`docs/test-plan.md`](docs/test-plan.md) | Every test by ID: automated firmware, bench, enclosure and ride tests |

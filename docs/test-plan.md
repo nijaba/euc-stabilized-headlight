@@ -165,6 +165,7 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | C-PKG-15 | v4 only: each module's beam clears the lidar bay at full inward yaw | Inner beam edge outside the bay | Pass (v4 study), 2026-11-21 |
 | C-PKG-16 | v4 only: the gimbal frames clear the lidar bay | No overlap | Pass (v4 study), 2026-11-21 |
 | C-PKG-17 | v4 with clear wrap: the clear side stops ahead of the servo slot | Wrap ends in front of the back slot | Pass (study), 2026-11-21 |
+| C-PKG-18 | v4: no internal part (optics, servos, electronics, lidar, mirrors at every corner of their pitch and yaw travel) pokes through the body's outer skin | Nothing left outside the skin (`cad/fit-v4.scad`) | Pass, 2026-11-21 |
 | C-MASS-01 | Head mass with the lidar, printed parts measured from the model's STL volumes, bought parts from datasheets | ≤ 400 g | See `cad/renders/checks.txt`; ~401 g in v3, 2026-11-21 |
 
 ## Bench tests (`B-`)
