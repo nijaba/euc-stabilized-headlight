@@ -151,6 +151,7 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | C-PKG-14 | v4 only: the lidar on its side fits inside the body | Lidar top below the inner roof | Pass (v4 study), 2026-11-21 |
 | C-PKG-15 | v4 only: each module's beam clears the lidar bay at full inward yaw | Inner beam edge outside the bay | Pass (v4 study), 2026-11-21 |
 | C-PKG-16 | v4 only: the gimbal frames clear the lidar bay | No overlap | Pass (v4 study), 2026-11-21 |
+| C-PKG-17 | v4 with clear wrap: the clear side stops ahead of the servo slot | Wrap ends in front of the back slot | Pass (study), 2026-11-21 |
 | C-MASS-01 | Head mass with the lidar, printed parts measured from the model's STL volumes, bought parts from datasheets | ≤ 400 g | See `cad/renders/checks.txt`; ~401 g in v3, 2026-11-21 |
 
 ## Bench tests (`B-`)
@@ -179,6 +180,7 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | B-OPT-07 | Glare above the cutoff, lux on a wall at 10 m, aimed per calibration step D | ≤ 2 lux above 3.4° over the brightest point; ≥ 10 lux at the brightest point | – |
 | B-OPT-08 | Toed-out low beam (4° wedges): beam width, and cutoff tilt at both ends of the mirror's travel | Width ~30° FWHM; cutoff tilt ≤ 2° | – |
 | B-OPT-09 | Convex low-beam mirror (R ≈ 315 mm, reflective aluminium sheet on a printed former) against the 4° toe-out wedges, same lux grid as B-OPT-04 | Record width, peak and cutoff bow; adopt if as wide and as sharp | – |
+| B-OPT-10 | Thermoformed wraparound window: beam through the flat front, the corner and the side; lux grid for haze and distortion | No visible ghost or glare band; peak within 5% of a flat window | – |
 | B-CRN-01 | Cornering lights aimed 30° out, 10° down: lux on a wall at 10 m above horizontal | ≤ 2 lux above horizontal; ~10 lux at the peak | – |
 | B-CRN-02 | Cornering spreader plate temperature after 20 s at full power, then at 50% | Plate stays below 70 °C | – |
 
@@ -221,6 +223,7 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | E-SEAL-02 | Repeat E-SEAL-01 after 10 hot–cold cycles | Tissue dry | – |
 | E-SEAL-03 | Window fogging after cooling from hot, with the vent and desiccant fitted | No fog | – |
 | E-SEAL-04 | Hose test, IPX5-style: water jet from all directions for 3 min, empty housing with tissue inside | Tissue dry | – |
+| E-SEAL-05 | Wraparound windows: E-SEAL-01 and E-SEAL-04 with the curved pieces bedded in RTV, before and after 10 hot–cold cycles | Tissue dry | – |
 | E-VIB-01 | 30 min of vibration on a crude shaker (an orbital sander under the mount works), then a 1 m drop onto grass | No loosened screw, cracked seal, shifted optic or broken joint; E-SEAL-01 still passes | – |
 | E-MNT-01 | Head weight, fully assembled with the lidar | ≤ 400 g | – |
 | E-MNT-02 | Pull and shake test on each mount option | Mount holds; leash catches the head if it doesn't | – |

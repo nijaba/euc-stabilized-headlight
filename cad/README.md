@@ -30,7 +30,7 @@ To explore, open `headlight.scad` in OpenSCAD and change `view` (`assembly`, `cu
 
 ## Layout v4 study
 
-`headlight-v4.scad` models the alternative with two independent 2-axis mirror modules and the lidar on its side between them, with no cornering lights or brow. `render.sh` renders it as `renders/v4-*.png` and writes its mass to `renders/mass-v4.txt`; its results are reported but don't affect the exit status. Extra variables: `yaw` (−7.5 to 7.5) and `yaw_max`.
+`headlight-v4.scad` models the alternative with two independent 2-axis mirror modules and the lidar on its side between them, with no cornering lights or brow. `render.sh` renders it as `renders/v4-*.png` and writes its mass to `renders/mass-v4.txt`; its results are reported but don't affect the exit status. Extra variables: `yaw` (−7.5 to 7.5), `yaw_max`, and `wrap_sides` (one clear front-and-side piece per side, with `yaw_out_max`, `r_wrap`, `wrap_side_min`). `render.sh` renders the wrap variant as `renders/v4-wrap-*.png` and writes `renders/mass-v4-wrap.txt`.
 
 ## Results (2026-11-21)
 
