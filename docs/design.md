@@ -293,4 +293,3 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - [ ] **Head weight may exceed 350 g with the lidar.** The larger mirror (+~15 g), longer heatsink (+~18 g), larger housing (+~8 g) and FILIPPA optics (+~6 g) add roughly 47 g, taking the estimate from ~280 g to ~327 g, or ~377 g with the lidar (about 50 g). Options: 1.1 mm mirror glass (−13 g), a lighter heatsink, thinner walls away from the seals. (2026-11-21)
 - [ ] FILIPPA with XP-L HI: focus height, cutoff sharpness and cutoff orientation are not in LEDiL's data. Bench tests B-OPT-05 and B-OPT-06.
 - [ ] Larger mirror (115 × 55 mm, about 5× the moment of inertia): does the servo still settle in under 50 ms (B-MIR-01)?
-- [ ] FILIPPA price and stock: a Mouser listing exists for C18612_FILIPPA-STVZO, but the price isn't confirmed; LEDiL's own minimum order is 252.

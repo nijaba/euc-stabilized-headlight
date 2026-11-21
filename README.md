@@ -55,7 +55,7 @@ Side view of the head:
 | Input power | ~21 W | ~30 W |
 | Runtime on a 20 Ah bank (~50 Wh usable at 15 V) | ~2.4 h | ~1.7 h |
 | Head weight (limit: 350 g with lidar) | ~327 g (+ ~50 g lidar), so ~377 g with lidar: over the limit, see design §10 | |
-| Material cost per unit (limit: $450 with lidar) | ~$300 + power bank (+ ~$98 lidar) | |
+| Material cost per unit (limit: $450 with lidar) | ~$297 + power bank (+ ~$98 lidar) | |
 
 ## Repository layout
 

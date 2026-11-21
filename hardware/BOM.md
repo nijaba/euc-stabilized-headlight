@@ -47,7 +47,7 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Spot LEDs | Cree XP-L HI (3535) on 20 mm DTP copper, 5000–6500 K | 2 | 6.50 | 13.00 | [link](https://kaidomain.com/XP-L-HI-10W-3A-1095-Lumens-SMD-3535-LED) | Choose the '20mm DTP Copper' option (+$1.20). Swapped in for SFT-40 (5050 doesn't fit the XP holder) |
 | Low-beam LEDs | Cree XP-L HI (3535) on 20 mm DTP copper, about 5000 K | 2 | 6.50 | 13.00 | [link](https://kaidomain.com/XP-L-HI-10W-3A-1095-Lumens-SMD-3535-LED) | For the FILIPPA optics. Replaces the Nichia 519A, which isn't on LEDiL's compatible list |
 | Spot optics | Carclo 10003 narrow spot, 20 mm (~8–12°) | 2 | 2.75 | 5.50 | [link](https://www.ledsupply.com/led-optics/10003-carclo-lens-20mm-narrow-spot-led-optic) |  |
-| Low-beam optics | LEDiL FILIPPA-STVZO (C18612_FILIPPA-STVZO), Ø 32.9 mm cutoff optic | 2 | 5.00 | 10.00 | [link](https://www.mouser.com/en/ProductDetail/Ledil/C18612_FILIPPA-STVZO?qs=2SLPxufLcgCat%2F0uKWgVhA%3D%3D) | **Price is a placeholder; confirm on Mouser.** LEDiL's own MOQ is 252. Flange mount; orienting rib toward the back of the housing |
+| Low-beam optics | LEDiL FILIPPA-STVZO (C18612_FILIPPA-STVZO), Ø 32.9 mm cutoff optic | 2 | 3.52 | 7.04 | [link](https://www.mouser.com/en/ProductDetail/Ledil/C18612_FILIPPA-STVZO?qs=2SLPxufLcgCat%2F0uKWgVhA%3D%3D) | Mouser, Nov 2026: $3.52 each, $2.06 each for 10. LEDiL's own MOQ is 252. Flange mount; orienting rib toward the back of the housing |
 | Optic holders | Carclo 10734, 20 mm, XP footprint | 2 | 0.80 | 1.60 | [link](https://www.digikey.com/en/products/detail/carclo-technical-plastics/10734/2641685) | Spot optics only |
 | Mirror | Front-surface (first-surface) glass mirror, enhanced Al, cut to ~115×55 mm, flat | 1 | 18.00 | 18.00 | [link](https://www.edmundoptics.com/f/first-surface-mirrors/12017/) | Edmund: precise, pricier. Budget: https://www.aliexpress.com/w/wholesale-front-surface-mirror-glass.html (glass, not acrylic). Score on the back face to cut. Price was for ~90×35 mm; recheck for the larger size. Flatness matters for a sharp cutoff |
 | Pivot bearings | MR63ZZ (3×6×2.5 mm), pack of 10 | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=MR63ZZ+bearing) |  |
@@ -56,7 +56,7 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Servo | EMAX ES08MD II, digital, metal gear, 12–13 g | 1 | 14.00 | 14.00 | [link](https://www.readymaderc.com/products/details/emax-es08mdii-12g-digital-metal-gear-servo) | Also AMain Hobbies, RaceDayQuads |
 | Heatsink (= lid) | Finned aluminium heatsink ~120×60×20 mm | 1 | 9.00 | 9.00 | [search](https://www.amazon.com/s?k=aluminum+heatsink+120x60x20mm) | LED stars screw to the flat side; drill/tap M3 |
 | Thermal paste | Arctic MX-4 (or similar) | 1 | 7.00 | 7.00 | [search](https://www.amazon.com/s?k=Arctic+MX-4) | Skip if you have it |
-| **Subtotal** | | | | **112.10** | | |
+| **Subtotal** | | | | **109.14** | | |
 
 ## D. Housing & sealing
 
@@ -140,12 +140,12 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 
 | | USD |
 |---|---|
-| Core build, cash outlay (sections A–G, excluding the 2 optional items) | **477** |
+| Core build, cash outlay (sections A–G, excluding the 2 optional items) | **474** |
 | Optional extras (XTC-3D coating, magnetic breakaway) | +35 |
 | Road-slope lidar (section H) | +98 |
 | Subtract if you already own a power bank, filament, resistor kit, wire, paste | −100 |
 | Packs and spools left over after one unit (inserts, screws, O-ring cord, bearings, mounts…) | ≈ 129 |
-| **Material actually used per unit, without lidar or power bank** | **≈ 300** |
+| **Material actually used per unit, without lidar or power bank** | **≈ 297** |
 
 Tools not included: 3D printer, soldering iron with a heat-set insert tip, multimeter, glass cutter, drill and M3 tap.
 

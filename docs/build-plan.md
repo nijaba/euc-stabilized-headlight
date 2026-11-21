@@ -11,7 +11,7 @@ Phases in order. Work on the current phase only, and tick each item when it pass
 - [x] `CLAUDE.md`, build plan, test plan, changelog
 - [x] `CONTRIBUTING.md` and `SECURITY.md`
 - [x] Branch protection on `main` (signed commits, PR required)
-- [x] Material cost within the limit: ~$388 with the lidar (~$398 after the FILIPPA low beam), under the $450 limit set on 2026-11-20
+- [x] Material cost within the limit: ~$388 with the lidar (~$395 after the FILIPPA low beam), under the $450 limit set on 2026-11-20
 
 ## Phase 1: Firmware core on the bench
 
