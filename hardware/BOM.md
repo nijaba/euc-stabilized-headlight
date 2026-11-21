@@ -127,6 +127,25 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 |---|---|---|---|---|---|---|
 | BLE shutter / page-turner ring | Generic BLE HID remote | 1 | 6.00 | 6.00 | [search](https://www.amazon.com/s?k=bluetooth+camera+shutter+remote) | Replaces all of section G. May lose the first press after it sleeps |
 
+## Bench kit (order first, build-plan phase 2)
+
+For firmware and bench testing before the protoboard or any PCB. Most of it is the real parts from the sections above and goes into the final build. Quantities cover both v3 and v4 (four servos). It is a one-off purchase list, so it is not in `BOM.csv` or the per-unit cost summary.
+
+| Item | Part / spec | Qty | Unit $ | Ext $ | Source | Reused in the build? |
+|---|---|---|---|---|---|---|
+| MCU | Seeed XIAO ESP32-S3 (section A) | 2 | 7.49 | 14.98 | [link](https://www.seeedstudio.com/XIAO-ESP32S3-p-5627.html) | One; the other is a spare |
+| IMU + cable | Adafruit LSM6DSO32 + STEMMA QT cable (section A) | 1 | 13.45 | 13.45 | [link](https://www.adafruit.com/product/4692) | Yes |
+| Servos | 5 g-class digital micro servo (section C) | 4 | 10.00 | 40.00 | [search](https://www.amazon.com/s?k=5g+digital+micro+servo+metal+gear) | Yes (v4 uses all four) |
+| Fallback servo | EMAX ES08MD II, 12 g metal gear | 1 | 14.00 | 14.00 | [link](https://www.readymaderc.com/products/details/emax-es08mdii-12g-digital-metal-gear-servo) | If the 5 g servos jitter |
+| Mirror test pieces | Front-surface mirror offcuts, MR63ZZ bearings, 3 mm rod, pushrod kit (section C) | 1 | 31.00 | 31.00 | see section C | Bearings, rod and kit yes |
+| Laser module | 5 V 650 nm dot laser module | 1 | 5.00 | 5.00 | [search](https://www.amazon.com/s?k=5V+650nm+laser+dot+module) | No (test tool) |
+| Breadboard + jumpers | Full-size breadboard and jumper wire kit | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=breadboard+jumper+wire+kit) | No (test tool) |
+| Optics bench | 1 BuckBlock, 2 XP-L HI on stars, 1 FILIPPA-STVZO, 1 Carclo 10003 + holder, the heatsink (sections B, C) | 1 | 50.00 | 50.00 | see sections B, C | Yes |
+| Power | PD trigger cable 15 V, Pololu 5 V regulator, passives (section B, F); RXEF300 as well as RXEF250 to compare | 1 | 45.00 | 45.00 | see sections B, F | Yes |
+| USB-C power meter | Inline USB-C voltage/current meter | 1 | 20.00 | 20.00 | [search](https://www.amazon.com/s?k=usb+c+power+meter) | No (test tool) |
+| Lux meter | Basic digital lux meter | 1 | 20.00 | 20.00 | [search](https://www.amazon.com/s?k=digital+lux+meter) | No (test tool) |
+| **Total** | | | | **263.43** | | about $200 of it goes into the build |
+
 ## 3D-printed parts (no purchase)
 
 | Part | Notes |

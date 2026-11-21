@@ -30,6 +30,14 @@ Goal: a parametric model and renders of the whole head prove it fits, sweeps and
 
 ## Phase 2: Firmware core on the bench
 
+**Order the bench kit first** (`hardware/BOM.md`, "Bench kit"). Why a bench kit rather than the final board (2026-11-21):
+- There is no final board to order yet. v1 is wired on protoboard (design §7); a custom PCB is phase 9.
+- A PCB designed now would freeze choices the bench tests haven't settled: v3 or v4 (one servo or four, cornering drivers or not), the dimming interface and the power-on flash fix (B-DRV), the fuse rating (B-PWR-01), and the extra GPIO on the XIAO's back pads. Each respin costs money and 1–3 weeks.
+- Most bench-kit parts are the real parts and go into the final build. The extras are about $45 of tools and test pieces.
+- Firmware can start straight away: the pure logic runs on the computer (`pio test -e native`), and the bench kit tests the hardware layer (IMU, servo PWM, LED dimming) and the laser-on-mirror checks.
+- On a breadboard, everything can be probed and changed in minutes.
+
+
 Goal: the IMU filter drives the servo, checked with a laser pointer on the mirror.
 
 - [ ] PlatformIO project in `firmware/` with a `native` test environment and a `xiao_esp32s3` board environment

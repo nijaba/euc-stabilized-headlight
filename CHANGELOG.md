@@ -5,6 +5,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ## [Unreleased]
 
 ### Added
+- Bench kit (BOM) to order before firmware, and why it comes before any PCB (build plan phase 2).
 - v4 clear wraparound sides (study): one thermoformed piece per side across the front, corner and side, no pillar; outward beam swing ±25°; ~200 mm wide, ~393 g (design §5, C-PKG-17, B-OPT-10, E-SEAL-05).
 - Waterproofing and vibration review for v3 and v4 (design §5): seal inventory, IP65 target, vibration measures; tests B-MIR-05, B-VIB-01, E-SEAL-04, E-VIB-01.
 - Layout v4 study (`cad/headlight-v4.scad`): two 2-axis mirror modules steering ±15° into turns, the lidar on its side between them, no cornering lights or brow; ~221 × 70 × 108 mm, ~410 g (C-PKG-14 to 16). v3 remains the design pending the owner's choice.
