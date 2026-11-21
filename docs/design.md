@@ -118,6 +118,20 @@ Cold weather cuts usable capacity by about 20%, so plan on about 2 h in normal m
 1. Many banks briefly cut every port when you plug something into another port. **Never plug or unplug anything into the bank while riding.**
 2. Banks turn off at low current. After the head goes to sleep, press the bank's button to start the next ride, or pick a bank with a low-current mode.
 
+### Powering from the wheel (researched 2026-11-21)
+
+**Wheel USB ports can't run the head.** No EUC was found that is documented to supply 15 V at 2 A (30 W) from its USB port.
+- Wheel specs and manuals list USB-A and USB-C ports "for power output" or "phone charging" without a wattage (for example, the Inmotion V13).
+- Many wheels have no USB port at all (for example, one review lists none for the KingSong S22).
+- Forum reports put wheel USB ports at about 5 V and 1–2 A (5–10 W), with no mention of 15 V PD. That's a third or less of what the head needs in normal mode.
+- A wheel would qualify only if its USB-C port is measured with a USB power meter supplying 15 V at 2 A or more, continuously.
+
+**Other ways to use the wheel's power.** Both would break the "external power only" constraint, so they need the owner's decision:
+- **The wheel's 12 V light rail.** Some Leaperkim (Veteran) and Begode wheels have one; stock Begode lights draw about 20 W from it. The head would need about 1.75 A at 12 V in normal mode, more than a stock light, and no rated current for these rails was found. 12 V is inside the BuckBlock's input range, but firmware-spec §6 treats 10–13 V as a failing bank and caps brightness, so that rule would need to change.
+- **The main battery** (about 84–151 V, depending on the wheel) through a DC-DC converter. This means opening the wheel and working with high voltage, and may void the warranty.
+
+Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicycle.org/topic/21475-using-an-euc-to-charge-a-laptop/), [Inmotion V13 manual](https://device.report/manual/14117718), [KingSong S22 review](https://everythingelectricunicycle.com/kingsong-s22-review-best-suspension-euc-electric-unicycle/), [EUC forum: Sherman 12 V port USB install](https://forum.electricunicycle.org/topic/22791-veteran-sherman-dual-usb-port12v-voltmeter-install/), [EUC forum: Begode front light upgrade](https://forum.electricunicycle.org/topic/30127-upgrading-the-masters-front-light/).
+
 ## 5. Housing: 3D-printed ASA with a metal lid
 
 - **Material: ASA.** It resists UV and its glass transition is about 100 °C.
