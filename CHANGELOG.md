@@ -6,7 +6,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 
 ### Added
 - v4 turning behaviour decided: only the turn-side beam swings into the curve, the other stays straight (design §5).
-- Beam response requirement (owner, 2026-11-21): ±10° of pitch, beam adapts in under 1 s. Proposed hill-follower fix to meet it (firmware-spec §2): remove the acceleration's pitch, then follow with τ = 0.3 s; owner to decide.
+- Beam response requirement (owner, 2026-11-21): ±10° of pitch, beam adapts in under 1 s. Tests U-ROAD-03..06, R-ROAD-01..02.
 - Calibration and settings control decided (firmware-spec §11): a page over the head's own Wi-Fi, with the button and remote as a full fallback; no phone app. Tests U-CFG-01..04, B-CFG-01.
 - Bench kit (BOM) to order before firmware, and why it comes before any PCB (build plan phase 2).
 - v4 clear wraparound sides (study): one thermoformed piece per side across the front, corner and side, no pillar; outward beam swing ±25°; ~200 mm wide, ~393 g (design §5, C-PKG-17, B-OPT-10, E-SEAL-05).
@@ -22,6 +22,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - `CONTRIBUTING.md` and `SECURITY.md` (private reporting for safety faults as well as security issues).
 
 ### Changed
+- Hill follower (firmware-spec §2, adopted 2026-11-21): removes the pitch the measured acceleration explains, then follows with τ = 0.3 s instead of 4 s, freezing 0.3 s after hard acceleration or a jolt. Fixes the beam dropping while accelerating and lagging over crests. U-ROAD-01 and R-AIM-02 now require 1 s.
 - Weight limit raised from 350 g to 400 g with the lidar (owner, 2026-11-21). Layout v3: aerodynamic shape (tapered, sloping roof, soft tail, brow fairing) and lean package (1.6 mm walls, smaller heatsink, 1.5 mm window, 5 g servo, fewer screws, M8 gland); printed parts now measured from STL volumes; ~401 g. Design §2 explains the mirror's size.
 - Layout v2 (owner's requirements, 2026-11-21): heatsink at the bottom with fins fore-aft, LEDs facing up, mount on the back (never the top), rounded exterior (8 mm edges), lidar in a top pocket, lighter walls, window and mirror. Mass ~556 → ~463 g with the lidar (~448 g before rounding); configurations compared in design §5. Design §2 adds how cars and motorcycles level their beams.
 - Low beam: two LEDiL FILIPPA-STVZO cutoff optics with XP-L HI replace the Nichia 519A + Carclo elliptical flood (owner, 2026-11-21). Larger mirror, heatsink and window; BOM, calibration step D and tests B-OPT-05 to B-OPT-07 updated; B-OPT-01 retired. Weight estimate now over the 350 g limit with lidar (open question).
