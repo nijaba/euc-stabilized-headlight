@@ -208,3 +208,41 @@ Options considered:
 - **Dependencies:** Arduino-ESP32's built-in Wi-Fi and WebServer, so no new libraries. Wi-Fi draws ~100 mA, only while calibrating.
 
 **Tests:** U-CFG-01 to U-CFG-04 and B-CFG-01 in the test plan. The page itself is designed under the project's web rules when the firmware reaches it.
+
+## 12. High-beam width by speed (proposal, 2026-11-21, owner chose the approach; values to confirm)
+
+The high beam is two narrow spots (Carclo 10003, ~8–12°, design §3): about 25,000 cd and ~160 m to 1 lux, but only ~5 m wide at 30 m. Each spot shares a mirror with one low beam, so in high-beam mode the firmware can **swing the two mirrors apart** to widen the high beam with no extra parts, and narrow it again as speed rises: wide when slow, where the rider needs to see the sides; a tight pencil beam when fast, where reach matters.
+
+**Rule (high-beam mode only):**
+
+```c
+// spread: outward yaw of each beam, degrees; both modules swing apart symmetrically
+float spread = SPREAD_MAX * clamp((V_NARROW - speed_kmh) / (V_NARROW - V_WIDE), 0, 1);
+spread = rate_limit(spread, 10.0f, dt);              // degrees per second, so the beam never jumps
+yaw_beam_left  = clamp(turn_yaw_left  + spread, 0, YAW_OUT);   // turn yaw: only the turn-side beam (design §5)
+yaw_beam_right = clamp(turn_yaw_right - spread, -YAW_OUT, 0);
+```
+
+| Setting | Proposed | Notes |
+|---|---|---|
+| `SPREAD_MAX` | 5° per beam | High beam ~20° wide with a flat top at walking pace; settable from the calibration page (§11). More than about half a spot's width (6° or more) leaves a dark gap in the middle |
+| `V_WIDE` | 15 km/h | At or below: full spread |
+| `V_NARROW` | 40 km/h | At or above: both spots straight ahead, full reach |
+| Rate limit | 10°/s | Spread changes slowly and smoothly |
+
+- **Estimated effect** (two ~10° beams, design §3 figures): at full spread the high beam is ~20° wide with a flat top; the centre drops to about half the peak (~12,500 cd), so ANSI throw ~225 m instead of ~320 m (~110 m instead of ~160 m to 1 lux). At `V_NARROW` and above, unchanged.
+- **Low beam:** because each low beam shares its mirror with a spot, the low beams spread by the same angle in high-beam mode (about like v3's 4° toe-out at 29 km/h). The cutoff height is unchanged; the small compound-angle tilt is covered by B-OPT-08's measurement.
+- **Safety:** spreading only swings beams sideways, never up, so invariants 1–4 hold. In low-beam mode the spread is always 0. If the speed is unknown (see below), the spread holds at a middle value (2.5°) rather than guessing.
+
+**Speed source (open, owner to decide).** The head doesn't measure speed today; the IMU only tells moving from still. The turn-steering rule in the ride demo also uses speed (yaw ≈ look-ahead distance × yaw rate ÷ 2 × speed), so v4 needs one either way:
+1. **The wheel's own speed over BLE (recommended).** Most EUCs report speed to their phone apps over BLE, and the ESP32-S3 is already a BLE host for the remote. Needs per-brand protocol support and a connection the wheel allows alongside its app.
+2. **Estimated from the IMU:** integrate the measured longitudinal acceleration (§2, `a_long`) with a reset whenever the wheel is still, and correct it in turns from `speed ≈ g·tan(lean) / yaw rate`. No pairing, but drifts on long straights.
+3. **A GPS module:** accurate and brand-independent, but adds a part, ~$10 and a few grams (and the head has 1 g of weight margin).
+
+**Tests if adopted:**
+- U-HB-01: the spread follows the table: `SPREAD_MAX` at ≤ `V_WIDE`, 0 at ≥ `V_NARROW`, linear between, rate-limited to 10°/s.
+- U-HB-02: the spread is 0 in low-beam mode, and combines with the turn yaw within the yaw limits.
+- U-HB-03: with no valid speed, the spread holds at 2.5°.
+- B-OPT-09: measured high-beam width and centre intensity at 0°, 2.5° and 5° of spread.
+- R-HB-01: on a dark road at 15, 25 and 40 km/h, the rider prefers the spread to a fixed narrow high beam.
+
