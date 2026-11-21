@@ -132,10 +132,13 @@ These run long randomised input sequences against the whole control and state lo
 
 | ID | What it checks | Pass if | Status |
 |---|---|---|---|
-| B-OPT-01 | The Nichia 519A dome fits the Carclo 10734 holder | Seats flat with no dome contact | – |
+| B-OPT-01 | The Nichia 519A dome fits the Carclo 10734 holder | Retired 2026-11-21: the 519A is no longer used | Retired |
 | B-OPT-02 | Beam clipping at the mirror and window across ±7.5° | No visible clipping at either end | – |
 | B-OPT-03 | Light output (lux at a fixed distance, converted to lumens) | Within 20% of the design estimate | – |
-| B-OPT-04 | Peak intensity and beam angles of each channel (lux grid on a wall at 10 m, both modes) | Spot and flood within 30% of the design §3 beam estimate; record the real beam angles | – |
+| B-OPT-04 | Peak intensity and beam angles of each channel (lux grid on a wall at 10 m, both modes) | Spot and low beam within 30% of the design §3 beam estimate; record the real beam angles | – |
+| B-OPT-05 | FILIPPA flange height above the XP-L HI board, set with printed spacers in 0.1 mm steps | Height recorded where the cutoff is sharpest on a wall at 10 m | – |
+| B-OPT-06 | Cutoff orientation with the orienting rib toward the back of the housing, through the mirror | Cutoff is at the top of the beam and horizontal within ±0.5° | – |
+| B-OPT-07 | Glare above the cutoff, lux on a wall at 10 m, aimed per calibration step D | ≤ 2 lux above 3.4° over the brightest point; ≥ 10 lux at the brightest point | – |
 
 ### LED drivers
 

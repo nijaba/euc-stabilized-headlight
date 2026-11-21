@@ -43,7 +43,7 @@ servo_write_deg(trim + mirror * LINKAGE_RATIO);                // ≈ 4:1
 | A. Mirror trim | Once, at home | Aim at a wall; remote clicks move the hotspot to lamp height | `trim` (servo µs) |
 | B. Level | After mounting | Hold the wheel upright with the **pedals level** (phone level app), hold the button 3 s, keep still 2 s | gravity vector in IMU axes; lidar height `h` (if fitted) |
 | C. Pitch axis | Right after B | LED blinks: rock the wheel forward and back 3 times by the handle | pitch axis = main axis of the gyro motion |
-| D. Aim | First night ride / at a wall | Aim mode: remote moves the low-beam hotspot (about 25–40 m ahead) | `aim_down` |
+| D. Aim | At a wall 10 m away, or on the first night ride | Aim mode: remote moves the low-beam cutoff line to about 20 cm below the lamp's height on the wall (about 1.2° down, so it meets the road about 38 m ahead with the head at 0.8 m) | `aim_down` |
 
 - After calibration, pitch is measured as rotation about the learned axis, relative to the learned gravity vector. The head only needs to face forward within about 10°.
 - **Optional:** slowly refine `level_offset` from the average steady pitch while cruising on flat road.

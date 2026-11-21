@@ -11,7 +11,7 @@ Phases in order. Work on the current phase only, and tick each item when it pass
 - [x] `CLAUDE.md`, build plan, test plan, changelog
 - [x] `CONTRIBUTING.md` and `SECURITY.md`
 - [x] Branch protection on `main` (signed commits, PR required)
-- [x] Material cost within the limit: ~$388 with the lidar, under the $450 limit set on 2026-11-20
+- [x] Material cost within the limit: ~$388 with the lidar (~$395 after the FILIPPA low beam), under the $450 limit set on 2026-11-20
 
 ## Phase 1: Firmware core on the bench
 
@@ -39,7 +39,7 @@ Goal: the protoboard powers both channels safely and dims them smoothly.
 
 Goal: the mirror size and window height are proven before CAD fixes them.
 
-- [ ] 519A fits the Carclo 10734 holder (B-OPT-01)
+- [ ] FILIPPA focus height and cutoff with XP-L HI (B-OPT-05, B-OPT-06, B-OPT-07)
 - [ ] Beam clipping across ±7.5° of mirror (B-OPT-02)
 - [ ] Mirror balance and ringing under vibration (B-MIR-04)
 - [ ] Light output, beam intensity and angles, heatsink temperature rise (B-OPT-03, B-OPT-04, B-THM-01, B-THM-02)
