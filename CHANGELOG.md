@@ -5,7 +5,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ## [Unreleased]
 
 ### Added
-- Proposal for controlling calibration and settings (firmware-spec §11): a calibration page over the head's own Wi-Fi recommended, no phone app; owner to decide.
+- Calibration and settings control decided (firmware-spec §11): a page over the head's own Wi-Fi, with the button and remote as a full fallback; no phone app. Tests U-CFG-01..04, B-CFG-01.
 - Bench kit (BOM) to order before firmware, and why it comes before any PCB (build plan phase 2).
 - v4 clear wraparound sides (study): one thermoformed piece per side across the front, corner and side, no pillar; outward beam swing ±25°; ~200 mm wide, ~393 g (design §5, C-PKG-17, B-OPT-10, E-SEAL-05).
 - Waterproofing and vibration review for v3 and v4 (design §5): seal inventory, IP65 target, vibration measures; tests B-MIR-05, B-VIB-01, E-SEAL-04, E-VIB-01.
