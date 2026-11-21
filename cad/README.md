@@ -10,9 +10,9 @@ Needs [OpenSCAD](https://openscad.org) (2021.01 or newer) and Python 3 (standard
 cad/render.sh
 ```
 
-It renders the views below to `renders/`, runs the clearance checks (C-PKG-01 to 10) and the mass budget (C-MASS-01, `weight.py`, with lighter configurations for comparison), and writes the results to `renders/checks.txt` and `renders/mass.txt`. The exit status is non-zero if any check fails. Set `OPENSCAD` if the binary isn't on your PATH.
+It renders the views below to `renders/`, runs the clearance checks (C-PKG-01 to 13) and the mass budget (C-MASS-01, `weight.py`, which measures the printed shell and brow from exported STL volumes), and writes the results to `renders/checks.txt` and `renders/mass.txt`. The exit status is non-zero if any check fails. Set `OPENSCAD` if the binary isn't on your PATH.
 
-To explore, open `headlight.scad` in OpenSCAD and change `view` (`assembly`, `cutaway`, `exploded`, `front`, `under`, `wheel`), `tilt` (−7.5 to 7.5), `n_fil`, `n_spot`, `lidar_on_head` and `show_beams`.
+To explore, open `headlight.scad` in OpenSCAD and change `view` (`assembly`, `cutaway`, `exploded`, `front`, `under`, `wheel`), `tilt` (−7.5 to 7.5), `n_fil`, `n_spot`, `lidar_on_head`, `show_beams`, and the shape parameters `taper`, `roof_drop`, `r_tail` and `hood_tail`.
 
 ## Views
 
@@ -24,8 +24,10 @@ To explore, open `headlight.scad` in OpenSCAD and change `view` (`assembly`, `cu
 | `cutaway.png`, `cutaway-up.png`, `cutaway-down.png` | Section through the middle at nominal and full mirror tilt |
 | `exploded.png` | Heatsink, optics, mirror, electronics, body, window, lidar pod |
 | `no-lidar.png` | Assembled head without the lidar |
+| `side.png`, `top.png` | Side and top profiles, orthographic: the tapered, sloping v3 shape |
+| `rear-quarter.png` | From behind: tail, mount boss, gland and vent |
 | `on-wheel.png` | On a generic 16" wheel for scale (not any real model) |
 
 ## Results (2026-11-21)
 
-Layout v2 (heatsink at the bottom, fins fore-aft, mount on the back): all clearance checks pass. The current configuration (2 FILIPPA + 2 spot, lidar on the head) is about 517 g with the rounded exterior and the cornering lights, against the 350 g limit, so C-MASS-01 fails. `renders/mass.txt` compares lighter configurations; none fits. See design.md §5 "Packaging study".
+Layout v3 (aerodynamic, lean): heatsink at the bottom with fins fore-aft, mount on the back, a tapered body with a sloping roof and a brow fairing for the lidar and cornering lights. All clearance checks pass. The head is about 401 g with the lidar against the 400 g limit; see `renders/mass.txt` and design.md §5 "Packaging study".

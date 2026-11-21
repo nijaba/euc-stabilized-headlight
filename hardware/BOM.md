@@ -58,29 +58,29 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Pivot bearings | MR63ZZ (3×6×2.5 mm), pack of 10 | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=MR63ZZ+bearing) |  |
 | Pivot shaft | 3 mm stainless steel rod, 100 mm | 1 | 6.00 | 6.00 | [search](https://www.amazon.com/s?k=3mm+stainless+steel+rod+100mm) |  |
 | Linkage | RC pushrod set: 1.2 mm Z-bend wire + clevis / EZ connector | 1 | 7.00 | 7.00 | [search](https://www.amazon.com/s?k=rc+pushrod+clevis+kit+1.2mm) | Gives the 4:1 lever ratio |
-| Servo | EMAX ES08MD II, digital, metal gear, 12–13 g | 1 | 14.00 | 14.00 | [link](https://www.readymaderc.com/products/details/emax-es08mdii-12g-digital-metal-gear-servo) | Also AMain Hobbies, RaceDayQuads |
-| Heatsink (= floor) | Finned aluminium heatsink ~128×45 mm, ~3 mm base, ~14 mm fins, fins running fore-aft | 1 | 9.00 | 9.00 | [search](https://www.amazon.com/s?k=aluminum+heatsink+extrusion+50mm+wide) | Cut from extrusion; LED stars screw to the flat side; drill/tap M3. Fins must run front-to-back |
+| Servo | Digital micro servo, ~5 g class, metal gears preferred, ≥ 0.8 kg·cm | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=5g+digital+micro+servo+metal+gear) | Lean package (2026-11-21): replaces the 12 g EMAX ES08MD II, which stays the fallback if B-MIR-01/02 show too much jitter. Price is an estimate |
+| Heatsink (= floor) | Finned aluminium heatsink ~96×45 mm, ~2.5 mm base, 10 fins ~14 mm, fins running fore-aft | 1 | 9.00 | 9.00 | [search](https://www.amazon.com/s?k=aluminum+heatsink+extrusion+50mm+wide) | Cut from extrusion; LED stars screw to the flat side; drill/tap M3. Fins must run front-to-back |
 | Thermal paste | Arctic MX-4 (or similar) | 1 | 7.00 | 7.00 | [search](https://www.amazon.com/s?k=Arctic+MX-4) | Skip if you have it |
-| **Subtotal** | | | | **136.24** | | |
+| **Subtotal** | | | | **132.24** | | |
 
 ## D. Housing & sealing
 
 | Item | Part / spec | Qty | Unit $ | Ext $ | Source | Notes |
 |---|---|---|---|---|---|---|
 | Filament | ASA 1 kg (Polymaker / Prusament) – ~150 g used | 1 | 25.00 | 25.00 | [search](https://www.amazon.com/s?k=ASA+filament+1kg) | Black interior parts can be same spool |
-| Window | Polycarbonate sheet 2–3 mm (or 3 mm tempered glass), 2 mm, cut to ~124×61 mm | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=polycarbonate+sheet+3mm+8x10) |  |
+| Window | Polycarbonate sheet 1.5 mm, cut to ~136×61 mm | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=polycarbonate+sheet+3mm+8x10) |  |
 | Anti-fog | Rain-X Anti-Fog (inside of window) | 1 | 6.00 | 6.00 | [search](https://www.amazon.com/s?k=Rain-X+anti+fog) |  |
 | O-ring | Silicone O-ring cord, 2 mm, 2 m | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=silicone+o-ring+cord+2mm) | Glue the ends with CA glue |
 | Heat-set inserts | CNC Kitchen M3 short (M3×3.0), 100 pcs | 1 | 10.00 | 10.00 | [link](https://www.3djake.com/cnc-kitchen/threaded-inserts-m3-short) | Also at prusa3d.com |
 | Screws | M3 A2 stainless assortment (6–16 mm, button head) | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=M3+stainless+button+head+screw+assortment) |  |
 | Mount insert | 1/4"-20 brass heat-set insert (or captive 1/4"-20 nut) | 1 | 6.00 | 6.00 | [search](https://www.amazon.com/s?k=1/4-20+heat+set+insert+brass) | Main structural anchor |
 | Pressure vent | Amphenol LTW VT-BPM08BK-NO8001, M8 ePTFE vent, IP68 | 1 | 4.00 | 4.00 | [link](https://www.masterelectronics.com/en/amphenol-ltw/vtbpm08bkno8001-64689643.html) | Also search the same part number at Mouser/DigiKey |
-| Cable gland | M12 nylon IP68 gland, 3–6.5 mm cable | 1 | 5.00 | 5.00 | [search](https://www.amazon.com/s?k=M12+cable+gland+IP68+3-6.5mm) | Only if not using a panel connector |
+| Cable gland | M8 nylon IP68 gland, 2–5 mm cable | 1 | 4.00 | 4.00 | [search](https://www.amazon.com/s?k=M8+cable+gland+IP68) | Only if not using a panel connector |
 | Button | Adafruit Rugged Metal Pushbutton, 16 mm, LED ring, momentary (#560 green / #481 blue) | 1 | 4.95 | 4.95 | [link](https://www.adafruit.com/product/560) | Includes rubber gasket; 6 V LED – run from 5 V via 2N3904 |
 | Desiccant | 1–2 g silica gel packs | 1 | 6.00 | 6.00 | [search](https://www.amazon.com/s?k=silica+gel+packets+1+gram) |  |
 | Sealant | Sensor-safe neutral-cure RTV (e.g. Permatex Ultra Black 82180) | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=Permatex+82180) | Do NOT use acetoxy (vinegar-smell) silicone near the mirror/LEDs |
 | Surface sealer (optional) | Smooth-On XTC-3D epoxy coating | 1 | 25.00 | 25.00 | [search](https://www.amazon.com/s?k=XTC-3D) | Skip if acetone-vapour smoothing the ASA |
-| **Subtotal** | | | | **127.95** | | |
+| **Subtotal** | | | | **126.95** | | |
 
 ## E. Mounting
 
@@ -146,12 +146,12 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 
 | | USD |
 |---|---|
-| Core build, cash outlay (sections A–G, excluding the 2 optional items) | **507** |
+| Core build, cash outlay (sections A–G, excluding the 2 optional items) | **502** |
 | Optional extras (XTC-3D coating, magnetic breakaway) | +35 |
 | Road-slope lidar (section H) | +98 |
 | Subtract if you already own a power bank, filament, resistor kit, wire, paste | −100 |
 | Packs and spools left over after one unit (inserts, screws, O-ring cord, bearings, mounts…) | ≈ 129 |
-| **Material actually used per unit, without lidar or power bank** | **≈ 330** |
+| **Material actually used per unit, without lidar or power bank** | **≈ 325** |
 
 Tools not included: 3D printer, soldering iron with a heat-set insert tip, multimeter, glass cutter, drill and M3 tap.
 

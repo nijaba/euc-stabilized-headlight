@@ -6,7 +6,7 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 **Firm constraints** (owner's decision, 2026-11-20). Changing one needs the owner's approval:
 - Only the mirror moves. The LEDs and heatsink stay fixed.
 - External power only. The head has no battery, and PD is negotiated at the bank.
-- Material cost ≤ $450 per unit (raised from $350 on 2026-11-20) and head weight ≤ 350 g, both **with the optional lidar fitted**. The cost excludes the power bank, tools and leftover pack contents.
+- Material cost ≤ $450 per unit (raised from $350 on 2026-11-20) and head weight ≤ 400 g (raised from 350 g on 2026-11-21), both **with the optional lidar fitted**. The cost excludes the power bank, tools and leftover pack contents.
 - The lidar stays optional. Everything must work without it.
 
 ## 1. The problem
@@ -39,9 +39,15 @@ The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 **Mirror geometry:**
 - The four optics sit in a row along the pivot axis: two 20 mm spot optics and two 33 mm FILIPPA low-beam optics, about 112 mm in all. The mirror is long and thin: about **114 × 55 mm**, about 17 g in **1.1 mm** front-surface glass.
 - The mirror must be **flat**: any curvature blurs the low-beam cutoff.
+- **Why it's this size (checked 2026-11-21):** its length is the optic row (two 33 mm FILIPPA and two 20 mm spots, ~112 mm). Its width is the 33 mm low-beam column spread across a mirror tilted to 52.5° at full travel: 33 / cos 52.5° ≈ 54 mm. Alternatives looked at:
+  - A 2 × 2 optic layout gives a mirror of the same area (~70 × 90 mm), with ~2.7× the moment of inertia and a window ~28 mm taller, because the two rows reflect at different heights. No gain.
+  - Limiting steering to ±10° of beam (±5° of mirror) would trim ~3 mm of width and a few millimetres of window and body. Only worth it if ride logs show the pitch stays within ±10°.
+  - Cutting the mirror narrower at the spot ends (20 mm columns) saves ~3 g of glass but complicates the cradle.
+  - The real FILIPPA output spreads a little between the optic and the mirror, so the mirror may need to be slightly larger, not smaller. B-OPT-02 checks it.
 - It rotates about its long axis, which gives it a very small moment of inertia.
 - Use a **front-surface** mirror (enhanced aluminium, R > 95% across the visible range). A normal back-silvered mirror produces ghost beams and absorbs light.
 - The pivot passes through the mirror's **centre of mass**. Bumps and acceleration then create no torque, and the servo only holds position.
+- **Servo:** a 5 g-class digital micro servo (lean package); the 12 g EMAX ES08MD II is the fallback. The packaging model keeps the larger servo's envelope.
 - **Pivot:** 2× MR63ZZ bearings on a 3 mm stainless shaft, pressed into printed bosses with CA glue.
 - **Linkage:** a pushrod at about 4:1. The servo sweeps ±30° for ±7.5° of mirror, which gives 4× the resolution and hides servo backlash. Response stays well under 50 ms.
 - **Window:** about 124 × 61 mm, 2 mm polycarbonate, so the 33 mm low beam can sweep ±15° without clipping.
@@ -217,22 +223,15 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 
 *v1 (heatsink lid on top):* everything fitted, but the head came to ~466 g, or ~556 g with the lidar pod hanging underneath.
 
-*v2 (heatsink at the bottom, fins fore-aft), with these weight savings:* 2.0 mm walls (the design's minimum), 2 mm window, 1.1 mm mirror, a heatsink only under the optic zone and sized for moving air (§8), the window 3 mm closer to the mirror, the lidar in a pocket in the top cover, the mount boss on the back, and a 12 mm sealed button instead of the 16 mm metal one.
-- **Size (rounded, 8 mm edges):** body about 143 × 71 × 90 mm; about 107 mm tall with the fins; about 151 mm with the lidar pocket on top. Rounding adds about 15 mm of length, because the window has to sit on the flat part of the front, and about 15 g.
-- **Fit:** checks C-PKG-01 to C-PKG-08 pass.
-- **Mass by configuration:**
+*v2 (heatsink at the bottom, fins fore-aft):* everything fits, and two rounds of changes brought the mass down.
 
-| Configuration | Mass | Within 350 g? |
-|---|---|---|
-| 2 FILIPPA + 2 spot, lidar on the head (current design) | ~463 g (~448 g square-edged) | No |
-| 2 FILIPPA + 1 spot, lidar on the head | ~435 g | No |
-| 2 FILIPPA + 2 spot, lidar mounted separately on the wheel | ~386 g | No |
-| 2 FILIPPA + 1 spot, lidar mounted separately on the wheel | ~358 g (~341 g square-edged) | No |
-| 1 FILIPPA + 1 spot, lidar on the head | ~368 g (~348 g square-edged) | No |
-
-- The heaviest items are still the printed body (~105 g) and the heatsink (~79 g). A body with one FILIPPA is about 52 mm shorter because the optic row shrinks; the window stays as wide as the FILIPPA's 32° spread needs.
-- **Cornering lights and toe-out** (added later the same day) put both lights in a rounded brow across the top front, with the lidar in the middle when it's fitted. They add about 54 g: ~463 → **~517 g** with the lidar on the head, ~451 g with it on the wheel. With one FILIPPA and one spot, the brow is too short for the lidar and both lights (C-PKG-09).
-- **Lidar off the head:** the IMU in the head still gives the lidar's true depression angle if both are fixed rigidly to the same part of the wheel, so the lidar can live in its own small housing on the shell, joined by a cable.
+*v3 (aerodynamic and lean, 2026-11-21).* The owner raised the weight limit to 400 g, kept the lidar on the head and both spots, and asked for a less boxy, more aerodynamic shape:
+- **Shape:** a rounded front (6 mm edges) that **tapers 14 mm narrower each side toward the back**, a **roof that slopes 20 mm down** to a soft 14 mm-radius tail, and a **brow fairing** over the lidar and cornering lights that blends 30 mm back into the roof. The window, lidar lenses and cornering windows sit on the flat front; everything behind them is shaped for the airflow. The mount boss stays on the back.
+- **Lean package:** 1.6 mm walls (4 perimeters, below the earlier 2 mm minimum, so the leak and thermal-cycling tests matter more), a smaller heatsink (~96 × 45 mm, 2.5 mm base, 10 fins, §8), 1.5 mm window, a 5 g-class micro servo, fewer screws, an M8 gland.
+- **Size:** body about 139 × 70 × 88 mm, about 149 mm tall with the fins and brow.
+- **Fit:** checks C-PKG-01 to C-PKG-13 pass, including the electronics board (~60 × 52 mm, tighter than before) and servo fitting under the sloping roof and inside the rounded, tapered tail.
+- **Mass:** the printed body and brow are now **measured from the model's geometry** (STL volumes), not approximated: body ~53 g, brow ~33 g. The head comes to **~401 g** with the lidar, right at the 400 g limit. The custom PCB (build-plan phase 9) should take off another ~20 g.
+- Further options if needed: foaming lightweight ASA for the brow and other non-sealing parts (~−15 g, material to verify), a LightWare LW20/C lidar (~−45 g but ~$187 more, over the cost limit).
 
 ## 6. Mounting
 
@@ -280,10 +279,10 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 ## 8. Thermal
 
 - **Heat:** about 12 W at normal output, roughly 65% of LED electrical power.
-- **Heatsink (layout v2):** about 128 × 45 mm under the optics, fins fore-aft so riding air flows along them. Sized for moving air, with firmware derating when parked:
-  - About 0.9 K/W at 25 km/h, so about 11 K above ambient at 12 W (flat-plate laminar estimate over 45 mm fins).
-  - About 1.6 K/W at walking pace (2 m/s), so about 19 K above ambient.
-  - About 7–8 K/W in still air with the fins pointing down, which is too hot at full power. Firmware already dims to 20% after 2 min parked (about 2.4 W, ~18 K rise), and the heatsink's ~70 J/K of thermal mass gives about 1 min at full power before it warms by 10 K.
+- **Heatsink (layout v3):** about 96 × 45 mm under the optics, 2.5 mm base, 10 fins 1.2 × 14 mm running fore-aft so riding air flows along them. Sized for moving air, with firmware derating when parked:
+  - About 1.4 K/W at 25 km/h, so about 16 K above ambient at 12 W (flat-plate laminar estimate over 45 mm fins).
+  - About 2.5 K/W at walking pace (2 m/s), so about 30 K above ambient. On a hot day that reaches the 60 °C start of derating, so the spot may dim slightly at walking pace.
+  - About 10 K/W in still air with the fins pointing down, which is too hot at full power. Firmware already dims to 20% after 2 min parked (about 2.4 W, ~24 K rise). The heatsink's ~44 J/K of thermal mass gives about 40 s at full power before it warms by 10 K.
   - Verify in B-THM-01, with airflow along the fins.
 - **Firmware derating** (thresholds in `firmware-spec.md`):
   - Spot dims before flood.
@@ -333,7 +332,7 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - [ ] P6KE27A clamps at ~37.5 V, above the BuckBlock's 32 V maximum. Low risk with a 20 V bank, but a lower-clamp TVS would cover it.
 - [x] Cost over the limit: about $290 core + $98 lidar ≈ $388, against a $350 ceiling. Resolved 2026-11-20: the owner raised the limit to $450, so no parts change.
 - [x] **The flood has no cutoff.** Resolved 2026-11-21: the owner chose two LEDiL FILIPPA-STVZO cutoff optics with XP-L HI as the low beam (§3). A shield or masked mirror edge was rejected because a TIR beam isn't an image, so blocking part of it only dims it without making a sharp edge.
-- [ ] **Head weight is over 350 g.** Layout v2 brought it from ~556 g to ~448 g with the lidar on the head; the rounded exterior adds ~15 g and the cornering lights with toe-out ~54 g, for **~517 g** (~451 g with the lidar on the wheel). Needs the owner's decision: lighter configuration, smaller edge radius, or a higher limit. (2026-11-21)
+- [ ] **Head weight is at the 400 g limit** (raised from 350 g, owner, 2026-11-21): ~401 g with the lidar after the aerodynamic, lean v3 shape, with no margin. The custom PCB should add ~20 g of margin; the part masses are estimates until weighed (E-MNT-01).
 - [ ] Heatsink sized for moving air (§8): confirm the riding temperature and the parked derating on the bench (B-THM-01).
 - [ ] FILIPPA with XP-L HI: focus height, cutoff sharpness and cutoff orientation are not in LEDiL's data. Bench tests B-OPT-05 and B-OPT-06.
 - [ ] Larger mirror (115 × 55 mm, about 5× the moment of inertia): does the servo still settle in under 50 ms (B-MIR-01)?

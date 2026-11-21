@@ -26,6 +26,9 @@ render cutaway-up     cutaway  0,-10,45,90,0,270,520 --projection=ortho  -D tilt
 render cutaway-down   cutaway  0,-10,45,90,0,270,520 --projection=ortho  -D tilt=-7.5
 render exploded       exploded 0,0,0,65,0,140,0
 render no-lidar       assembly 0,0,0,62,0,140,0  -D lidar_on_head=false
+render side           assembly 0,0,0,90,0,90,0   -D show_beams=false --projection=ortho
+render top            assembly 0,0,0,0,0,0,0     -D show_beams=false --projection=ortho
+render rear-quarter   assembly 0,0,0,65,0,320,0  -D show_beams=false
 render on-wheel       wheel    0,0,0,75,0,125,0  -D show_beams=false
 
 # Keep the measurements and any failed check (C-PKG) from the first run.
@@ -33,29 +36,16 @@ grep -m2 -E '^ECHO: "(PKG|MASS)' "$LOG.tmp" | sed 's/^ECHO: //' >> "$LOG"
 if grep -q 'C-PKG' "$LOG.tmp"; then
   grep 'C-PKG' "$LOG.tmp" | sort -u >> "$LOG"; rm -f "$LOG.tmp"; cat "$LOG"; exit 1
 fi
-echo "C-PKG-01..10 passed" >> "$LOG"
+echo "C-PKG-01..13 passed" >> "$LOG"
 rm -f "$LOG.tmp"
 
-# Mass budget (C-MASS-01) for the baseline, with lighter configurations for comparison.
-variant() { # name [-D args...]
-  name=$1; shift
-  if ! "$OPENSCAD" -o "$OUT/$name.echo" "$@" headlight.scad 2>"$OUT/$name.err" || ! grep -q '"PKG ' "$OUT/$name.echo"; then
-    echo "Variant $name does not fit: $(cat "$OUT/$name.err" "$OUT/$name.echo" 2>/dev/null | grep -o 'C-PKG-[0-9]*[^"]*' | head -1)" >> "$OUT/variants.txt"
-    rm -f "$OUT/$name.echo"
-  fi
-  rm -f "$OUT/$name.err"
-}
-: > "$OUT/variants.txt"
-variant baseline
-variant one-spot            -D n_spot=1
-variant lidar-off-head      -D lidar_on_head=false
-variant one-spot-no-lidar   -D n_spot=1 -D lidar_on_head=false
-variant one-fil-one-spot    -D n_fil=1 -D n_spot=1
+# Mass budget (C-MASS-01): the printed shell and brow are exported and measured.
 status=0
-# shellcheck disable=SC2046
-python3 -I weight.py $(ls "$OUT"/baseline.echo "$OUT"/one-spot.echo "$OUT"/lidar-off-head.echo \
-  "$OUT"/one-spot-no-lidar.echo "$OUT"/one-fil-one-spot.echo 2>/dev/null) > "$OUT/mass.txt" || status=$?
-cat "$OUT/variants.txt" >> "$OUT/mass.txt"; rm -f "$OUT"/*.echo "$OUT/variants.txt"
+"$OPENSCAD" -o "$OUT/model.echo" headlight.scad 2>/dev/null
+"$OPENSCAD" -o "$OUT/shell.stl" -D 'view="stl_shell"' headlight.scad 2>/dev/null
+"$OPENSCAD" -o "$OUT/hood.stl"  -D 'view="stl_hood"'  headlight.scad 2>/dev/null
+python3 -I weight.py "$OUT/model.echo" "$OUT/shell.stl" "$OUT/hood.stl" > "$OUT/mass.txt" || status=$?
+rm -f "$OUT/model.echo" "$OUT/shell.stl" "$OUT/hood.stl"
 tail -1 "$OUT/mass.txt" >> "$LOG"
 cat "$LOG"
 exit $status

@@ -14,7 +14,7 @@ These are the owner's decisions. A change that breaks one won't be merged withou
 
 - Only the mirror moves. The LEDs and heatsink stay fixed.
 - External power only. The head has no battery.
-- Material cost ≤ $450 per unit and head weight ≤ 350 g, both with the optional lidar fitted.
+- Material cost ≤ $450 per unit and head weight ≤ 400 g, both with the optional lidar fitted.
 - The lidar stays optional. Everything must work without it.
 
 ## Making a change

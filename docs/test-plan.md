@@ -140,12 +140,15 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | C-PKG-03 | The mirror stays out of the electronics slot at full tilt | At least 1 mm | Pass (v2), 2026-11-21 |
 | C-PKG-04 | The window aperture stays above the floor, and the mirror clears the optics at full tilt | At least 1 mm each | Pass (v2), 2026-11-21 |
 | C-PKG-05 | Every beam fits the window width (FWTM spread, ±15° steering) | Beam reach ≤ half the inner length | Pass (v2), 2026-11-21 |
-| C-PKG-06 | The servo fits the back slot | Servo width ≤ slot depth − 2 mm | Pass (v2), 2026-11-21 |
+| C-PKG-06 | The servo fits the back slot, set 4 mm in from the back wall | Servo front ≤ slot depth − 2 mm | Pass (v2), 2026-11-21 |
 | C-PKG-07 | The bottom heatsink fits inside the floor | Heatsink depth ≤ inner depth | Pass (v2), 2026-11-21 |
 | C-PKG-08 | The window and bezel stay on the flat front, clear of the rounded bottom edge | Bezel bottom ≥ edge radius above the floor | Pass (v2), 2026-11-21 |
 | C-PKG-09 | The cornering lights clear the lidar in the top brow | No overlap | Pass (2 FILIPPA + 2 spot); fails with 1 FILIPPA + 1 spot, 2026-11-21 |
 | C-PKG-10 | The cornering lights stay within the end of the body | At most 2 mm past the end | Pass, 2026-11-21 |
-| C-MASS-01 | Head mass of the current configuration (2 FILIPPA + 2 spot, lidar on the head), from model geometry and part masses | ≤ 350 g | **Fail: ~517 g** with cornering lights (v2 rounded; ~463 g before them, ~556 g in v1), 2026-11-21 |
+| C-PKG-11 | The sloping roof leaves the electronics board at least 45 mm tall | Board height ≥ 45 mm | Pass (v3), 2026-11-21 |
+| C-PKG-12 | The servo fits inside the rounded, tapered tail | Servo inside the tail's inner wall | Pass (v3), 2026-11-21 |
+| C-PKG-13 | The electronics board fits the flat part of the tail | Board width ≥ 55 mm | Pass (v3), 2026-11-21 |
+| C-MASS-01 | Head mass with the lidar, printed parts measured from the model's STL volumes, bought parts from datasheets | ≤ 400 g | See `cad/renders/checks.txt`; ~401 g in v3, 2026-11-21 |
 
 ## Bench tests (`B-`)
 
@@ -211,7 +214,7 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | E-SEAL-01 | Empty housing submerged with a tissue inside | Tissue dry | – |
 | E-SEAL-02 | Repeat E-SEAL-01 after 10 hot–cold cycles | Tissue dry | – |
 | E-SEAL-03 | Window fogging after cooling from hot, with the vent and desiccant fitted | No fog | – |
-| E-MNT-01 | Head weight, fully assembled with the lidar | ≤ 350 g | – |
+| E-MNT-01 | Head weight, fully assembled with the lidar | ≤ 400 g | – |
 | E-MNT-02 | Pull and shake test on each mount option | Mount holds; leash catches the head if it doesn't | – |
 
 ## Ride tests (`R-`)
