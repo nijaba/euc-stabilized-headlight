@@ -28,7 +28,7 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 
 | Item | Part / spec | Qty | Unit $ | Ext $ | Source | Notes |
 |---|---|---|---|---|---|---|
-| LED driver ×2 (spot, flood) | LEDdynamics BuckBlock A009-D-V-2100 (10–32 V in, 2.1 A, dimmable) | 2 | 21.00 | 42.00 | [link](https://www.digikey.com/en/products/detail/leddynamics-inc/0A009-D-V-2100/22578489) | Replaces the discontinued Mean Well LDD-1500H. Firmware caps at ~1.5 A normal, 2.1 A boost. Also sold at ledsupply.com/led-drivers/buckblock-dc-led-driver |
+| LED driver ×2 (spot, flood) | LEDdynamics BuckBlock A009-D-V-2100 (10–32 V in, 2.1 A, dimmable) | 2 | 21.77 | 43.54 | [link](https://www.ledsupply.com/led-drivers/buckblock-dc-led-driver) | Replaces the discontinued Mean Well LDD-1500H. Firmware caps at ~1.5 A normal, 2.1 A boost. LEDSupply (LEDdynamics' own store; pick 2100mA, part 0A009-D-V-2100), 2026-11-22: DigiKey quoted an 8-week lead time. Also at DigiKey |
 | 5 V regulator | Pololu D36V28F5 (5 V 3.2 A, 5.3–50 V in) | 1 | 23.95 | 23.95 | [link](https://www.pololu.com/product/3782) | Feeds servo + XIAO. Cheaper option: generic MP1584 5 V module (~$2) for prototyping |
 | Dim / ring-LED transistors | 2N3904 NPN, TO-92 | 3 | 0.15 | 0.45 | [search](https://www.digikey.com/en/products/result?keywords=2N3904+TO-92) | 2 for BuckBlock DIM (datasheet's MCU interface), 1 for button ring LED |
 | DIM smoothing caps | 10 µF 25 V ceramic or electrolytic | 2 | 0.30 | 0.60 | [search](https://www.digikey.com/en/products/result?keywords=10uF+25V+radial+capacitor) | Turns 20 kHz PWM into smooth analog dimming (no 200 Hz flicker) – confirm on bench |
@@ -41,7 +41,7 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Resistors | 1/4 W kit (need 120 k, 15 k, 10 k, 1 k ×3, 100 Ω) | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=1/4W+metal+film+resistor+kit) | Skip if you have a kit |
 | Protoboard | Adafruit Perma-Proto full-size (#1606), cut in half across the rows (two ~78 × 51 mm boards: one for the head, one spare) | 1 | 10.95 | 10.95 | [link](https://www.adafruit.com/product/1606) | Replaces the half-size #1609, out of stock (2026-11-22). Same strips and rails. Custom PCB later |
 | Wire | Silicone wire 22 AWG + 26 AWG | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=silicone+wire+22+awg+26+awg+kit) |  |
-| **Subtotal** | | | | **99.15** | | |
+| **Subtotal** | | | | **100.69** | | |
 
 ## C. Optics & mechanism
 
@@ -140,12 +140,12 @@ For firmware and bench testing before the protoboard or any PCB. Most of it is t
 | Mirror test pieces | Front-surface mirror offcuts, MR63ZZ bearings, 3 mm rod, pushrod kit (section C) | 1 | 31.00 | 31.00 | see section C | Bearings, rod and kit yes |
 | Laser module | 5 V 650 nm dot laser, wired: brass barrel (12 mm is easiest to clamp) with two leads, adjustable focus, ≤ 5 mW. Not the board-mounted KY-008 type, which can't be aimed apart from the breadboard | 1 | 5.00 | 5.00 | [search](https://www.amazon.com/s?k=5V+650nm+laser+dot+module+12mm+brass+adjustable+focus) | No (test tool). Never look into the beam or its reflection off the mirror |
 | Breadboard + jumpers | Full-size breadboard and jumper wire kit | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=breadboard+jumper+wire+kit) | No (test tool) |
-| Optics bench | 2 BuckBlocks (phase 3 tests both channels), 2 XP-L HI on stars, 1 FILIPPA-STVZO, 1 Carclo 10003 + holder, the heatsink (sections B, C) | 1 | 71.00 | 71.00 | see sections B, C | Yes |
+| Optics bench | 2 BuckBlocks (phase 3 tests both channels), 2 XP-L HI on stars, 1 FILIPPA-STVZO, 1 Carclo 10003 + holder, the heatsink (sections B, C) | 1 | 72.54 | 72.54 | see sections B, C | Yes |
 | Lidar | Benewake TFS20-L (section H), to test its range through a window early | 1 | 55.00 | 55.00 | [link](https://en.benewake.com/TFS20L/index.html) | Yes |
 | Power | PD trigger board 15 V + USB-C cable, Pololu 5 V regulator, passives (section B, F); RXEF300 as well as RXEF250 to compare | 1 | 51.40 | 51.40 | see sections B, F | Yes |
 | USB-C power meter | Inline USB-C voltage/current meter | 1 | 20.00 | 20.00 | [search](https://www.amazon.com/s?k=usb+c+power+meter) | No (test tool) |
 | Lux meter | Basic digital lux meter | 1 | 20.00 | 20.00 | [search](https://www.amazon.com/s?k=digital+lux+meter) | No (test tool) |
-| **Total** | | | | **345.83** | | about $260 of it goes into the build |
+| **Total** | | | | **347.37** | | about $260 of it goes into the build |
 
 **Bench tools (skip what you own, added 2026-11-22).** The phase 2–3 bench tests need these too. They are general workshop tools, so they are not in the kit total above. Prices are estimates.
 
@@ -176,13 +176,13 @@ For firmware and bench testing before the protoboard or any PCB. Most of it is t
 
 | | USD |
 |---|---|
-| Core build, cash outlay (sections A–G, excluding the 2 optional items) | **534** |
+| Core build, cash outlay (sections A–G, excluding the 2 optional items) | **536** |
 | Optional extras (XTC-3D coating, magnetic breakaway) | +35 |
 | Road-slope lidar (section H) | +59 |
 | Subtract if you already own a power bank, filament, resistor kit, wire, paste | −100 |
 | Packs and spools left over after one unit (inserts, screws, O-ring cord, bearings, mounts, sheet, plaster, half the protoboard…) | ≈ 141 |
-| **Material actually used per unit, without lidar or power bank** | **≈ 343** |
-| **With the lidar (the $450 limit applies here)** | **≈ 402** |
+| **Material actually used per unit, without lidar or power bank** | **≈ 344** |
+| **With the lidar (the $450 limit applies here)** | **≈ 403** |
 
 Tools not included: 3D printer, soldering iron with a heat-set insert tip, multimeter, glass cutter, drill and M3 tap.
 

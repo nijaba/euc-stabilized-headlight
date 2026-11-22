@@ -66,7 +66,7 @@ Top view of the head (layout v4, front at the top):
 | Runtime on a 20 Ah bank (~50 Wh usable at 15 V) | ~2.4 h | ~1.7 h |
 | Head weight (limit: 400 g with lidar) | ~331 g with lidar (packaging model, measured shell; 69 g of margin, see design §10) | |
 | Head size | ~151 × 72 × 112 mm with the fins, a rounded light bar (nothing on the roof) | |
-| Material cost per unit (limit: $450 with lidar) | ~$402 with the lidar, + power bank (~$343 without the lidar) | |
+| Material cost per unit (limit: $450 with lidar) | ~$403 with the lidar, + power bank (~$344 without the lidar) | |
 
 The low-beam figures were estimated with v3's 4° toe-out; v4 aims both low beams straight ahead outside turns, so the centre should be a little brighter.
 
