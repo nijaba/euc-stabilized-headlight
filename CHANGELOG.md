@@ -5,6 +5,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ## [Unreleased]
 
 ### Added
+- Service access (2026-11-22): design §10 gains two open questions to settle before the housing CAD (service cover on the top or the back; firmware updates without opening the head, by OTA or a sealed USB-C port). Design §5 and the printed-parts list gain a desiccant holder just inside the service cover (owner). Build plan phase 6 updated.
 - Firmware README: how to fix the board build when pioarduino's own PlatformIO fork (6.2.0.post1) makes the platform refuse to install.
 - BOM bench kit: a list of five bench tools the phase 2–3 tests need (bench power supply, multimeter, thermometer, USB-C data cable, soldering iron; ~$153, skip what you own), kept out of the kit total. Site's phase 2 bench-kit figure corrected from ~$263 to ~$339.
 - Board build (owner's platform decision, 2026-11-22): `pio run -e xiao_esp32s3` builds with Arduino-ESP32 3.3.12 through the community pioarduino platform, pinned to release 55.03.312-1 with its digest noted; needs PlatformIO Core 6.2. A minimal `src/main.cpp` prints a boot line. Design §7/§10, firmware-spec, build plan and CLAUDE.md updated. Not yet flashed to a board.
