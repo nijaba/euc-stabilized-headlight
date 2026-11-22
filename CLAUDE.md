@@ -21,7 +21,7 @@ Current choices that are not firm constraints (change them through the design do
 
 ## Commands
 
-There's no firmware code yet. These are planned for when `firmware/` has a PlatformIO project (build plan phase 2):
+`firmware/` is a PlatformIO project. The host tests run now; the board environment comes with the hardware layer (build plan phase 2, waiting on the platform choice in design §10):
 
 ```bash
 pio test -e native          # automated firmware tests on the host, including the test-plan ID check

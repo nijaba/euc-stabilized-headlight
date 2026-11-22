@@ -438,6 +438,7 @@ Seven LEDC channels are used (four servos, two DIM, the ring LED) of the ESP32-S
 
 ## 10. Open questions and risks
 
+- [ ] **Board platform (found 2026-11-22):** the firmware targets Arduino-ESP32 **3.x**, but the official PlatformIO `espressif32` platform (6.12) ships **2.0.17**. 3.x needs the community `pioarduino` platform, pinned to a release. The two differ in the APIs the hardware layer uses (LEDC servo PWM, I²C). Decide before the board environment and hardware layer (build plan phase 2).
 - [x] ~~Does the 519A dome fit the Carclo 10734 holder?~~ No longer needed: the 519A was dropped for the FILIPPA low beam (2026-11-21).
 - [ ] BuckBlock analog dimming using 20 kHz PWM + RC: linearity, minimum level.
 - [ ] Mirror vibration and ringing at EUC vibration frequencies. Is the balance good enough? (Owner asked about dampers, 2026-11-21.) The mirror doubles any wobble: 0.1° of mirror flutter moves the cutoff ~13 cm at 38 m. Decide after B-MIR-04/05 and a logged ride, trying these in order:
