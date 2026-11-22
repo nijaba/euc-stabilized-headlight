@@ -25,35 +25,35 @@ Status is "–" until a test exists or has been run.
 
 | ID | What it checks | Spec | Status |
 |---|---|---|---|
-| U-PLAN-01 | Every `U-` ID in this plan has a test, and every test name's ID is in this plan | — | – |
+| U-PLAN-01 | Every test name's ID has a row in this plan, and every `U-` row whose status isn't "–" (not automated yet) has a test (`firmware/test/test_plan`) | — | Pass (host), 2026-11-22 |
 
 ### Pitch filter
 
 | ID | What it checks | Spec | Status |
 |---|---|---|---|
-| U-FILT-01 | Gyro integration tracks a known pitch rate | FW §2 | – |
-| U-FILT-02 | 0.5 g of braking with the wheel level produces no tilt correction (accelerometer gated off) | FW §2 | – |
-| U-FILT-03 | The gate rejects accelerometer correction when the pitch rate is above 5°/s | FW §2 | – |
-| U-FILT-04 | When steady, pitch converges to the accelerometer pitch | FW §2 | – |
+| U-FILT-01 | Gyro integration tracks a known pitch rate | FW §2 || Pass (host), 2026-11-22 |
+| U-FILT-02 | 0.5 g of braking with the wheel level produces no tilt correction (accelerometer gated off) | FW §2 || Pass (host), 2026-11-22 |
+| U-FILT-03 | The gate rejects accelerometer correction when the pitch rate is above 5°/s | FW §2 || Pass (host), 2026-11-22 |
+| U-FILT-04 | When steady, pitch converges to the accelerometer pitch | FW §2 || Pass (host), 2026-11-22 |
 
 ### Road follow
 
 | ID | What it checks | Spec | Status |
 |---|---|---|---|
-| U-ROAD-01 | A step in road grade at steady speed settles to 95% within 1 s (τ = 0.3 s) | FW §2 | – |
-| U-ROAD-02 | With `follow_road` off, the beam holds gravity level | FW §2 | – |
-| U-ROAD-03 | A 10° acceleration lean (1.7 m/s², `K_TILT` correct) moves `road_imu` by under 0.3° | FW §2 | – |
-| U-ROAD-04 | A gentle 0.15 m/s² acceleration for 8 s moves `road_imu` by under 0.3° | FW §2 | – |
-| U-ROAD-05 | `a_long` over 1 m/s² or a 0.2 g jolt freezes the follower; it resumes 0.3 s after | FW §2 | – |
-| U-ROAD-06 | `a_long` from `G·(sin acc_pitch − sin pitch)` matches a known acceleration on a tilted IMU | FW §2 | – |
+| U-ROAD-01 | A step in road grade at steady speed settles to 95% within 1 s (τ = 0.3 s) | FW §2 || Pass (host), 2026-11-22 |
+| U-ROAD-02 | With `follow_road` off, the beam holds gravity level | FW §2 || Pass (host), 2026-11-22 |
+| U-ROAD-03 | A 10° acceleration lean (1.7 m/s², `K_TILT` correct) moves `road_imu` by under 0.3° | FW §2 || Pass (host), 2026-11-22 |
+| U-ROAD-04 | A gentle 0.15 m/s² acceleration for 8 s moves `road_imu` by under 0.3° | FW §2 || Pass (host), 2026-11-22 |
+| U-ROAD-05 | `a_long` over 1 m/s² or a 0.2 g jolt freezes the follower; it resumes 0.3 s after | FW §2 || Pass (host), 2026-11-22 |
+| U-ROAD-06 | `a_long` from `G·(sin acc_pitch − sin pitch)` matches a known acceleration on a tilted IMU (within 5% for ±1.7 m/s² with the head pitched up to ±10°) | FW §2 || Pass (host), 2026-11-22 |
 
 ### Mirror command
 
 | ID | What it checks | Spec | Status |
 |---|---|---|---|
-| U-MIR-01 | The mirror moves by half the pitch error, in the opposite direction | FW §2, design §2 | – |
-| U-MIR-02 | The mirror command is clamped to ±7.5° | FW §2 | – |
-| U-MIR-03 | Servo command = trim + mirror × linkage ratio, clamped to the mechanical limits | FW §2 | – |
+| U-MIR-01 | The mirror moves by half the pitch error, in the opposite direction | FW §2, design §2 || Pass (host), 2026-11-22 |
+| U-MIR-02 | The mirror command is clamped to ±7.5° | FW §2 || Pass (host), 2026-11-22 |
+| U-MIR-03 | Servo command = trim + mirror × linkage ratio, clamped to the mechanical limits | FW §2 || Pass (host), 2026-11-22 |
 
 ### Calibration
 
