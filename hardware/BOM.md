@@ -96,11 +96,12 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Item | Part / spec | Qty | Unit $ | Ext $ | Source | Notes |
 |---|---|---|---|---|---|---|
 | Power bank | Baseus Adaman 65 W 20,000 mAh (15 V / 3 A on USB-C) | 1 | 50.00 | 50.00 | [link](https://www.baseus.com/products/adaman-power-bank-65w-20000mah) | Any 20 Ah bank with 15 V ≥ 2 A PD works (alt: JSAUX PB6501, Anker A1383). $0 if you own one |
-| PD trigger cable | USB-C PD → 5.5 mm barrel, fixed 15 V, e-marked | 1 | 12.00 | 12.00 | [link](https://shop.pimoroni.com/products/usb-type-c-3-1-pd-to-5-5mm-barrel-jack-cable-1-2m-long-with-e-mark) | Cut the barrel off and splice to the IP68 connector |
+| PD trigger board | Adafruit USB-C PD dummy breakout, HUSB238 (#5807), set to a fixed 15 V | 1 | 5.95 | 5.95 | [link](https://www.adafruit.com/product/5807) | Replaces the Pimoroni trigger cable (~$49 shipped to the US), 2026-11-22. Cut the 5 V jumper and close the 15 V one. Rides in the pouch, sealed in heat-shrink; the lead to the head goes into its screw terminal |
+| USB-C cable | Short USB-C to USB-C cable, 3 A (60 W), 0.3–0.5 m | 1 | 6.00 | 6.00 | [search](https://www.amazon.com/s?k=short+usb+c+to+usb+c+cable+3A) | Bank to trigger board. No e-marker needed: the head draws 2 A at most |
 | Waterproof connector | IP68 2-pin inline connector pair (SP13 / M12 style) | 1 | 7.00 | 7.00 | [search](https://www.amazon.com/s?k=IP68+2+pin+waterproof+connector) |  |
 | Pouch | Waterproof pouch/bag for the power bank | 1 | 12.00 | 12.00 | [search](https://www.amazon.com/s?k=waterproof+dry+pouch+power+bank) |  |
 | Breakaway (optional) | IP67 magnetic 2-pin connector | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=waterproof+magnetic+connector+2+pin) | Pops apart in a fall |
-| **Subtotal** | | | | **91.00** | | |
+| **Subtotal** | | | | **90.95** | | |
 
 ## G. Remote (DIY)
 
@@ -141,10 +142,10 @@ For firmware and bench testing before the protoboard or any PCB. Most of it is t
 | Breadboard + jumpers | Full-size breadboard and jumper wire kit | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=breadboard+jumper+wire+kit) | No (test tool) |
 | Optics bench | 2 BuckBlocks (phase 3 tests both channels), 2 XP-L HI on stars, 1 FILIPPA-STVZO, 1 Carclo 10003 + holder, the heatsink (sections B, C) | 1 | 71.00 | 71.00 | see sections B, C | Yes |
 | Lidar | Benewake TFS20-L (section H), to test its range through a window early | 1 | 55.00 | 55.00 | [link](https://en.benewake.com/TFS20L/index.html) | Yes |
-| Power | PD trigger cable 15 V, Pololu 5 V regulator, passives (section B, F); RXEF300 as well as RXEF250 to compare | 1 | 51.45 | 51.45 | see sections B, F | Yes |
+| Power | PD trigger board 15 V + USB-C cable, Pololu 5 V regulator, passives (section B, F); RXEF300 as well as RXEF250 to compare | 1 | 51.40 | 51.40 | see sections B, F | Yes |
 | USB-C power meter | Inline USB-C voltage/current meter | 1 | 20.00 | 20.00 | [search](https://www.amazon.com/s?k=usb+c+power+meter) | No (test tool) |
 | Lux meter | Basic digital lux meter | 1 | 20.00 | 20.00 | [search](https://www.amazon.com/s?k=digital+lux+meter) | No (test tool) |
-| **Total** | | | | **345.88** | | about $260 of it goes into the build |
+| **Total** | | | | **345.83** | | about $260 of it goes into the build |
 
 **Bench tools (skip what you own, added 2026-11-22).** The phase 2–3 bench tests need these too. They are general workshop tools, so they are not in the kit total above. Prices are estimates.
 

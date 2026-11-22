@@ -36,6 +36,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - `CONTRIBUTING.md` and `SECURITY.md` (private reporting for safety faults as well as security issues).
 
 ### Changed
+- PD trigger (2026-11-22): the Pimoroni 15 V trigger cable (~$49 shipped to the US) is replaced by the Adafruit HUSB238 trigger board (#5807, $5.95) jumpered to 15 V, plus a short 3 A USB-C cable; it rides in the pouch in heat-shrink. Design §4 drops the e-marked requirement (the head draws 2 A at most). Per-unit cost unchanged (~$402 with the lidar); bench kit $345.83.
 - Protoboard (2026-11-22): the half-size Adafruit Perma-Proto #1609 is out of stock, so the BOM uses the full-size #1606 ($10.95), cut in half (one half for the head, one spare). Cash outlay ~$534 (was ~$528), material per unit ~$402 with the lidar (was ~$401), bench kit ~$346 (was ~$339).
 - v4 ride demo: the “Old hill follower (4 s)” comparison is removed; the demo runs only the adopted hill follower (firmware-spec §2).
 - v4 model: the curved clear sides are now the only version (flat front dropped, owner 2026-11-21) and the default; `render.sh` renders only it. Per-side yaw (`yaw_l`, `yaw_r`) so the turn renders show only the turn-side beam swinging. Site headline mentions turns.

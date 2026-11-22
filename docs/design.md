@@ -137,7 +137,7 @@ For scale, good StVZO bicycle lights are about 70–150 lux at 10 m. A car's low
 ## 4. Power: external USB-C PD bank
 
 ```
-power bank ──USB-C──► PD trigger cable (fixed 15 V, e-marked) ──► IP68 2-pin ──► head
+power bank ──USB-C cable──► PD trigger board (fixed 15 V, in the pouch) ──► IP68 2-pin ──► head
 ```
 
 ### Consumption (estimates, to be measured in B-PWR-06 and R-RUN-01)
@@ -163,7 +163,7 @@ Cold weather cuts usable capacity by about 20%, so plan on about 2 h in normal m
 - **PD at the dry end.** The PD negotiation happens at the bank, inside a pouch. Only plain DC reaches the head. Don't run exposed USB-C pins at 15–20 V in the rain, because they corrode quickly.
 - **Bank:** 20,000 mAh that supplies **15 V at 2 A or more** on one USB-C port. **15 V at 3 A (45 W or more) is recommended** for margin in boost. Examples: Baseus Adaman 65 W, JSAUX PB6501, Anker A1383.
 - **Usable energy:** about 50 Wh at 15 V.
-- **Cable:** a USB-C PD trigger cable fixed at 15 V and e-marked, spliced to an IP68 2-pin connector at the head.
+- **Trigger (2026-11-22):** a USB-C PD trigger board (Adafruit #5807, HUSB238) jumpered to a fixed 15 V, in the pouch and sealed in heat-shrink, fed by a short 3 A USB-C cable. Its screw terminal takes the lead to the IP68 2-pin connector at the head. It replaces a ready-made 15 V trigger cable from the UK (about $49 shipped to the US). No e-marked cable is needed: e-marking only matters above 3 A, and the head draws 2 A at most in boost.
 - **Head input protection:**
   - PTC fuse (2.5 A hold). Marginal in boost when hot; see §10.
   - 1N5822 Schottky for reverse polarity. Dissipates ~1 W at 2 A; see §10.
