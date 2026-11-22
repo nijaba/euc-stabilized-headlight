@@ -141,6 +141,7 @@ These run long randomised input sequences against the whole control and state lo
 | U-SAFE-02 | No lidar input raises the beam above where the IMU alone would put it | FW §1.2 | – |
 | U-SAFE-03 | Losing the lidar falls back to IMU only; losing the IMU fixes the mirror at the calibrated aim with reduced brightness; losing the remote keeps the mode | FW §1.3 | – |
 | U-SAFE-04 | No brightness change, from any cause, steps faster than the rate limit | FW §1.4 | – |
+| U-TURN-01 | v4 turn yaw (planned; rule not yet in the firmware spec): over turns from 10 to 80 m radius and 10 to 45 km/h, the swung beam's cutoff, traced through the mirror, tilts no more than 3° the wrong way (inside end up), and no cutoff end of either beam rises above the road's level (design §5, cutoff roll in turns) | All cases hold | – |
 
 ## Packaging checks (`C-`)
 

@@ -89,7 +89,7 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
   <header>
     <div class="eyebrow"><a href="./" style="color:inherit">EUC stabilized headlight</a> · layout v4 · simulation</div>
     <h1>v4 Ride Demo</h1>
-    <p class="lede">A 52-second ride through the firmware's control loop: accelerating, braking, a hill with a crest, and two turns. The wheel pitches up to ±10°. Two mirrors, each on pitch and yaw, keep the <b>low-beam cutoff about 38 m ahead</b>, and in a turn the beam on that side swings into the curve while the other stays straight. The dashed red line is a light bolted to the wheel, for comparison. Switch between the <b>low beam</b>, with its cutoff, and the <b>high beam</b>, which adds the two spots.</p>
+    <p class="lede">A 52-second ride through the firmware's control loop: accelerating, braking, a hill with a crest, two turns and a slow corner. The wheel pitches up to ±10°. Two mirrors, each on pitch and yaw, keep the <b>low-beam cutoff about 38 m ahead</b>, and in a turn the beam on that side swings into the curve while the other stays straight. The dashed red line is a light bolted to the wheel, for comparison. Switch between the <b>low beam</b>, with its cutoff, and the <b>high beam</b>, which adds the two spots. Tick <b>Cutoff roll</b> to see how swinging a beam also rolls its cutoff, and <b>Cap swing</b> for the proposed fix.</p>
   </header>
 
   <div class="board">
@@ -133,6 +133,8 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
           <label><input type="checkbox" id="optLidar" checked> Lidar fitted</label>
           <label><input type="checkbox" id="optHill"> Old hill follower (4 s)</label>
           <label><input type="checkbox" id="optFixed" checked> Fixed light</label>
+          <label><input type="checkbox" id="optRoll"> Cutoff roll from the swing</label>
+          <label><input type="checkbox" id="optCap"> Cap swing at lean + 3° (proposed)</label>
           <label>Speed <select id="optSpeed"><option value="0.5">0.5×</option><option value="1" selected>1×</option></select></label>
         </div>
       </div>
@@ -160,10 +162,20 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
       <h3>What it assumes</h3>
       <ul>
         <li>Yaw: the beam on the turn side swings into the curve and the other stays straight (owner, 2026-11-21). The swinging beam aims at the road 20 m ahead along the curve (yaw ≈ 20 m × yaw rate ÷ 2 × speed), up to 25°, rate-limited to 90°/s. The exact rule isn't in the firmware spec yet.</li>
-        <li>Leaning is corrected by tilting each mirror so the middle of its cutoff sits where it would with the wheel upright. A tilt is left within each half.</li>
+        <li>Leaning is corrected by tilting each mirror so the middle of its cutoff sits where it would with the wheel upright. A tilt is left within each half. With <b>Cutoff roll</b> on, the levelling also allows for the roll, as the firmware would.</li>
         <li>The IMU reading is perfect. The real gated filter adds a small lag and noise.</li>
         <li>The spot's aim (its axis 1.2° above the cutoff, at the road's horizon) is an assumption; the design doesn't fix it yet.</li>
-        <li>Servo speed, mirror ringing and the cutoff's compound-angle error are not modelled.</li>
+        <li>Servo speed and mirror ringing are not modelled. With <b>Cutoff roll</b> off, each cutoff is drawn as if swinging the beam left it level in the head; with it on, the cutoff is traced through the real mirror (next section).</li>
+      </ul>
+    </section>
+    <section>
+      <h3>Cutoff roll from the swing (design §5, found 2026-11-22)</h3>
+      <ul>
+        <li>The light reaches each mirror straight up from its fixed optic. Once the mirror sends the beam in a given direction, its angle is fully set, so it can't also choose how the cutoff is turned. Swinging a beam sideways by some angle <b>rolls its cutoff by exactly that angle</b>: swinging left lifts the cutoff's left end.</li>
+        <li>Leaning into a turn lowers the cutoff's inside end by the lean angle. On the beam that swings into the turn the two partly cancel: its tilt is <b>lean − swing</b>. The other beam keeps the full lean.</li>
+        <li>With the 20 m look-ahead the swing outgrows the lean in slow, tight turns. In the <b>Slow corner</b> (10 m radius, ~13 km/h) the left beam swings 25° but the wheel leans only ~7°, so its cutoff tilts ~18° the other way and its inside end rises above the road, towards traffic turning across.</li>
+        <li><b>Cap swing</b> (proposed) limits the swing to the lean + 3°, so the swung cutoff stays within 3° of level. It lights less of a slow corner. Firmware-spec §10 holds the open rule.</li>
+        <li>The high-beam spread rolls each low beam by its spread (up to 5°, outer ends up). That's high-beam mode, for use without oncoming traffic.</li>
       </ul>
     </section>
   </div>
@@ -173,7 +185,7 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
 (() => {
   const DT = 1 / 200, T_PLAY = 52, T_SIM = 58, G = 9.81;
   const H_HEAD = 0.8, AIM = -1.2, TAU_ROAD = 4, MIR_MAX = 7.5;
-  const YAW_OUT = 25, YAW_IN = 15, LOOK = 20, HALF_W = 11;
+  const YAW_OUT = 25, YAW_IN = 15, LOOK = 20, HALF_W = 11, CAP_MARGIN = 3;
   const D = Math.PI / 180;
   const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
   const sstep = (e0, e1, x) => { const t = clamp((x - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); };
@@ -188,13 +200,14 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
     { t: 31, name: "Left turn", text: "20 m radius at 29 km/h: about 18° of lean. The left beam swings up to 25° into the curve, toward the road 20 m ahead. The right beam stays straight ahead, so the road you're about to leave and anything coming the other way stay lit. Each mirror also tilts to undo the lean." },
     { t: 37, name: "Right turn", text: "The same turn to the right: now the right beam swings into the curve and the left one stays straight. The fixed light shines straight ahead only, with its cutoff tilted by the full lean." },
     { t: 43, name: "Slow street", text: "Slowing to about 13 km/h on a dark street. In high beam the two spots swing apart by up to 5° each, so the high beam is about 20° wide when slow and narrows back to a pencil beam by 40 km/h (proposed, firmware-spec §12). Switch to High beam to see it." },
+    { t: 47.8, name: "Slow corner", text: "A tight left corner, 10 m radius at about 13 km/h: only ~7° of lean, but the 20 m look-ahead swings the left beam the full 25°. Tick Cutoff roll: the swing rolls the left cutoff ~18° the wrong way, inside end above the road. Tick Cap swing to hold the swing near the lean." },
   ];
   const chapterAt = t => { let i = 0; CHAPTERS.forEach((c, k) => { if (t >= c.t) i = k; }); return i; };
 
   // ---------- ride inputs ----------
   const AMAX = G * Math.tan(10 * D);                   // acceleration that pitches the wheel 10°
   const accAt = t => AMAX * pulse(t, 4.5, 7.5, 0.4) - AMAX * pulse(t, 9.6, 12.6, 0.4) - 1.0 * pulse(t, 43, 47.5, 0.6);
-  const omegaAt = t => 0.4 * pulse(t, 32, 35, 1.0) - 0.4 * pulse(t, 38, 41, 1.0);
+  const omegaAt = t => 0.4 * pulse(t, 32, 35, 1.0) - 0.4 * pulse(t, 38, 41, 1.0) + 0.35 * pulse(t, 48.3, 51, 0.8);
   const N = Math.round(T_SIM / DT) + 1;
   const F = n => new Float32Array(n);
   const S = F(N), V = F(N), X = F(N), Y = F(N), PSI = F(N), OM = F(N), ACC = F(N);
@@ -241,7 +254,9 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
         if (Math.tan(lidF * D) <= 0.12) road = roadImu + 0.7 * (lidF - roadImu);
       }
       // yaw (assumed rule): aim at the road LOOK m ahead along the curve
-      const target = v > 1 ? Math.atan(LOOK * w / (2 * v)) / D : 0;
+      let target = v > 1 ? Math.atan(LOOK * w / (2 * v)) / D : 0;
+      // proposed cap (design §5, 2026-11-22): swing no more than the lean + 3°, so the swung cutoff stays near level
+      if (opt.cap) target = Math.sign(target) * Math.min(Math.abs(target), Math.abs(lean) + CAP_MARGIN);
       const step = 90 * DT;
       // owner, 2026-11-21: the beam on the turn side swings into the curve; the other stays straight ahead
       // high beam only: spread the two spots apart by speed (firmware-spec §12, proposed), rate-limited to 10°/s
@@ -260,8 +275,16 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
         return (Math.asin(clamp(tw / Rr, -1, 1)) - Math.atan2(B, A)) / D;
       };
       const mp = h => clamp(elevBody(h) / 2, -MIR_MAX, MIR_MAX);
+      // with the roll traced: find the mirror elevation that puts the same cutoff point (5° outboard) at `want`
+      const mpRoll = (az, u) => {
+        let lo = -2 * MIR_MAX - 10, hi = 2 * MIR_MAX + 10;
+        for (let k = 0; k < 28; k++) { const mid = (lo + hi) / 2, [h, e] = cutBody(az, mid, u);
+          if (toWorld(h, e, pitch, lean)[1] > want) hi = mid; else lo = mid; }
+        return clamp((lo + hi) / 4, -MIR_MAX, MIR_MAX);
+      };
       const sv = 150 * DT;                             // servo through the 4:1 linkage: ~150°/s at the mirror
-      mL += clamp(mp(byL + 5) - mL, -sv, sv); mR += clamp(mp(byR - 5) - mR, -sv, sv);
+      const tL = opt.roll ? mpRoll(byL, 5) : mp(byL + 5), tR = opt.roll ? mpRoll(byR, -5) : mp(byR - 5);
+      mL += clamp(tL - mL, -sv, sv); mR += clamp(tR - mR, -sv, sv);
       const mpL = mL, mpR = mR;
       R.pitch[i] = pitch; R.lean[i] = lean; R.road[i] = road; R.grade[i] = grade;
       R.mpL[i] = mpL; R.mpR[i] = mpR; R.myL[i] = byL / 2; R.myR[i] = byR / 2;
@@ -283,8 +306,32 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
     return [Math.atan2(l2, f3) / D, Math.asin(clamp(u3, -1, 1)) / D];
   }
 
+  // Cutoff traced through the real fold mirror. The optic sends light straight up (body +z); the mirror normal is the one
+  // that sends the beam's centre to (azimuth h, elevation e), so a sideways swing also rolls the cutoff by the swing.
+  const nrm = v => { const l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; };
+  const refl = (v, n) => { const k = 2 * (v[0] * n[0] + v[1] * n[1] + v[2] * n[2]); return [v[0] - k * n[0], v[1] - k * n[1], v[2] - k * n[2]]; };
+  const dirOf = (h, e) => [Math.cos(e * D) * Math.cos(h * D), Math.cos(e * D) * Math.sin(h * D), Math.sin(e * D)];  // fwd, left, up
+  const N0 = nrm([1, 0, -1]);                                          // nominal 45° mirror: straight up -> straight ahead
+  function cutBody(az, el, u) {                                        // body (h, e) of the cutoff point u° from its centre
+    const src = refl(dirOf(u, 0), N0), n = nrm([dirOf(az, el)[0], dirOf(az, el)[1], dirOf(az, el)[2] - 1]);
+    const o = refl(src, n);
+    return [Math.atan2(o[1], o[0]) / D, Math.asin(clamp(o[2], -1, 1)) / D];
+  }
+  // world points of one module's cutoff, with or without the roll
+  function cutWorld(i, az, el) {
+    const pts = [];
+    for (let u = -HALF_W; u <= HALF_W + 1e-6; u += 1) {
+      const [h, e] = opt.roll ? cutBody(az, el, u) : [az + u, el];
+      pts.push(toWorld(h, e, R.pitch[i], R.lean[i]));
+    }
+    return pts;
+  }
+  // tilt of a cutoff in the rider's view, degrees, + = left end up
+  const tiltOf = pts => { const a = pts[pts.length - 1], b = pts[0]; return Math.atan2(a[1] - b[1], a[0] - b[0]) / D; };
+
   // world elevation of the v4 cutoff: mean of both modules' centre directions
-  const beamElev = i => (toWorld(R.byL[i] + 5, 2 * R.mpL[i], R.pitch[i], R.lean[i])[1] + toWorld(R.byR[i] - 5, 2 * R.mpR[i], R.pitch[i], R.lean[i])[1]) / 2;
+  const anchorElev = (i, az, m, u) => { const [h, e] = opt.roll ? cutBody(az, 2 * m, u) : [az + u, 2 * m]; return toWorld(h, e, R.pitch[i], R.lean[i])[1]; };
+  const beamElev = i => (anchorElev(i, R.byL[i], R.mpL[i], 5) + anchorElev(i, R.byR[i], R.mpR[i], -5)) / 2;
 
   // high beam (spots): same mirrors, axis assumed 1.2° above the cutoff, i.e. at the road's horizon; ~±5° half-intensity
   const SPOT_HALF = 5;
@@ -456,7 +503,7 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
     ctx.fillStyle = col.road; ctx.fill();
     // cutoffs
     const cut = (az, eBody, color) => {
-      const pts = []; for (let hh = az - HALF_W; hh <= az + HALF_W + 1e-6; hh += 1) pts.push(toWorld(hh, eBody, pitch, lean));
+      const pts = cutWorld(i, az, eBody);
       ctx.beginPath(); pts.forEach(([a, e], k) => k ? ctx.lineTo(px(a), py(e - g)) : ctx.moveTo(px(a), py(e - g)));
       for (let k = pts.length - 1; k >= 0; k--) ctx.lineTo(px(pts[k][0]), py(pts[k][1] - g - 3.2));
       ctx.closePath(); const gr = ctx.createLinearGradient(0, py(pts[0][1] - g), 0, py(pts[0][1] - g - 3.2));
@@ -492,9 +539,16 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
     ["Mirror yaw L", i => sgn(R.myL[i]) + "°", i => [R.myL[i], -12.5, 12.5, col.left]],
     ["Mirror yaw R", i => sgn(R.myR[i]) + "°", i => [R.myR[i], -12.5, 12.5, col.right]],
   ];
-  roEl.innerHTML = ROWS.map((r, k) => `<div class="ro"><span class="k">${r[0]}</span><span id="rv${k}"></span>${r[2] ? `<div class="bar"><b style="left:50%"></b><i id="rb${k}"></i></div>` : ""}</div>`).join("");
+  const ROLL_ROWS = [
+    ["Cutoff tilt L", i => tiltText(tiltOf(cutWorld(i, R.byL[i], 2 * R.mpL[i]))), i => [tiltOf(cutWorld(i, R.byL[i], 2 * R.mpL[i])), -25, 25, col.left]],
+    ["Cutoff tilt R", i => tiltText(tiltOf(cutWorld(i, R.byR[i], 2 * R.mpR[i]))), i => [tiltOf(cutWorld(i, R.byR[i], 2 * R.mpR[i])), -25, 25, col.right]],
+  ];
+  const tiltText = d => Math.abs(d) < 0.5 ? "level" : Math.abs(d).toFixed(0) + "° " + (d > 0 ? "left" : "right") + " end up";
+  let rows = ROWS;
+  const buildRO = () => { rows = opt.roll ? ROWS.concat(ROLL_ROWS) : ROWS;
+    roEl.innerHTML = rows.map((r, k) => `<div class="ro"><span class="k">${r[0]}</span><span id="rv${k}"></span>${r[2] ? `<div class="bar"><b style="left:50%"></b><i id="rb${k}"></i></div>` : ""}</div>`).join(""); };
   function readouts(i) {
-    ROWS.forEach((r, k) => {
+    rows.forEach((r, k) => {
       document.getElementById("rv" + k).textContent = r[1](i);
       if (r[2]) {
         const [v, lo, hi, c] = r[2](i), z = 50, p = clamp((v - lo) / (hi - lo) * 100, 0, 100), b = document.getElementById("rb" + k);
@@ -506,12 +560,18 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
     const glareV = !isFinite(tv) || tv > 80, glareF = !isFinite(tf) || tf > 80;
     let html = `<span class="pill ${glareV ? "bad" : "ok"}">v4 cutoff ${fmt(tv)}</span>`;
     if (opt.fixed) html += `<span class="pill ${glareF ? "bad" : ""}">fixed ${fmt(tf)}</span>`;
+    if (opt.roll) {
+      const above = [["left", cutWorld(i, R.byL[i], 2 * R.mpL[i])], ["right", cutWorld(i, R.byR[i], 2 * R.mpR[i])]]
+        .map(([n, pts]) => [n, Math.max(...pts.map(p => p[1])) - R.grade[i]]).filter(([, top]) => top > 0.05);
+      html += above.length ? above.map(([n, top]) => `<span class="pill bad">${n} cutoff end ${top.toFixed(1)}° above the road</span>`).join("")
+                           : `<span class="pill ok">both cutoffs below the road's level</span>`;
+    }
     html += opt.high ? `<span class="pill">high beam: spots spread ±${R.spread[i].toFixed(1)}° at ${(V[i] * 3.6).toFixed(0)} km/h</span>` : `<span class="pill">low beam: cutoff only</span>`;
     stEl.innerHTML = html;
   }
 
   // ---------- controls ----------
-  const opt = { high: false, lidar: true, fixed: true, speed: 1, newHill: true };
+  const opt = { high: false, lidar: true, fixed: true, speed: 1, newHill: true, roll: false, cap: false };
   const chipsEl = document.getElementById("chips");
   CHAPTERS.forEach((c, k) => { const b = document.createElement("button"); b.className = "chip"; b.id = "chip" + k; b.textContent = c.name; b.setAttribute("aria-pressed", "false"); b.onclick = () => { t = c.t + 0.001; render(); }; chipsEl.appendChild(b); });
   const playBtn = document.getElementById("play"), scrub = document.getElementById("scrub"), clock = document.getElementById("clock");
@@ -527,6 +587,8 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
   document.getElementById("modeLow").onclick = () => setMode(false);
   document.getElementById("modeHigh").onclick = () => setMode(true);
   document.getElementById("optFixed").onchange = e => { opt.fixed = e.target.checked; render(); };
+  document.getElementById("optRoll").onchange = e => { opt.roll = e.target.checked; simulate(opt.lidar); buildRO(); render(); };
+  document.getElementById("optCap").onchange = e => { opt.cap = e.target.checked; simulate(opt.lidar); render(); };
   document.getElementById("optSpeed").onchange = e => { opt.speed = +e.target.value; };
   document.addEventListener("keydown", e => { if (e.code === "Space" && e.target === document.body) { e.preventDefault(); setPlay(!playing); } });
 
@@ -551,7 +613,7 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
     requestAnimationFrame(frame);
   }
   simulate(opt.lidar);
-  fit(); render();
+  buildRO(); fit(); render();
   new ResizeObserver(() => { fit(); render(); }).observe(document.querySelector(".board"));
   requestAnimationFrame(frame);
 })();

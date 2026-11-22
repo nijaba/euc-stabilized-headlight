@@ -164,6 +164,8 @@ If the remote disconnects, the light keeps its current mode. The button on the h
 
 Layout v4 (adopted 2026-11-21) has no cornering lights: the beam on the turn side swings into the curve instead and the other stays straight (design §5). The yaw rule for v4 is still to be written here. This section and its tests (U-CRN) apply to v3.
 
+**Constraint on the v4 yaw rule (finding, 2026-11-22; design §5, cutoff roll in turns):** swinging a beam sideways rolls its cutoff by the swing angle, against the lean. The rule must keep the swung cutoff near level, so the proposal is `swing = min(look-ahead swing, |lean| + 3°)`, and the mirror pitch must level the cutoff traced through the mirror rather than a level line. Planned test: U-TURN-01. The outside beam's full-lean tilt is an open decision.
+
 Two fixed lights aimed 30° outward and 10° down (design §3). Left on D3, right on a back-pad GPIO, each through a 700 mA driver's PWM input.
 
 - **Inputs:** lean angle (roll about the learned forward axis, from the same gated filter as pitch) and yaw rate (gyro about the learned vertical axis). `now` is passed in.
@@ -231,7 +233,7 @@ yaw_beam_right = clamp(turn_yaw_right - spread, -YAW_OUT, 0);
 | Rate limit | 10°/s | Spread changes slowly and smoothly |
 
 - **Estimated effect** (two ~10° beams, design §3 figures): at full spread the high beam is ~20° wide with a flat top; the centre drops to about half the peak (~12,500 cd), so ANSI throw ~225 m instead of ~320 m (~110 m instead of ~160 m to 1 lux). At `V_NARROW` and above, unchanged.
-- **Low beam:** because each low beam shares its mirror with a spot, the low beams spread by the same angle in high-beam mode (about like v3's 4° toe-out at 29 km/h). The cutoff height is unchanged; the small compound-angle tilt is covered by B-OPT-08's measurement.
+- **Low beam:** because each low beam shares its mirror with a spot, the low beams spread by the same angle in high-beam mode (about like v3's 4° toe-out at 29 km/h). The cutoff's centre height is unchanged, but each low-beam cutoff rolls by its spread (up to 5°, outer end up; design §5, cutoff roll in turns). That's in high-beam mode, used without oncoming traffic; B-OPT-08 measures it.
 - **Safety:** spreading only swings beams sideways, never up, so invariants 1–4 hold. In low-beam mode the spread is always 0. If the speed is unknown (see the speed source below), the spread holds at a middle value (2.5°) rather than guessing.
 
 **Speed source: estimated from the IMU (owner's decision, 2026-11-21).** The head has no speed sensor, and v4's turn steering needs speed too. Of the options (the wheel's speed over BLE, an IMU estimate, a GPS module), the owner chose the IMU estimate: no pairing with each wheel brand, no extra part or weight.
