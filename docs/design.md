@@ -322,6 +322,21 @@ v4 has fewer separate openings but about 80% more seal length, so more places fo
 - **Checks:** C-PKG-01 to 16 pass for v4 (14–16 are v4-only: lidar height, inward beam clearing the lidar bay, gimbal frame clearing the bay).
 - **Trade against v3:** v4 gains steering into turns, a roughly levelled cutoff when leaning (raise the inside half, lower the outside), software-adjustable spread and a brow-free shape. It costs four servos, gimbals, more firmware and calibration, and ~80 mm more width.
 - **Turning behaviour (owner decision, 2026-11-21):** in a turn, only the beam on the turn side swings into the curve, up to 25° outward through the clear wraparound side. The other beam stays straight ahead, so the road being left and anything coming the other way stay lit. Both mirrors still tilt to undo the lean. The yaw target is to be specified in the firmware spec if v4 is adopted (the ride demo uses "aim at the road 20 m ahead along the curve").
+- **Cutoff roll in turns (finding, 2026-11-22; proposal, owner to decide).** The light reaches each mirror straight up from its fixed optic. Once the mirror sends the beam in a given direction its orientation is fully set, so a sideways swing also turns the beam pattern about its own axis: **the cutoff rolls by the swing angle** (checked numerically; exact for a level beam, independent of how the gimbal's axes are arranged). A swing into the turn rolls the cutoff against the lean. Results:
+  - **Turn-side beam:** tilt ≈ lean − swing. **Outside beam:** tilt = the full lean (inside end down, outside end up).
+  - **The 20 m look-ahead over-corrects in slow, tight turns.** The swing grows with 1/radius whatever the speed, while the lean grows with speed²:
+
+    | Turn | Lean | Swing (20 m rule) | Turn-side tilt |
+    |---|---|---|---|
+    | 10 m radius, 15 km/h | 10° | 25° | 15° the wrong way |
+    | 20 m radius, 15 km/h | 5° | 25° | **20° the wrong way** |
+    | 20 m radius, 35 km/h | 26° | 25° | about level |
+    | 40 m radius, 25 km/h | 7° | 14.5° | 7.5° the wrong way |
+
+    "The wrong way" lifts the cutoff's inside end, which in a turn across traffic points at oncoming drivers. In the ride demo's slow corner (10 m, ~13 km/h) that end sits about 0.7° above the road.
+  - **Proposed fix:** cap the swing at the lean + 3° (`swing = min(look-ahead swing, |lean| + 3°)`), so the swung cutoff stays within about 3° of level. It lights less of a slow corner. The levelling must also use the cutoff traced through the mirror, not a level line, or the whole cutoff sits about 1.5° high in a turn.
+  - **Still open, the outside beam:** it keeps the full lean, so in the demo's 20 m turn at 29 km/h its outer end sits about 0.7° above the road even with the cap. Options: anchor each cutoff's levelling on its highest end rather than its middle (free; costs reach on that side); also swing the outside beam into the turn (only mirrors move, but reverses the "other beam stays straight" decision); or rotate each FILIPPA above its fixed LED (+2 servos, ~+20–25 g, ~+$25; breaks the "only mirrors move" constraint). A third mirror axis can't help: a flat mirror's orientation is already fixed by the beam direction.
+  - The ride demo shows all of this with **Cutoff roll** and **Cap swing** (`docs/v4-ride-demo.html`). The high-beam spread also rolls each low beam by its spread, up to 5° (firmware-spec §12).
   - **Consequence:** no beam ever swings inward. Done 2026-11-21: inward travel cut to a 2.5° aim trim, and the body narrowed (see "v4 at 150 mm" above).
 
 ## 6. Mounting
@@ -451,7 +466,7 @@ Seven LEDC channels are used (four servos, two DIM, the ring LED) of the ESP32-S
 - [ ] Larger mirror (115 × 55 mm, about 5× the moment of inertia): does the servo still settle in under 50 ms (B-MIR-01)?
 - [ ] Two free GPIO for the right mirror's servos (v4): the XIAO ESP32-S3's back pads MTDI/GPIO41 and MTMS/GPIO42. Confirm on the board.
 - [x] ~~Cornering-light glare and the toed-out cutoff tilt (B-CRN-01, B-OPT-08)~~ v3 only; v4 has neither (2026-11-21).
-- [ ] v4 turn steering: write the yaw rule into the firmware spec (the ride demo aims the turn-side beam at the road 20 m ahead, up to 25°) and the safety invariant that goes with it.
+- [ ] v4 turn steering: write the yaw rule into the firmware spec (the ride demo aims the turn-side beam at the road 20 m ahead, up to 25°) and the safety invariant that goes with it. The rule must limit the cutoff roll the swing causes (§5, cutoff roll in turns: proposed cap at the lean + 3°), and the outside beam's tilt needs a decision.
 - [x] Speed source for v4 (high-beam width and turn steering): estimated from the IMU, with resets when still and corrections in turns (owner's decision, 2026-11-21; firmware-spec §12). Its accuracy on long straights is checked in R-SPD-01.
 - [x] v4 with no inward yaw: narrow the body (§5). Done 2026-11-21 with the TFS20-L (now under the beams): ~151 mm, checks and mass re-run.
 - [x] How calibration and settings are controlled: a calibration page over the head's own Wi-Fi, with the button and remote kept as a full fallback (decided 2026-11-21; firmware-spec §11).
