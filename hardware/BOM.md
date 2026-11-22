@@ -146,6 +146,17 @@ For firmware and bench testing before the protoboard or any PCB. Most of it is t
 | Lux meter | Basic digital lux meter | 1 | 20.00 | 20.00 | [search](https://www.amazon.com/s?k=digital+lux+meter) | No (test tool) |
 | **Total** | | | | **339.43** | | about $260 of it goes into the build |
 
+**Bench tools (skip what you own, added 2026-11-22).** The phase 2–3 bench tests need these too. They are general workshop tools, so they are not in the kit total above. Prices are estimates.
+
+| Item | Part / spec | Qty | Unit $ | Ext $ | Source | Needed for |
+|---|---|---|---|---|---|---|
+| Bench power supply | Adjustable DC supply, 0–30 V, 5 A, with current limit | 1 | 60.00 | 60.00 | [search](https://www.amazon.com/s?k=adjustable+dc+bench+power+supply+30V+5A) | Reverse polarity, overvoltage, the 12 V / 9 V bank fallback (B-PWR-02 to B-PWR-04) |
+| Multimeter | Digital multimeter with a 10 A range | 1 | 25.00 | 25.00 | [search](https://www.amazon.com/s?k=digital+multimeter) | Wiring checks, DIM voltage, driver current |
+| Thermometer | K-type thermocouple meter or IR thermometer | 1 | 20.00 | 20.00 | [search](https://www.amazon.com/s?k=k+type+thermocouple+thermometer) | Fuse at about 50 °C, diode temperature (B-PWR-01, B-PWR-02) |
+| USB-C data cable | USB-C data cable (not charge-only) | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=usb+c+data+cable) | Flashing the XIAO, serial telemetry |
+| Soldering iron | Temperature-controlled iron and solder | 1 | 40.00 | 40.00 | [search](https://www.amazon.com/s?k=temperature+controlled+soldering+iron) | The protoboard (phase 3) |
+| **Total** | | | | **153.00** | | |
+
 ## 3D-printed parts (no purchase)
 
 | Part | Notes |
