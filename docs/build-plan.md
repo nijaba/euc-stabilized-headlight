@@ -40,7 +40,7 @@ Goal: a parametric model and renders of the whole head prove it fits, sweeps and
 
 Goal: the IMU filter drives the servo, checked with a laser pointer on the mirror.
 
-- [ ] PlatformIO project in `firmware/` with a `native` test environment and a `xiao_esp32s3` board environment. Native done 2026-11-22; the board environment waits on the platform choice (design §10)
+- [ ] PlatformIO project in `firmware/` with a `native` test environment and a `xiao_esp32s3` board environment. Native done 2026-11-22; board environment builds 2026-11-22 (pioarduino, design §7), not yet flashed
 - [x] Test-plan ID check (U-PLAN-01), 2026-11-22
 - [x] Pure modules: pitch filter, road follow, mirror command (U-FILT, U-ROAD, U-MIR), host tests pass 2026-11-22
 - [ ] Hardware layer: LSM6DSO32 over I²C, servo PWM on LEDC

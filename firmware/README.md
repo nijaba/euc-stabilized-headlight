@@ -10,10 +10,18 @@ pio test -e native
 
 These run on the computer, with no board. They include the test-plan ID check (U-PLAN-01).
 
+## Build for the board
+
+```bash
+pio run -e xiao_esp32s3
+pio run -e xiao_esp32s3 -t upload && pio device monitor
+```
+
 ## Layout
 
 ```
-platformio.ini            environments: native (host tests); the board environment comes later
+platformio.ini            environments: native (host tests), xiao_esp32s3 (board)
+src/main.cpp              board entry point (Arduino); not built on the host
 lib/headlight_core/src/   pure logic: no Arduino, no clock, no hardware I/O
   pitch_filter.*          gated complementary pitch filter (spec §2)
   road_follow.*           hill follower: road grade from the IMU (spec §2)
@@ -30,4 +38,5 @@ test/
 
 - Pure logic takes `dt`, `now` and sensor readings as arguments; it never reads the clock or hardware.
 - Every test function's name starts with its test-plan ID, for example `test_U_FILT_02_...`, and the row is added to the plan in the same change. When a test passes, mark its row's status.
-- The board environment (`xiao_esp32s3`) and the hardware layer wait on the platform choice (design §10: Arduino-ESP32 3.x needs the community pioarduino platform).
+- The board environment (`xiao_esp32s3`) uses Arduino-ESP32 3.x through the community pioarduino platform, pinned to one release in `platformio.ini` (design §7). It needs PlatformIO Core 6.2 or later. To move to a newer release, pick one at least 14 days old and update the URL and digest together.
+- `src/main.cpp` is the board entry point. The host build skips it; for now it only prints a boot line. The hardware layer comes next.
