@@ -32,6 +32,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - `CONTRIBUTING.md` and `SECURITY.md` (private reporting for safety faults as well as security issues).
 
 ### Changed
+- v4 ride demo: the “Old hill follower (4 s)” comparison is removed; the demo runs only the adopted hill follower (firmware-spec §2).
 - v4 model: the curved clear sides are now the only version (flat front dropped, owner 2026-11-21) and the default; `render.sh` renders only it. Per-side yaw (`yaw_l`, `yaw_r`) so the turn renders show only the turn-side beam swinging. Site headline mentions turns.
 - Layout v4 adopted (owner, 2026-11-21): two mirrors on 2-axis gimbals, four servos, clear wraparound sides, lidar in the body, no cornering lights. Design, firmware spec, build plan, CLAUDE.md, BOM (≈ $440 per unit with the lidar, ~393 g) and README updated; `render.sh` now gates on v4.
 - Hill follower (firmware-spec §2, adopted 2026-11-21): removes the pitch the measured acceleration explains, then follows with τ = 0.3 s instead of 4 s, freezing 0.3 s after hard acceleration or a jolt. Fixes the beam dropping while accelerating and lagging over crests. U-ROAD-01 and R-AIM-02 now require 1 s.
