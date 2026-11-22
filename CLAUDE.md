@@ -12,7 +12,7 @@ The owner decided these (2026-11-20). Ask before trading one away.
 
 - **Mirror steering.** The LEDs and heatsinks never move. Only the mirrors tilt to steer the beams.
 - **External power only.** The head has no battery. USB-C PD is negotiated at the power bank, in its pouch, and only plain DC reaches the head.
-- **Material cost ≤ $450 per unit, with the optional lidar fitted** (raised from $350 on 2026-11-20). This excludes the power bank, tools, and packs left over after one unit. The current estimate is about $403 for layout v4 with the TFS20-L lidar (2026-11-22).
+- **Material cost ≤ $450 per unit, with the optional lidar fitted** (raised from $350 on 2026-11-20). This excludes the power bank, tools, and packs left over after one unit. The current estimate is about $409 for layout v4 with the TFS20-L lidar (2026-11-22).
 - **Head weight ≤ 400 g, with the optional lidar fitted** (raised from 350 g on 2026-11-21).
 - **The lidar stays optional.** The firmware and housing must work fully without it.
 - **No personal data in the repository:** no real names, hostnames, accounts or locations in code, docs, tests or commit messages. Personal build or ride notes go in `*.local.md`, which git ignores. The one approved exception is the repository's GitHub handle, in repository links and `CODEOWNERS`.

@@ -381,7 +381,7 @@ v4 has fewer separate openings but about 80% more seal length, so more places fo
 Seven LEDC channels are used (four servos, two DIM, the ring LED) of the ESP32-S3's eight.
 
 **5 V rail:**
-- Pololu D36V28F5 feeds the four servos and the XIAO's 5 V pin (3.2 A covers four 5 g servos moving at once) through a 1N5817.
+- Pololu D30V30F5 feeds the four servos and the XIAO's 5 V pin (3.4 A covers four 5 g servos moving at once) through a 1N5817. It replaced the D36V28F5 (3.2 A, same footprint) when that went out of stock (2026-11-22).
 - The diode makes it safe to plug in USB for flashing while the head is powered.
 - 470 µF capacitor on the servo rail.
 
