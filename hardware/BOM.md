@@ -138,7 +138,7 @@ For firmware and bench testing before the protoboard or any PCB. Most of it is t
 | Servos | 5 g-class digital micro servo (section C) | 4 | 10.00 | 40.00 | [search](https://www.amazon.com/s?k=5g+digital+micro+servo+metal+gear) | Yes (v4 uses all four) |
 | Fallback servo | EMAX ES08MD II, 12 g metal gear | 1 | 14.00 | 14.00 | [link](https://www.readymaderc.com/products/details/emax-es08mdii-12g-digital-metal-gear-servo) | If the 5 g servos jitter |
 | Mirror test pieces | Front-surface mirror offcuts, MR63ZZ bearings, 3 mm rod, pushrod kit (section C) | 1 | 31.00 | 31.00 | see section C | Bearings, rod and kit yes |
-| Laser module | 5 V 650 nm dot laser module | 1 | 5.00 | 5.00 | [search](https://www.amazon.com/s?k=5V+650nm+laser+dot+module) | No (test tool) |
+| Laser module | 5 V 650 nm dot laser, wired: brass barrel (12 mm is easiest to clamp) with two leads, adjustable focus, ≤ 5 mW. Not the board-mounted KY-008 type, which can't be aimed apart from the breadboard | 1 | 5.00 | 5.00 | [search](https://www.amazon.com/s?k=5V+650nm+laser+dot+module+12mm+brass+adjustable+focus) | No (test tool). Never look into the beam or its reflection off the mirror |
 | Breadboard + jumpers | Full-size breadboard and jumper wire kit | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=breadboard+jumper+wire+kit) | No (test tool) |
 | Optics bench | 2 BuckBlocks (phase 3 tests both channels), 2 XP-L HI on stars, 1 FILIPPA-STVZO, 1 Carclo 10003 + holder, the heatsink (sections B, C) | 1 | 71.00 | 71.00 | see sections B, C | Yes |
 | Lidar | Benewake TFS20-L (section H), to test its range through a window early | 1 | 55.00 | 55.00 | [link](https://en.benewake.com/TFS20L/index.html) | Yes |
