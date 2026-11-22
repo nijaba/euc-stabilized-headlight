@@ -36,7 +36,7 @@ An EUC pitches nose-down when it accelerates and nose-up when it brakes, by up t
    │   ├─► BuckBlock #2 ─► 2× XP-L HI   (low beams, FILIPPA)      │
    │   └─► 5 V buck ─► 4 servos ─► 2 mirrors (pitch + yaw each)   │
    │                 └─► XIAO ESP32-S3 ◄─I²C─► LSM6DSO32 IMU      │
-   │                          ▲   └─I²C─► TF02-Pro lidar          │
+   │                          ▲   └─I²C─► TFS20-L lidar (3.3 V)   │
    │                          ├── BLE ── wrist remote (nRF52840)  │
    │                          └── Wi-Fi ── calibration page       │
    └──────────────────────────────────────────────────────────────┘
@@ -45,11 +45,12 @@ An EUC pitches nose-down when it accelerates and nose-up when it brakes, by up t
 Top view of the head (layout v4, front at the top):
 
 ```
-   ╭── clear side ──┬──────────────┬── clear side ──╮
-   │  FILIPPA  spot │  lidar bay   │ spot  FILIPPA  │
-   │   ╲ mirror ╱   │  (TF02-Pro)  │   ╲ mirror ╱   │
-   │  2 servos      │              │      2 servos  │
-   ╰── left module ─┴─ electronics ┴─ right module ─╯
+   ╭──────── one clear piece, front and both sides ────────╮
+   │  FILIPPA  spot    ┃ post ┃    spot  FILIPPA           │
+   │   ╲  mirror  ╱    ┃      ┃    ╲  mirror  ╱            │
+   │  2 servos ──── electronics board ──── 2 servos        │
+   ╰── left module ────────────────────── right module ────╯
+     lidar (TFS20-L) in a small pod on the roof, at the front
         aluminium heatsink floors, fins fore-aft
                 1/4"-20 mount on the back
 ```
@@ -63,9 +64,9 @@ Top view of the head (layout v4, front at the top):
 | Low beam (cutoff) at 10 m | ~62 lux | ~81 lux |
 | Input power | ~21 W | ~30 W |
 | Runtime on a 20 Ah bank (~50 Wh usable at 15 V) | ~2.4 h | ~1.7 h |
-| Head weight (limit: 400 g with lidar) | ~399 g with lidar (packaging model, measured shell; 1 g of margin, see design §10) | |
-| Head size | ~200 × 70 × 111 mm, a rounded light bar | |
-| Material cost per unit (limit: $450 with lidar) | ~$440 with the lidar, + power bank (~$342 without the lidar) | |
+| Head weight (limit: 400 g with lidar) | ~341 g with lidar (packaging model, measured shell; 59 g of margin, see design §10) | |
+| Head size | ~151 × 72 × 112 mm, a rounded light bar (~128 mm tall at the lidar pod) | |
+| Material cost per unit (limit: $450 with lidar) | ~$401 with the lidar, + power bank (~$342 without the lidar) | |
 
 The low-beam figures were estimated with v3's 4° toe-out; v4 aims both low beams straight ahead outside turns, so the centre should be a little brighter.
 
@@ -94,7 +95,7 @@ The phases and their progress are in [`docs/build-plan.md`](docs/build-plan.md).
 
 - This is an experimental project. Test it carefully, and ride with a backup light until it's proven.
 - Lighting rules differ between countries. Aim the low beam so it doesn't dazzle other road users. Self-levelling helps with this, but only if it's calibrated.
-- The optional TF02-Pro is a Class 1 (eye-safe) laser device.
+- The optional TFS20-L lidar is a Class 1 (eye-safe) laser device.
 
 ## License
 

@@ -69,8 +69,8 @@ def budget(g, shell_mm3, hood_mm3):
         "2x cornering driver (700 mA buck)": cornering * 2 * 2,
     }
     if g["lidar"]:
-        parts["TF02-Pro lidar"] = 50
-        parts["Lidar gasket + screws"] = 2
+        parts["Lidar (v3 TF02-Pro, v4 TFS20-L)"] = g.get("lidar_g", 50)
+        parts["Lidar window, gasket + screws"] = g.get("lidar_mount_g", 2)
     return parts
 
 

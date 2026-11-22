@@ -5,6 +5,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ## [Unreleased]
 
 ### Added
+- Owner's render review (2026-11-21): v4 body narrowed from 200 to ~151 mm (target 150). The Benewake TFS20-L lidar (1.35 g, 3.3 V) replaces the TF02-Pro in a small roof pod, the modules sit side by side around a centre post, one clear piece wraps the whole front, inward yaw is cut to a 2.5° aim trim, and an exploded render is added. Head ~341 g (was ~399 g), material cost ~$401 with the lidar (was ~$440). C-PKG-18 now checks against the inner skin, which found and fixed a mirror end touching the front wall; body taper 4 mm, clear-corner radius 12 mm, front clearance 5 mm. BOM, bench kit (two BuckBlocks, a TFS20-L), design §5/§9, firmware-spec §8 and tests C-PKG-14..16/18, B-LID-02, B-THM-03 updated. Mirror-damping options recorded as an open question.
 - Proposal: high beam widened at low speed by swinging the two spots apart (up to 5° each, narrowing by 40 km/h), firmware-spec §12; speed estimated from the IMU (owner's decision), with resets when still and corrections in turns. Ride demo shows it.
 - Site and README say the project is a concept design and invite ideas as GitHub issues rather than builds.
 - GitHub Pages serves `docs/`, so the README's demo link opens the live page (`docs/.nojekyll` serves the files as they are).

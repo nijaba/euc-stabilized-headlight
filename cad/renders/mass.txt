@@ -22,7 +22,7 @@ Mount boss + 1/4"-20 insert                                 10
 Gland (M8), vent, button, desiccant                          9
 2x cornering light (LED, optic, plate, window)              25
 2x cornering driver (700 mA buck)                            4
-TF02-Pro lidar                                              50
-Lidar gasket + screws                                        2
+Lidar (v3 TF02-Pro, v4 TFS20-L)                             50
+Lidar window, gasket + screws                                2
 Total                                                      401
 C-MASS-01 2F+2S+lidar: 401 g vs 400 g limit: FAIL

@@ -30,7 +30,7 @@ To explore, open `headlight.scad` in OpenSCAD and change `view` (`assembly`, `cu
 
 ## Layout v4 (adopted 2026-11-21)
 
-`headlight-v4.scad` models the adopted layout: two independent 2-axis mirror modules, the lidar on its side between them, and one curved clear piece per side across the front and round the corner (`wrap_sides = true`, the default; the flat front was dropped on 2026-11-21). No cornering lights or brow. `render.sh` renders it as `renders/v4-*.png` and writes its mass to `renders/mass-v4.txt`; its C-PKG checks and mass set the exit status, and v3's mass is reported only. Extra variables: `yaw` (outward-positive), `yaw_l` and `yaw_r` to swing one side only (the turn renders swing the left one), `yaw_max`, `yaw_out_max`, `r_wrap`, `wrap_side_min`.
+`headlight-v4.scad` models the adopted layout: two independent 2-axis mirror modules side by side around a centre post, a TFS20-L lidar in a small pod on the roof, and one curved clear piece across the whole front and round both corners (`wrap_sides = true`, the default; the flat front was dropped on 2026-11-21, the lidar bay on 2026-11-21 for a ~151 mm body). No cornering lights or brow. `render.sh` renders it as `renders/v4-*.png`, including an exploded view and writes its mass to `renders/mass-v4.txt`; its C-PKG checks and mass set the exit status, and v3's mass is reported only. Extra variables: `yaw` (outward-positive), `yaw_l` and `yaw_r` to swing one side only (the turn renders swing the left one), `yaw_in_max` (the inward aim trim), `yaw_out_max`, `r_wrap`, `wrap_side_min`, `post_w`, `pivot_boss`, `lidar` (envelope). `fit-v4.scad` checks against `skin_outer()`, the body plus the roof pod.
 
 ## Results (2026-11-21)
 

@@ -140,9 +140,9 @@ Inputs:
 
 If the remote disconnects, the light keeps its current mode. The button on the head mirrors the remote's actions.
 
-## 8. Lidar road-slope fusion (optional TF02-Pro)
+## 8. Lidar road-slope fusion (optional TFS20-L)
 
-- **Input:** range `d` and signal strength at 100 Hz, over I²C.
+- **Input:** range `d` and signal strength at 100 Hz, over I²C (TFS20-L at its default address 0x10; TF02-Pro until 2026-11-21). In sunlight the TFS20-L reaches only about 9 m on dark asphalt, so "no return" will be more frequent than with the TF02-Pro. The crest rule below already answers it in the safe direction (a small downward bias, then the IMU estimate); B-LID-01 will show how often it happens.
 - **Grade:** `φ = atan2(h − d·sin β, d·cos β)`, where `β` is the ray's true depression angle from the IMU.
 - **Filtering:** median over about 100 ms, then rate-limited.
 
