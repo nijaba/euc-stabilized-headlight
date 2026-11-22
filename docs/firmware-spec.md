@@ -1,7 +1,7 @@
 # Firmware Specification
 
 - **Target:** Seeed XIAO ESP32-S3.
-- **Framework:** Arduino-ESP32 core 3.x under PlatformIO.
+- **Framework:** Arduino-ESP32 core 3.x under PlatformIO, through the pinned pioarduino platform (design §7).
 - **BLE:** NimBLE-Arduino, acting as an HID host.
 - **Pin map:** see [`design.md` §7](design.md#7-electronics).
 

@@ -21,7 +21,7 @@ Current choices that are not firm constraints (change them through the design do
 
 ## Commands
 
-`firmware/` is a PlatformIO project. The host tests run now; the board environment comes with the hardware layer (build plan phase 2, waiting on the platform choice in design §10):
+`firmware/` is a PlatformIO project. Both environments build; the board one uses the pinned pioarduino platform (design §7) and needs PlatformIO Core 6.2 or later:
 
 ```bash
 pio test -e native          # automated firmware tests on the host, including the test-plan ID check
