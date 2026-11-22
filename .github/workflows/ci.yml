@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - id: diff
-        name: Firmware, test plan or CI touched?
+        name: Firmware code, test plan or CI touched?
         env:
           BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
           HEAD: ${{ github.sha }}
@@ -34,7 +34,12 @@ jobs:
           if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
             echo "firmware=true" >> "$GITHUB_OUTPUT"; exit 0
           fi
-          if git diff --name-only "$BASE" "$HEAD" | grep -qE '^(firmware/|docs/test-plan\.md$|\.github/workflows/)'; then
+          # What the jobs read: firmware/ (but not its Markdown), the test plan (U-PLAN-01), this workflow.
+          # No grep -q: under pipefail its early exit can SIGPIPE the command before it.
+          relevant=$(git diff --name-only "$BASE" "$HEAD" | grep -vE '^firmware/.*\.md$' \
+                       | grep -E '^(firmware/|docs/test-plan\.md$|\.github/workflows/)' || true)
+          echo "Files the firmware jobs depend on:"; echo "${relevant:-  (none)}"
+          if [ -n "$relevant" ]; then
             echo "firmware=true" >> "$GITHUB_OUTPUT"
           else
             echo "firmware=false" >> "$GITHUB_OUTPUT"

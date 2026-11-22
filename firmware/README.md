@@ -36,7 +36,7 @@ Wire the IMU to D4/D5 (STEMMA QT), the left pitch servo to D10 and the left yaw 
 
 ## CI
 
-`.github/workflows/ci.yml` runs the host tests and the board build on every PR and on main, when `firmware/`, the test plan or the workflow change. "CI passed" is required to merge into main (branch protection, 2026-11-22). It runs on every PR, and passes when the firmware jobs pass or were skipped because nothing they cover changed. Actions are pinned by SHA; Dependabot proposes updates after 14 days.
+`.github/workflows/ci.yml` runs the host tests and the board build on every PR and on main, only when something they read changes: `firmware/` (except its Markdown), `docs/test-plan.md` (U-PLAN-01) or the workflow. Other PRs (BOM, design, site) skip both jobs. "CI passed" is required to merge into main (branch protection, 2026-11-22). It runs on every PR, and passes when the firmware jobs pass or were skipped because nothing they cover changed. Actions are pinned by SHA; Dependabot proposes updates after 14 days.
 
 ## Layout
 
