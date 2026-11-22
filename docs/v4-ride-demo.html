@@ -131,7 +131,6 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
         <div class="opts">
           <span class="seg" role="group" aria-label="Beam mode"><button class="chip" id="modeLow" aria-pressed="true">Low beam</button><button class="chip" id="modeHigh" aria-pressed="false">High beam</button></span>
           <label><input type="checkbox" id="optLidar" checked> Lidar fitted</label>
-          <label><input type="checkbox" id="optHill"> Old hill follower (4 s)</label>
           <label><input type="checkbox" id="optFixed" checked> Fixed light</label>
           <label><input type="checkbox" id="optRoll"> Cutoff roll from the swing</label>
           <label><input type="checkbox" id="optCap"> Cap swing at lean + 3° (proposed)</label>
@@ -151,7 +150,7 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
       <ul>
         <li>Pitch follows firmware-spec §2: the mirror moves by <code>−err/2 + aim_down/2</code>, clamped to ±7.5°.</li>
         <li>With the lidar fitted, the road estimate blends 70% toward the slope it measures over the next 12 m, and ignores anything steeper than +12% (§8).</li>
-        <li><b>Hill follower</b> (firmware-spec §2, adopted 2026-11-21) removes the pitch the measured acceleration explains, then follows the road with a 0.3 s time constant, so a grade change settles in under 1 s. It freezes for 0.3 s after anything harder than 1 m/s². Tick “Old hill follower” to compare with the earlier 4 s version.</li>
+        <li><b>Hill follower</b> (firmware-spec §2, adopted 2026-11-21) removes the pitch the measured acceleration explains, then follows the road with a 0.3 s time constant, so a grade change settles in under 1 s. It freezes for 0.3 s after anything harder than 1 m/s².</li>
         <li>The wheel pitches up to ±10° when accelerating or braking (the balance angle for 1.7 m/s²). The servo moves the mirror at about 150°/s.</li>
         <li><b>Beam modes</b> (firmware-spec §7: click toggles low and high, hold flashes high). Low beam: the two FILIPPA optics, cutoff 1.2° down. High beam: adds the two spots, about 10° wide, which have no cutoff and reach about 160 m to 1 lux; for use without oncoming traffic. Each spot shares its module's mirror, so it levels and swings with that module's low beam. <b>Speed-based width</b> (firmware-spec §12, proposed): in high beam the two mirrors swing the spots apart by up to 5° each at 15 km/h or slower, narrowing to straight ahead at 40 km/h, so the high beam is about 20° wide when slow; the low beams spread with them.</li>
         <li>Head 0.8 m above the road, cutoff 1.2° down, so it meets a flat road about 38 m ahead.</li>
@@ -184,7 +183,7 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
 <script>
 (() => {
   const DT = 1 / 200, T_PLAY = 52, T_SIM = 58, G = 9.81;
-  const H_HEAD = 0.8, AIM = -1.2, TAU_ROAD = 4, MIR_MAX = 7.5;
+  const H_HEAD = 0.8, AIM = -1.2, MIR_MAX = 7.5;
   const YAW_OUT = 25, YAW_IN = 15, LOOK = 20, HALF_W = 11, CAP_MARGIN = 3;
   const D = Math.PI / 180;
   const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
@@ -193,10 +192,10 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
 
   const CHAPTERS = [
     { t: 0, name: "Cruise", text: "Flat road at 29 km/h. Both mirrors sit at their trim and the cutoff meets the road about 38 m ahead." },
-    { t: 4, name: "Accelerating", text: "The wheel pitches 10° nose-down. The mirrors cancel that within about 0.05 s. The hill follower removes the lean the acceleration explains, so the cutoff stays at 38 m. The old 4 s follower mistook it for a downhill and let the cutoff creep to about 7 m." },
-    { t: 9, name: "Braking", text: "The wheel pitches 10° nose-up, the moment a fixed light shines into oncoming drivers' eyes. The mirrors tilt down by 5°. The cutoff stays at 38 m or closer. The old follower overshot to about 78 m." },
-    { t: 14, name: "Uphill, 8%", text: "The road estimate settles in under 1 s; the old follower took about 12 s. Either way, the rising road catches the beam short as the hill starts." },
-    { t: 22.5, name: "Crest and downhill", text: "Over the crest the estimate lags the falling road, so the beam points above it: about 2 s (the old follower: about 4 s). Most of what's left is geometry, a beam parallel to the climb passing over the top. The lidar sees the drop ahead and shortens it further." },
+    { t: 4, name: "Accelerating", text: "The wheel pitches 10° nose-down. The mirrors cancel that within about 0.05 s. The hill follower removes the lean the acceleration explains, so the cutoff stays at 38 m." },
+    { t: 9, name: "Braking", text: "The wheel pitches 10° nose-up, the moment a fixed light shines into oncoming drivers' eyes. The mirrors tilt down by 5°. The cutoff stays at 38 m or closer." },
+    { t: 14, name: "Uphill, 8%", text: "The road estimate settles in under 1 s, but the rising road catches the beam short as the hill starts." },
+    { t: 22.5, name: "Crest and downhill", text: "Over the crest the estimate lags the falling road, so the beam points above it for about 2 s. Most of what's left is geometry, a beam parallel to the climb passing over the top. The lidar sees the drop ahead and shortens it further." },
     { t: 31, name: "Left turn", text: "20 m radius at 29 km/h: about 18° of lean. The left beam swings up to 25° into the curve, toward the road 20 m ahead. The right beam stays straight ahead, so the road you're about to leave and anything coming the other way stay lit. Each mirror also tilts to undo the lean." },
     { t: 37, name: "Right turn", text: "The same turn to the right: now the right beam swings into the curve and the left one stays straight. The fixed light shines straight ahead only, with its cutoff tilted by the full lean." },
     { t: 43, name: "Slow street", text: "Slowing to about 13 km/h on a dark street. In high beam the two spots swing apart by up to 5° each, so the high beam is about 20° wide when slow and narrows back to a pencil beam by 40 km/h (proposed, firmware-spec §12). Switch to High beam to see it." },
@@ -242,11 +241,11 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
       const grade = gradeAt(s);
       const pitch = grade - Math.atan(ACC[i] / G) / D; // nose down when accelerating, up when braking (±10°)
       const lean = Math.atan(v * w / G) / D;           // + = leaning left
-      if (opt.newHill) {                               // proposed: remove the acceleration's pitch, follow with τ = 0.3 s
+      {                                                // hill follower (§2): remove the acceleration's pitch, follow with τ = 0.3 s
         const raw = pitch + Math.atan(ACC[i] / G) / D; // K_TILT = 1, a_long from a perfect IMU
         hold = Math.abs(ACC[i]) > 1 ? 0.3 : Math.max(0, hold - DT);
         if (hold === 0) roadImu += (raw - roadImu) * DT / 0.3;
-      } else roadImu += (pitch - roadImu) * DT / TAU_ROAD;
+      }
       let road = roadImu;
       if (lidar) {
         const slope = (zAt(s + 12) - zAt(s)) / 12;
@@ -571,7 +570,7 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
   }
 
   // ---------- controls ----------
-  const opt = { high: false, lidar: true, fixed: true, speed: 1, newHill: true, roll: false, cap: false };
+  const opt = { high: false, lidar: true, fixed: true, speed: 1, roll: false, cap: false };
   const chipsEl = document.getElementById("chips");
   CHAPTERS.forEach((c, k) => { const b = document.createElement("button"); b.className = "chip"; b.id = "chip" + k; b.textContent = c.name; b.setAttribute("aria-pressed", "false"); b.onclick = () => { t = c.t + 0.001; render(); }; chipsEl.appendChild(b); });
   const playBtn = document.getElementById("play"), scrub = document.getElementById("scrub"), clock = document.getElementById("clock");
@@ -582,7 +581,6 @@ select { font: 13px var(--f-body); background: var(--bg); color: var(--fg); bord
   playBtn.onclick = () => setPlay(!playing);
   scrub.oninput = () => { t = +scrub.value; render(); };
   document.getElementById("optLidar").onchange = e => { opt.lidar = e.target.checked; simulate(opt.lidar); render(); };
-  document.getElementById("optHill").onchange = e => { opt.newHill = !e.target.checked; simulate(opt.lidar); render(); };
   const setMode = h => { opt.high = h; simulate(opt.lidar); document.getElementById("modeLow").setAttribute("aria-pressed", String(!h)); document.getElementById("modeHigh").setAttribute("aria-pressed", String(h)); render(); };
   document.getElementById("modeLow").onclick = () => setMode(false);
   document.getElementById("modeHigh").onclick = () => setMode(true);
