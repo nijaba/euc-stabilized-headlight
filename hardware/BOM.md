@@ -49,7 +49,7 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 |---|---|---|---|---|---|---|
 | Spot LEDs | Cree XP-L HI (3535) on 20 mm DTP copper, 5000–6500 K | 2 | 6.50 | 13.00 | [link](https://kaidomain.com/XP-L-HI-10W-3A-1095-Lumens-SMD-3535-LED) | Choose the '20mm DTP Copper' option (+$1.20). Swapped in for SFT-40 (5050 doesn't fit the XP holder) |
 | Low-beam LEDs | Cree XP-L HI (3535) on 20 mm DTP copper, about 5000 K | 2 | 6.50 | 13.00 | [link](https://kaidomain.com/XP-L-HI-10W-3A-1095-Lumens-SMD-3535-LED) | For the FILIPPA optics. Replaces the Nichia 519A, which isn't on LEDiL's compatible list |
-| Spot optics | Carclo 10003 narrow spot, 20 mm (~8–12°) | 2 | 2.75 | 5.50 | [link](https://www.ledsupply.com/led-optics/10003-carclo-lens-20mm-narrow-spot-led-optic) |  |
+| Spot optics | Carclo 10003 narrow spot, 20 mm (~8–12°) | 2 | 2.46 | 4.92 | [link](https://www.mouser.com/en/ProductDetail/Carclo-Technical-Plastics/10003?qs=iofSZqe50rnmOPzAcfytrg%3D%3D) | Mouser 962-10003 (owner's choice, 2026-11-22; same order as the FILIPPA optics). Also at LEDSupply |
 | Low-beam optics | LEDiL FILIPPA-STVZO (C18612_FILIPPA-STVZO), Ø 32.9 mm cutoff optic | 2 | 3.52 | 7.04 | [link](https://www.mouser.com/en/ProductDetail/Ledil/C18612_FILIPPA-STVZO?qs=2SLPxufLcgCat%2F0uKWgVhA%3D%3D) | Mouser, Nov 2026: $3.52 each, $2.06 each for 10. LEDiL's own MOQ is 252. Flange mount; orienting rib toward the front of the housing (LEDs face up) |
 | Optic holders | Carclo 10734, 20 mm, XP footprint | 2 | 0.80 | 1.60 | [link](https://www.digikey.com/en/products/detail/carclo-technical-plastics/10734/2641685) | Spot optics |
 | Mirrors | Front-surface (first-surface) glass mirror, enhanced Al, 1.1 mm, cut to 2 × ~57×55 mm, flat | 2 | 12.00 | 24.00 | [link](https://www.edmundoptics.com/f/first-surface-mirrors/12017/) | Edmund: precise, pricier. Budget: https://www.aliexpress.com/w/wholesale-front-surface-mirror-glass.html (glass, not acrylic). Score on the back face to cut. Price was for ~90×35 mm; recheck for the larger size. Flatness matters for a sharp cutoff. US source for thin glass (2026-11-22): 1.1 mm is hard to find in the US, but opticalmirror.com and firstsurfacemirror.com (Ohio) sell 1.0 mm enhanced-Al glass and cut custom rectangles; 1.0 mm is ~10% lighter and keeps the model's clearances, flatness to be confirmed in phase 4 |
@@ -59,7 +59,7 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Servos | Digital micro servo, ~5 g class, metal gears preferred, ≥ 0.8 kg·cm | 4 | 10.00 | 40.00 | [search](https://www.amazon.com/s?k=5g+digital+micro+servo+metal+gear) | Lean package (2026-11-21): replaces the 12 g EMAX ES08MD II, which stays the fallback if B-MIR-01/02 show too much jitter. Price is an estimate |
 | Heatsinks (= floor) | Finned aluminium heatsink extrusion, cut into 2 × ~54×26 mm, ~2.5 mm base, 6 fins each ~14 mm, fins running fore-aft | 1 | 9.00 | 9.00 | [search](https://www.amazon.com/s?k=aluminum+heatsink+extrusion+50mm+wide) | Cut from extrusion; LED stars screw to the flat side; drill/tap M3. Fins must run front-to-back |
 | Thermal paste | Arctic MX-4 (or similar) | 1 | 7.00 | 7.00 | [search](https://www.amazon.com/s?k=Arctic+MX-4) | Skip if you have it |
-| **Subtotal** | | | | **154.14** | | |
+| **Subtotal** | | | | **153.56** | | |
 
 ## D. Housing & sealing
 
@@ -140,12 +140,12 @@ For firmware and bench testing before the protoboard or any PCB. Most of it is t
 | Mirror test pieces | 1 mm glass front-surface mirror, 6″ × 6″ sample from [opticalmirror.com](https://opticalmirror.com/first-surface-mirror/) ($9.95, enough for both v4 mirrors), MR63ZZ bearings, 3 mm rod, pushrod kit (section C) | 1 | 28.95 | 28.95 | see section C | Bearings, rod and kit yes; the mirror glass may be too, if 1 mm proves flat enough |
 | Laser module | 5 V 650 nm dot laser, wired: brass barrel (12 mm is easiest to clamp) with two leads, adjustable focus, ≤ 5 mW. Not the board-mounted KY-008 type, which can't be aimed apart from the breadboard | 1 | 5.00 | 5.00 | [search](https://www.amazon.com/s?k=5V+650nm+laser+dot+module+12mm+brass+adjustable+focus) | No (test tool). Never look into the beam or its reflection off the mirror |
 | Breadboard + jumpers | Full-size breadboard and jumper wire kit | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=breadboard+jumper+wire+kit) | No (test tool) |
-| Optics bench | 2 BuckBlocks (phase 3 tests both channels), 2 XP-L HI on stars, 1 FILIPPA-STVZO, 1 Carclo 10003 + holder, the heatsink (sections B, C) | 1 | 72.54 | 72.54 | see sections B, C | Yes |
+| Optics bench | 2 BuckBlocks (phase 3 tests both channels), 2 XP-L HI on stars, 1 FILIPPA-STVZO, 1 Carclo 10003 + holder, the heatsink (sections B, C) | 1 | 72.25 | 72.25 | see sections B, C | Yes |
 | Lidar | Benewake TFS20-L (section H), to test its range through a window early | 1 | 55.00 | 55.00 | [link](https://en.benewake.com/TFS20L/index.html) | Yes |
 | Power | PD trigger board 15 V + USB-C cable, Pololu 5 V regulator, passives (section B, F); RXEF300 as well as RXEF250 to compare | 1 | 51.40 | 51.40 | see sections B, F | Yes |
 | USB-C power meter | Inline USB-C voltage/current meter | 1 | 20.00 | 20.00 | [search](https://www.amazon.com/s?k=usb+c+power+meter) | No (test tool) |
 | Lux meter | Basic digital lux meter | 1 | 20.00 | 20.00 | [search](https://www.amazon.com/s?k=digital+lux+meter) | No (test tool) |
-| **Total** | | | | **345.32** | | about $260 of it goes into the build |
+| **Total** | | | | **345.03** | | about $260 of it goes into the build |
 
 **Bench tools (skip what you own, added 2026-11-22).** The phase 2–3 bench tests need these too. They are general workshop tools, so they are not in the kit total above. Prices are estimates.
 
@@ -176,7 +176,7 @@ For firmware and bench testing before the protoboard or any PCB. Most of it is t
 
 | | USD |
 |---|---|
-| Core build, cash outlay (sections A–G, excluding the 2 optional items) | **536** |
+| Core build, cash outlay (sections A–G, excluding the 2 optional items) | **535** |
 | Optional extras (XTC-3D coating, magnetic breakaway) | +35 |
 | Road-slope lidar (section H) | +59 |
 | Subtract if you already own a power bank, filament, resistor kit, wire, paste | −100 |

@@ -36,6 +36,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - `CONTRIBUTING.md` and `SECURITY.md` (private reporting for safety faults as well as security issues).
 
 ### Changed
+- Spot optics (2026-11-22): the Carclo 10003 is bought from Mouser ($2.46, in stock), alongside the FILIPPA optics. Section C $153.56, cash outlay ~$535, bench kit $345.03; per-unit cost still ~$403 with the lidar.
 - Bench mirror (2026-11-22): the test piece is a 1 mm glass front-surface mirror, a 6″ × 6″ sample from opticalmirror.com ($9.95), because 1.1 mm is hard to find in the US; section C notes the US 1.0 mm sources for the build. 2N3904 row says single TO-92 parts, buy ~10. Bench kit $345.32.
 - LED drivers (2026-11-22): the BuckBlock A009-D-V-2100 is now bought from LEDSupply ($21.77, in stock) because DigiKey quoted an 8-week lead time. Material ~$403 with the lidar (limit $450), cash outlay ~$536, bench kit $347.37.
 - Bench kit laser (2026-11-22): spec clarified as a wired brass-barrel module with adjustable focus, ≤ 5 mW, so it can be aimed at the mirror apart from the breadboard. No price change.
