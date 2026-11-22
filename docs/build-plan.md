@@ -2,7 +2,7 @@
 
 Phases in order. Work on the current phase only, and tick each item when it passes. Test IDs refer to [`test-plan.md`](test-plan.md).
 
-**Current phase: 1.** Phase 0 is complete.
+**Current phase: 2.** Phases 0 and 1 are complete.
 
 ## Phase 0: Project setup and budget
 
@@ -63,11 +63,12 @@ Goal: the protoboard powers both channels safely and dims them smoothly.
 Goal: the mirror size and window height are proven before CAD fixes them.
 
 - [ ] FILIPPA focus height and cutoff with XP-L HI (B-OPT-05, B-OPT-06, B-OPT-07)
-- [ ] Toe-out wedges and cornering lights: width, cutoff tilt, glare, heat (B-OPT-08, B-CRN-01, B-CRN-02)
-- [ ] Convex low-beam mirror against the wedges (B-OPT-09, options study)
+- [ ] v4 cutoff roll: the FILIPPA cutoff's roll across the yaw travel against the model, swing = roll (B-OPT-08; design §5, cutoff roll in turns)
 - [ ] Beam clipping across ±7.5° of mirror (B-OPT-02)
 - [ ] Mirror balance and ringing under vibration (B-MIR-04)
 - [ ] Light output, beam intensity and angles, heatsink temperature rise (B-OPT-03, B-OPT-04, B-THM-01, B-THM-02)
+
+Dropped with layout v4 (2026-11-21), kept in the test plan for v3: toe-out wedges, cornering lights (B-CRN-01, B-CRN-02) and the convex low-beam mirror (B-OPT-09).
 
 ## Phase 5: Firmware features
 
@@ -76,7 +77,8 @@ Goal: the mirror size and window height are proven before CAD fixes them.
 - [ ] Thermal derating and boost limits (U-THM)
 - [ ] Input-voltage handling (U-VIN)
 - [ ] BLE remote, head button (U-REM, B-REM-01, B-REM-02)
-- [ ] Cornering lights (U-CRN)
+- [ ] **Owner decision, gate for turn steering:** the turn-swing cap (proposed: lean + 3°) and what to do about the outside beam's full-lean tilt (design §5, cutoff roll in turns). The turn rule is not written or coded before this.
+- [ ] v4 turn steering: the yaw rule and its safety invariant written into firmware-spec §10, then coded (U-TURN-01)
 - [ ] Safety invariant tests (U-SAFE)
 - [ ] DIY remote firmware (XIAO nRF52840)
 

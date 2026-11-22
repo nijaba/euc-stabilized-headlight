@@ -194,7 +194,7 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | B-OPT-05 | FILIPPA flange height above the XP-L HI board, set with printed spacers in 0.1 mm steps | Height recorded where the cutoff is sharpest on a wall at 10 m | – |
 | B-OPT-06 | Cutoff orientation with the orienting rib toward the front of the housing (LEDs facing up), through the mirror | Cutoff is at the top of the beam and horizontal within ±0.5° | – |
 | B-OPT-07 | Glare above the cutoff, lux on a wall at 10 m, aimed per calibration step D | ≤ 2 lux above 3.4° over the brightest point; ≥ 10 lux at the brightest point | – |
-| B-OPT-08 | Toed-out low beam (4° wedges): beam width, and cutoff tilt at both ends of the mirror's travel | Width ~30° FWHM; cutoff tilt ≤ 2° | – |
+| B-OPT-08 | v4: low beam swung across its yaw travel: cutoff roll against the swing angle (design §5, cutoff roll in turns). v3 until 2026-11-22: toed-out low beam (4° wedges), width and cutoff tilt | Roll within 1° of the swing angle at 0, 12.5 and 25° | – |
 | B-OPT-09 | Convex low-beam mirror (R ≈ 315 mm, reflective aluminium sheet on a printed former) against the 4° toe-out wedges, same lux grid as B-OPT-04 | Record width, peak and cutoff bow; adopt if as wide and as sharp | – |
 | B-OPT-10 | Thermoformed wraparound window: beam through the flat front, the corner and the side; lux grid for haze and distortion | No visible ghost or glare band; peak within 5% of a flat window | – |
 | B-CRN-01 | Cornering lights aimed 30° out, 10° down: lux on a wall at 10 m above horizontal | ≤ 2 lux above horizontal; ~10 lux at the peak | – |
