@@ -36,6 +36,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - `CONTRIBUTING.md` and `SECURITY.md` (private reporting for safety faults as well as security issues).
 
 ### Changed
+- Protoboard (2026-11-22): the half-size Adafruit Perma-Proto #1609 is out of stock, so the BOM uses the full-size #1606 ($10.95), cut in half (one half for the head, one spare). Cash outlay ~$534 (was ~$528), material per unit ~$402 with the lidar (was ~$401), bench kit ~$346 (was ~$339).
 - v4 ride demo: the “Old hill follower (4 s)” comparison is removed; the demo runs only the adopted hill follower (firmware-spec §2).
 - v4 model: the curved clear sides are now the only version (flat front dropped, owner 2026-11-21) and the default; `render.sh` renders only it. Per-side yaw (`yaw_l`, `yaw_r`) so the turn renders show only the turn-side beam swinging. Site headline mentions turns.
 - Layout v4 adopted (owner, 2026-11-21): two mirrors on 2-axis gimbals, four servos, clear wraparound sides, lidar in the body, no cornering lights. Design, firmware spec, build plan, CLAUDE.md, BOM (≈ $440 per unit with the lidar, ~393 g) and README updated; `render.sh` now gates on v4.
