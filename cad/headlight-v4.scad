@@ -2,8 +2,10 @@
 //
 // Two independent mirror modules, each steering one FILIPPA low beam and one spot
 // on two axes: pitch (levelling) and yaw (swinging into turns). The yaw steering
-// replaces the fixed cornering lights and the toe-out wedges, so there is no brow:
-// the lidar sits on its side in the main body, between the two modules.
+// replaces the fixed cornering lights and the toe-out wedges, so there is no brow.
+// Since 2026-11-21 (owner: width ideally 150 mm) the two modules sit side by side around a thin centre post,
+// one clear piece wraps the whole front and both sides, and a small TFS20-L lidar sits low in the nose, under the beams
+// (on the roof until the owner moved it under, same day), behind its own window over a shallow rounded chin.
 //
 // Same conventions as headlight.scad (layout v3): heatsink at the bottom with fins
 // fore-aft, LEDs facing up, mount on the back, rounded tapered body.
@@ -14,7 +16,7 @@
 /* [View] */
 view = "assembly";   // assembly | cutaway | exploded | front | under | wheel | stl_shell
 tilt = 0;            // mirror pitch from nominal, degrees (-7.5 .. 7.5)
-yaw = 0;             // mirror yaw, degrees (-7.5 .. 7.5); beam swings by twice this; positive = outward
+yaw = 0;             // mirror yaw, degrees (-yaw_in_max .. yaw_out_max); beam swings by twice this; positive = outward
 yaw_l = yaw;         // left module (rider's left, x < 0); in a left turn only this one swings (owner, 2026-11-21)
 yaw_r = yaw;         // right module (x > 0)
 function side_yaw(sx) = sx < 0 ? yaw_l : yaw_r;
@@ -32,25 +34,34 @@ fil_fwhm = 11;    spot_fwhm = 5;   // half-intensity half-angles (window sized f
 wrap_sides = true;                 // true: on each side, one thermoformed clear piece runs across the front, round the corner
                                    // and back along the side, with no pillar; the outward beam leaves through the side
 wrap_side_min = 30;                // the clear side reaches at least this far back from the front face
-yaw_out_max = 12.5;                // with wrap_sides: outward mirror yaw (beam ±25° outward); inward stays yaw_max
-r_wrap = 18;                       // front-corner radius of the clear wrap
+yaw_out_max = 12.5;                // with wrap_sides: outward mirror yaw (beam ±25° outward)
+r_wrap = 12;                       // front-corner radius of the clear wrap (18 until 2026-11-21; 12 keeps the gimbals' outer front corners inside the wall at 151 mm)
+                                   // One clear piece now runs across the whole front and round both corners (no lidar bay to split it)
 
 /* [Mirrors] */
 mir_t = 1.1;  mir_W = 55;
-tilt_max = 7.5;  yaw_max = 7.5;    // mirror travel; beam moves twice as far
+tilt_max = 7.5;                    // mirror pitch travel; beam moves twice as far
+yaw_in_max = 2.5;                  // inward mirror yaw: no beam swings inward (owner, 2026-11-21), this only trims the aim (beam ±5°)
 frame_t = 4;                       // gimbal frame around each mirror
 mir_clear = 3;
 
 /* [Housing] */
-wall = 1.6;  front_clear = 4;  elec_depth = 20;  win_t = 1.5;  bezel_lip = 4;
-r_edge = 6;  taper = 8;  roof_drop = 20;  r_tail = 10;   // taper 8 and tail 10 keep the heatsinks on the flat floor of the wrap body (flat front used 14 / 14)
+wall = 1.6;  front_clear = 5;  elec_depth = 20;  win_t = 1.5;  bezel_lip = 4;
+r_edge = 6;  taper = 4;  roof_drop = 20;  r_tail = 10;   // taper 4 (8 until 2026-11-21) keeps the gimbal frames inside the side walls at 151 mm; tail 10 keeps the heatsinks on the flat floor
 
 /* [Heatsink] */
 hs_base = 2.5;  hs_fin_h = 14;  hs_fin_t = 1.2;  hs_pitch = 10;  hs_margin = 3;  // 6 for the old flat front
 
+/* [Gimbal supports] */
+post_w = 6;                        // centre post between the modules: holds both inner pitch shafts (bearings sit in the gimbal frames)
+pivot_boss = 4;                    // outer post per side: holds the outer pitch shaft
+gimbal_gap = 1;                    // between a gimbal frame and its post
+
 /* [Bought parts] */
 servo = [12, 23, 24];              // envelope: W(y) x L(z) x H(x); 5 g servos are smaller
-lidar = [41.5, 69, 26];            // TF02-Pro on its side: x, z, y
+lidar = [21, 15, 7.87];            // Benewake TFS20-L: x (lens face width), z (lens face height), y (depth).
+                                   // Lens face assumed to be the 21 x 15 face; check the dimension drawing before the pod is printed
+lidar_g = 1.35;
 
 // ---------- one module: spot on the inside (next to the lidar), FILIPPA on the outside ----------
 mod_L  = spot_d + opt_gap + fil_d;
@@ -61,41 +72,50 @@ max_h  = max(fil_h, spot_h);
 
 function half_z(a) = (mir_W/2)*sin(45 + a) + mir_t;
 function half_y(a) = (mir_W/2)*cos(45 - a);
-yaw_hi = wrap_sides ? max(yaw_max, yaw_out_max) : yaw_max;
+yaw_hi = wrap_sides ? max(yaw_in_max, yaw_out_max) : yaw_in_max;
 yaw_lift = (mir_L/2)*sin(yaw_hi);                     // mirror ends rise and fall when yawed
 mir_z  = star_t + max_h + mir_clear + yaw_lift + half_z(tilt_max);
 mir_hy = half_y(tilt_max);
 in_front = mir_hy + front_clear;
 in_back  = -(mir_hy + elec_depth);
 win_d    = in_front;
-steer = 2*tilt_max;  beam_yaw = 2*yaw_max;
+steer = 2*tilt_max;  beam_yaw_in = 2*yaw_in_max;
 
 // Beam reach at the window from the module centre, inward and outward.
-function spread(fwtm, fwhm) = max(fwtm, fwhm + beam_yaw);
+function spread(fwtm, fwhm) = max(fwtm, fwhm + beam_yaw_in);
 reach_in  = -spot_rx + spot_d/2 + win_d*tan(spread(spot_fwtm, spot_fwhm));
 reach_out =  fil_rx  + fil_d/2  + win_d*tan(spread(fil_fwtm,  fil_fwhm));
-lidar_half = lidar[0]/2 + wall + 1;
-x_c = lidar_half + reach_in;                         // module centre: inward beam clears the lidar bay
+x_c = post_w/2 + gimbal_gap + mir_L/2 + frame_t;    // module centre: gimbal frame clears the centre post
 r_front = wrap_sides ? r_wrap : r_edge;
 // Without the wrap, the outward beam must leave through the flat front, which sets the width.
 // With it, the width is set by the mirror module and its bearings, and the outward beam leaves through the clear corner.
-half_int = max(x_c + mir_L/2 + frame_t + 6, x_c + fil_rx + fil_d/2 + 3) + wall;
+half_int = max(x_c + mir_L/2 + frame_t + gimbal_gap + pivot_boss, x_c + fil_rx + fil_d/2 + 3) + wall;
 half_L = wrap_sides ? half_int : x_c + reach_out + 1 + bezel_lip + r_edge;
 win_in  = x_c - reach_in - 1;
 win_out = wrap_sides ? half_L - r_front : x_c + reach_out + 1;
 win_w = win_out - win_in;                            // one flat-front window per module
 win_xc = (win_in + win_out)/2;
 // Where the outward beam's half-intensity edge meets the side wall at full outward yaw: the clear wrap must reach back that far.
-beam_out_angle = fil_fwhm + 2*(wrap_sides ? yaw_out_max : yaw_max);
+beam_out_angle = fil_fwhm + 2*(wrap_sides ? yaw_out_max : yaw_in_max);
 x_beam0 = x_c + fil_rx + fil_d/2;
 y_hit = in_front - (half_L - wall - x_beam0) / tan(beam_out_angle) - 0;
 wrap_depth = wrap_sides ? max(in_front + wall - y_hit, r_front + 4, wrap_side_min) : 0;
 // Clear piece per side: flat front from the lidar bay edge to the corner, the corner arc, then the flat side.
-wrap_len = win_w + 3.14159*r_front/2 + (wrap_depth - r_front);
+wrap_len = (2*half_L - 2*r_front) + 2*(3.14159*r_front/2 + (wrap_depth - r_front));   // the one piece, end to end
 
 win_half = fil_d/2 + win_d*tan(steer) + win_d*tan(fil_fwtm);
 win_zc = mir_z;  win_top = win_zc + win_half;  win_bot = win_zc - win_half;
-top_z = max(win_top + bezel_lip + r_edge, mir_z + half_z(tilt_max) + 2 + wall, lidar[1] + 10 + r_edge);
+top_z = max(win_top + bezel_lip + r_edge, mir_z + half_z(tilt_max) + 2 + wall);
+// Lidar under the beams (owner, 2026-11-21; on the roof until then): inside the body, on the floor between the two modules,
+// looking out through its own small window in the front wall below the clear piece. A shallow chin, rounded into the
+// underside on both sides, keeps that window face flat down past the body's rounded bottom edge.
+chin_drop = 2;                      // chin below the body's underside (the heatsink fins hang 16.5 mm, so no extra height)
+chin_r = 3;
+chin_w = lidar[0] + 2*(wall + 1);
+chin_blend = 8;                     // the chin's U reaches this far beyond the lidar window on each side
+pod_front = in_front + wall;
+lidar_y0 = pod_front - wall - 0.5 - lidar[2];
+lidar_z0 = 0.5;                     // on the floor
 top_rear = top_z - roof_drop;
 
 out_L = 2*half_L;
@@ -114,7 +134,7 @@ hs_fins = floor((hs_L - hs_fin_t) / hs_pitch) + 1;
 back_flat = out_L/2 - taper - r_tail;
 function tail_half(d) = back_flat + sqrt(max(r_tail*r_tail - pow(max(r_tail - d, 0), 2), 0)) - wall;
 servo_y0 = 4;
-servo_x = min(x_c, tail_half(servo_y0) - servo[2]/2 - 1);
+servo_x = tail_half(servo_y0) - servo[2]/2 - 1;     // servos as far out as the tail allows, so the board fits between them
 servo_z = [10 + servo[1]/2, 13 + 1.5*servo[1]];
 board_w = 2*(servo_x - servo[2]/2 - 3);
 board_top = top_rear - wall - 6;
@@ -129,25 +149,29 @@ assert(win_bot - bezel_lip >= -wall + r_edge, "C-PKG-08 window runs into the rou
 assert(!wrap_sides || in_front + wall - wrap_depth > in_back + elec_depth, "C-PKG-17 clear wrap would reach back into the servo slot");
 assert(servo_z[1] + servo[1]/2 <= top_rear - wall - 2, "C-PKG-11 stacked servos hit the sloping roof");
 assert(board_w >= 55, "C-PKG-13 electronics board narrower than 55 mm");
-assert(lidar[1] + 10 <= top_z - wall, "C-PKG-14 lidar taller than the body");
 // Flat-bottom half-width at a given y: the body tapers and its edge radius grows from front to tail.
 function flat_half(y) = let(yf = in_front + wall - r_edge, yr = in_back - wall + r_tail, t = (yf - y)/(yf - yr))
     (out_L/2 - t*taper) - (r_edge + t*(r_tail - r_edge));
 assert(hs_x1 <= flat_half(hs_y0) - 1, "C-PKG-07 heatsink runs into the rounded, tapering edge");
-assert(x_c - reach_in >= lidar_half, "C-PKG-15 a beam at full yaw crosses the lidar bay");
-assert(x_c - mir_L/2 - frame_t >= lidar[0]/2 - 6, "C-PKG-16 gimbal frame collides with the lidar bay");
+assert(x_c + spot_rx - spot_d/2 >= post_w/2 + 1, "C-PKG-15 a spot's light column hits the centre post");
+// C-PKG-19: the lidar in the nose clears the spot optics, leaves a 4 mm flange under the clear piece, and its chin ends
+// ahead of the heatsink fins.
+fin_front = -hs_y0 - hs_fin_h*0.7 + hs_fin_h;
+assert(lidar_y0 - 1 >= spot_d/2 + 1, "C-PKG-19 lidar hits a spot optic");
+assert(lidar_z0 + lidar[1] - 1 + 4 <= win_bot, "C-PKG-19 lidar window leaves under 4 mm of wall below the clear piece");
+assert(lidar_y0 - 0.5 >= fin_front + 0.5, "C-PKG-19 lidar chin runs into the heatsink fins");
 
 echo(str("PKG config=v4-2x2axis+lidar body_outer_mm=", out_L, "x", out_D, "x", out_H,
-         " head_height_mm=", out_H + hs_base + hs_fin_h,
-         " windows_mm=2x", win_w, "x", 2*win_half, " mirrors_mm=2x", mir_L, "x", mir_W,
-         " heatsinks_mm=2x", hs_L, "x", hs_D, " fins=2x", hs_fins, " beam_yaw=+-", beam_yaw,
+         " head_height_mm=", out_H + hs_base + hs_fin_h, " lidar_chin_mm=", chin_w + 2*chin_blend, "x", pod_front - (lidar_y0 - 0.5), "x", chin_drop,
+         " clear_piece_mm=", wrap_len, "x", 2*win_half, " mirrors_mm=2x", mir_L, "x", mir_W,
+         " heatsinks_mm=2x", hs_L, "x", hs_D, " fins=2x", hs_fins, " beam_yaw_in=", beam_yaw_in,
          wrap_sides ? str(" wrap_depth_mm=", wrap_depth, " outward_beam=", 2*yaw_out_max) : " wrap=none"));
-echo(str("MASS n_fil=2 n_spot=2 lidar=1 cornering=0 toe=0 n_servo=4 n_frames=2 ribs_g=16",
+echo(str("MASS n_fil=2 n_spot=2 lidar=1 lidar_g=", lidar_g, " lidar_mount_g=2 cornering=0 toe=0 n_servo=4 n_frames=2 ribs_g=16",
          " wall_mm=", wall,
-         " window_mm3=", wrap_sides ? 2*(wrap_len + bezel_lip)*(2*win_half + 2*bezel_lip)*win_t
+         " window_mm3=", wrap_sides ? (wrap_len + 2*bezel_lip)*(2*win_half + 2*bezel_lip)*win_t
                                     : 2*(win_w + 2*bezel_lip)*(2*win_half + 2*bezel_lip)*win_t,
          " hs_mm3=", 2*(hs_L*hs_D*hs_base + hs_fins*hs_fin_t*hs_D*hs_fin_h),
-         " mirror_mm3=", 2*mir_L*mir_W*mir_t, " shaft_mm=", 2*(mir_L + 2*frame_t + 10),
+         " mirror_mm3=", 2*mir_L*mir_W*mir_t, " shaft_mm=", 2*(mir_L + 2*frame_t + 2*(gimbal_gap + pivot_boss - 2)),
          " seal_mm=", 2*(out_L + out_D) + 2*(hs_L + hs_D) + 2*(lidar[0] + lidar[1])));
 
 // ---------- colours ----------
@@ -190,7 +214,7 @@ module mirror_module(sx, a = tilt, b = undef) let(b = is_undef(b) ? side_yaw(sx)
         translate([-mir_L/2 - frame_t, -mir_W/2 - 1, -1]) cube([mir_L + 2*frame_t, mir_W + 2, 2]);
         translate([-mir_L/2 - 0.5, -mir_W/2 + 3, -2]) cube([mir_L + 1, mir_W - 6, 4]);
     }
-    color(c_alu) rotate([0,90,0]) cylinder(d=3, h=mir_L + 2*frame_t + 10, center=true, $fn=16);   // pitch stubs
+    color(c_alu) rotate([0,90,0]) cylinder(d=3, h=mir_L + 2*frame_t + 2*(gimbal_gap + pivot_boss - 2), center=true, $fn=16);   // pitch shaft ends, into the posts
     rotate([0, sx*b, 0]) {                                                       // yaw about the frame's width axis
         color(c_mirror) translate([-mir_L/2, -mir_W/2, 0.2]) cube([mir_L, mir_W, mir_t]);
         color(c_alu) rotate([90,0,0]) cylinder(d=2, h=mir_W + 4, center=true, $fn=12);     // yaw pins
@@ -221,28 +245,38 @@ function body_pts(inset) = [
     for (sx = [-1,1], z = [-wall + r_tail, top_rear - r_tail]) [[sx*(out_L/2 - taper - r_tail), in_back - wall + r_tail, z], r_tail - inset]];
 module body_outer() blob(body_pts(0));
 module body_inner() blob(body_pts(wall));
+// Lidar chin: a shallow hump under the nose, rounded into the underside on both sides.
+// Seen from the front the chin is a U: a half-ellipse from the lidar's top down to 2 mm below the underside, traced by
+// small spheres on a front ring and a back ring (the back ring ends just ahead of the heatsink fins).
+chin_a = chin_w/2 + chin_blend - chin_r;  chin_top = lidar_z0 + lidar[1];  chin_b = chin_top - (-wall - chin_drop + chin_r);
+function chin_pts(inset) = [
+    for (y = [pod_front - chin_r, lidar_y0 - 0.5 + chin_r], t = [0:10:180])
+        [[chin_a*cos(t), y, chin_top - chin_b*sin(t)], chin_r - inset]];
+module chin_outer() blob(chin_pts(0));
+module skin_outer() union() { body_outer(); chin_outer(); }   // everything inside must stay within this (C-PKG-18)
 
-lidar_y0 = in_front + wall - lidar[2] - wall;
 module window_openings() for (sx = [-1,1]) translate([sx*win_xc, in_front + wall/2, win_zc]) rrect(win_w, 2*win_half, wall + 4, 6);
-module lidar_opening() translate([0, in_front + wall/2, 10 + lidar[1]/2]) rrect(lidar[0] - 4, lidar[1] - 4, wall + 4, 4);
+module lidar_cavity() {
+    translate([-lidar[0]/2 - 0.5, lidar_y0 - 1, lidar_z0 - 0.5]) cube([lidar[0] + 1, lidar[2] + 1.5, lidar[1] + 1]);
+    translate([0, (lidar_y0 + lidar[2] + pod_front + 1)/2, lidar_z0 + lidar[1]/2])
+        rrect(lidar[0] - 2, lidar[1] - 2, pod_front + 1 - (lidar_y0 + lidar[2]) + 0.2, 2);                     // window opening
+}
 // The clear wrap: the front corners within the window band, from the flat front back to wrap_depth.
-module wrap_region() for (sx = [-1,1])
-    translate([sx > 0 ? win_in : -out_L/2 - 1, in_front + wall - wrap_depth, win_bot])
-        cube([out_L/2 + 1 - win_in, wrap_depth + 1, 2*win_half]);
+module wrap_region() translate([-out_L/2 - 1, in_front + wall - wrap_depth, win_bot]) cube([out_L + 2, wrap_depth + 1, 2*win_half]);
 module wrap_clear() intersection() { difference() { body_outer(); body_inner(); } wrap_region(); }
 module shell_solid() difference() {
-    body_outer(); body_inner();
+    difference() { skin_outer(); body_inner(); }
     if (wrap_sides) wrap_region();
     for (sx = [-1,1]) translate([sx*hs_xc - hs_L/2, hs_y0, -wall - 1]) cube([hs_L, hs_D, wall + 2]);
     if (!wrap_sides) window_openings();
-    lidar_opening();
+    lidar_cavity();
 }
 
 module body_shell() {
     color(c_asa) shell_solid();
     if (!wrap_sides) color(c_asa) for (sx = [-1,1]) translate([sx*win_xc, in_front + wall + 1, win_zc]) rrect_frame(win_w, 2*win_half, 2.5, 6, bezel_lip);
-    color(c_asa) translate([0, in_front + wall + 1, 10 + lidar[1]/2]) rrect_frame(lidar[0] - 4, lidar[1] - 4, 2.5, 4, 3);
-    color(c_asa) for (sx = [-1,1]) translate([sx*(lidar[0]/2 + 0.8), lidar_y0 - 2, 0]) cube([wall, lidar[2] + 2, top_z - 2*wall], center=false);  // lidar bay walls
+    color(c_asa) translate([-post_w/2, -4, wall]) cube([post_w, 8, mir_z - wall + 4]);                              // centre post (inner pitch shafts)
+    color(c_asa) for (sx = [-1,1]) translate([sx*(half_L - wall - pivot_boss/2) - pivot_boss/2, -4, wall]) cube([pivot_boss, 8, mir_z - wall + 4]);  // outer posts
     color(c_asa) translate([0, in_back - wall + 2, top_rear*0.45]) rotate([90,0,0]) cylinder(d=18, h=10, $fn=40);   // 1/4"-20 mount boss
     color([0.8,0.65,0.3]) translate([0, in_back - wall - 7.8, top_rear*0.45]) rotate([90,0,0]) cylinder(d=8, h=0.5, $fn=24);
     color([0.1,0.1,0.1]) translate([-28, in_back - wall - 10, 12]) rotate([-90,0,0]) cylinder(d=12, h=12, $fn=6);
@@ -252,10 +286,11 @@ module body_shell() {
 module windows() {
     if (wrap_sides) color([0.85,0.95,1,0.3]) wrap_clear();
     else color([0.85,0.95,1,0.25]) for (sx = [-1,1]) translate([sx*win_xc, in_front + wall/2, win_zc]) rrect(win_w + 2*bezel_lip - 1, 2*win_half + 2*bezel_lip - 1, win_t, 6.5);
+    color([0.85,0.95,1,0.3]) translate([0, pod_front - wall/2, lidar_z0 + lidar[1]/2]) rrect(lidar[0], lidar[1], 1, 2.5);   // lidar window
 }
 module lidar_unit() {
-    color([0.1,0.1,0.12]) translate([-lidar[0]/2, lidar_y0, 10]) cube([lidar[0], lidar[2], lidar[1]]);
-    color([0.3,0.3,0.35]) for (s=[-1,1]) translate([0, in_front + 0.1, 10 + lidar[1]/2 + s*15]) rotate([-90,0,0]) cylinder(d=18, h=0.5, $fn=32);
+    color([0.1,0.1,0.12]) translate([-lidar[0]/2, lidar_y0, lidar_z0]) cube([lidar[0], lidar[2], lidar[1]]);
+    color([0.3,0.3,0.35]) for (s=[-1,1]) translate([s*5, lidar_y0 + lidar[2], lidar_z0 + lidar[1]/2]) rotate([-90,0,0]) cylinder(d=6, h=0.3, $fn=24);
 }
 
 module beams() for (sx = [-1,1]) for (o = [[spot_rx, spot_d, spot_h, spot_fwtm, c_beam_hi], [fil_rx, fil_d, fil_h, fil_fwtm, c_beam_lo]]) {
@@ -268,13 +303,15 @@ module beams() for (sx = [-1,1]) for (o = [[spot_rx, spot_d, spot_h, spot_fwtm, 
 }
 
 module head(explode = 0) {
-    translate([0,0,-explode*40]) heatsink();
-    translate([0,0,-explode*15]) for (sx = [-1,1]) module_optics(sx);
-    translate([0,0,explode*12]) for (sx = [-1,1]) mirror_module(sx);
-    translate([0,-explode*30,0]) { servos_and_links(); electronics(); }
-    translate([0,0,explode*35]) body_shell();
-    translate([0,explode*35,0]) windows();
-    translate([0,explode*20,explode*20]) lidar_unit();
+    // Exploded: shell lifted well clear, clear sides forward, lidar forward and down, servos and board back,
+    // mirrors up a little, optics and heatsinks down in steps.
+    translate([0,0,-explode*75]) heatsink();
+    translate([0,0,-explode*35]) for (sx = [-1,1]) module_optics(sx);
+    translate([0,0,explode*15]) for (sx = [-1,1]) mirror_module(sx);
+    translate([0,-explode*70,explode*10]) { servos_and_links(); electronics(); }
+    translate([0,0,explode*130]) body_shell();
+    translate([0,explode*70,explode*10]) windows();
+    translate([0,explode*55,-explode*20]) lidar_unit();
     if (show_beams && explode == 0) beams();
 }
 

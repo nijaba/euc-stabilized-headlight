@@ -3,7 +3,7 @@
 All figures are design estimates until they're verified on a prototype.
 The parts list with links is in [`../hardware/BOM.md`](../hardware/BOM.md).
 
-**Layout: v4 adopted (owner's decision, 2026-11-21).** Two mirror modules, each steering one FILIPPA low beam and one spot on a 2-axis gimbal (pitch for levelling, yaw for turns), four 5 g servos, the lidar on its side between the modules, and one clear thermoformed piece per side wrapping the front and side. No cornering lights, toe-out wedges or brow. The v4 layout, its checks and its turning behaviour are in §5 ("v4"). Earlier sections still describe v3's single mirror, cornering lights and toe-out where marked *(v3)*; they're kept as the record of how the design got here.
+**Layout: v4 adopted (owner's decision, 2026-11-21).** Two mirror modules, each steering one FILIPPA low beam and one spot on a 2-axis gimbal (pitch for levelling, yaw for turns), four 5 g servos, the modules side by side around a centre post, one clear thermoformed piece wrapping the front and both sides, and a small TFS20-L lidar low in the nose, under the beams (since the owner's render review, 2026-11-21: body about 151 mm wide, owner's target 150 mm). No cornering lights, toe-out wedges or brow. The v4 layout, its checks and its turning behaviour are in §5 ("v4"). Earlier sections still describe v3's single mirror, cornering lights and toe-out where marked *(v3)*; they're kept as the record of how the design got here.
 
 **Firm constraints** (owner's decision, 2026-11-20). Changing one needs the owner's approval:
 - Only the mirrors move. The LEDs and heatsinks stay fixed.
@@ -147,7 +147,7 @@ power bank ──USB-C──► PD trigger cable (fixed 15 V, e-marked) ──�
 | Normal (both channels 1.5 A) | ~21 W | ~1.4 A | ~2.4 h |
 | Boost (both channels 2.1 A, at most 60 s at a time) | ~30 W | ~2.0 A | ~1.7 h |
 | Typical (low beam normal, spot 50%) | ~16 W | ~1.1 A | ~3 h |
-| Optional lidar | +~1 W | +~0.07 A | about 5% less |
+| Optional lidar | +~0.4 W (TFS20-L; TF02-Pro ~1 W) | +~0.03 A | about 2% less |
 | Cornering lights (v3 only, in turns only) | +~2.2 W per side | +~0.15 A per side | negligible |
 
 Where it goes in normal mode:
@@ -215,8 +215,8 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 - **Leak test:** submerge the empty housing with a tissue inside before any electronics go in.
 
 *v4 with clear wraparound sides (2026-11-21, `wrap_sides = true`, now the model's default and the only v4 version: the flat front is dropped, owner, 2026-11-21).* The owner's idea: on each side, **one thermoformed clear piece** runs from the lidar bay across the front, round an 18 mm-radius corner and 30 mm back along the side, so there's **no pillar** between front and side glass.
-- **Why it helps:** the outward beam no longer has to leave through the flat front, so the head's width is set by the mirror modules instead of the beam. The outward swing can grow from ±15° to **±25°** (outward only; inward is still limited by the lidar bay).
-- **Model result:** about **200 × 71 × 95 mm** body, 111 mm tall with the heatsink (v4 flat-front: 221 mm), and **~399 g** with the lidar, just within the 400 g limit. *(Corrected 2026-11-21: the first wrap model drew the front face ~12 mm too far back, so internal parts poked through the skin and the shell measured light at ~393 g. Fixed, with 1 mm more front clearance and a new skin check, C-PKG-18.)* To keep the heatsinks on the flat floor of the narrower body, the taper drops to 8 mm and the tail radius to 10 mm.
+- **Why it helps:** the outward beam no longer has to leave through the flat front, so the head's width is set by the mirror modules instead of the beam. The outward swing can grow from ±15° to **±25°** (outward only; inward was limited by the lidar bay, and since 2026-11-21 is only a 2.5° aim trim).
+- **Model result (superseded the same day by the 150 mm layout below):** about **200 × 71 × 95 mm** body, 111 mm tall with the heatsink (v4 flat-front: 221 mm), and **~399 g** with the lidar, just within the 400 g limit. *(Corrected 2026-11-21: the first wrap model drew the front face ~12 mm too far back, so internal parts poked through the skin and the shell measured light at ~393 g. Fixed, with 1 mm more front clearance and a new skin check, C-PKG-18.)* To keep the heatsinks on the flat floor of the narrower body, the taper drops to 8 mm and the tail radius to 10 mm.
 - **Thermoforming the pieces:**
   - **Material:** UV-stabilised polycarbonate, 1.5 mm. PETG forms at 120–160 °C without drying and is easier, but it's less impact- and UV-resistant.
   - **Drying:** PC must be dried first (about 120 °C for several hours for 1.5 mm sheet) or it bubbles when heated.
@@ -224,6 +224,33 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
   - **Method:** drape or vacuum forming (a shop-vac box) over the buck, or a heat gun and a simple frame for small pieces. The shape is a simple L with a rounded corner, so it drapes well.
   - **Optics:** a uniform thin shell barely bends the beam, but any mould marks scatter light, which shows as glare. Keep the buck's surface smooth and polished, or form with the inner face off the buck.
   - **Sealing:** each piece sits in a printed groove along its top, bottom and both ends with a neutral-cure RTV bead. There's no bezel across the view.
+
+*v4 at 150 mm: owner's review of the renders (2026-11-21).* The owner reviewed the v4 renders and decided:
+- **Width:** the body should be narrower, ideally **150 mm** wide (owner's target, not a firm constraint).
+- **Lidar:** the **Benewake TFS20-L** replaces the TF02-Pro (§9). With no lidar bay between them, the two mirror modules sit side by side. It first went in a small pod on the roof; the owner then had it moved **under the beams**, behind a rounded chin (below).
+- **Clear sides stay fully clear**, showing the mechanism. One piece now runs across the whole front and round both corners, about 200 mm developed length.
+- **The exposed fins under the body are fine.**
+- **An exploded view** is added to the renders.
+
+What changed in the model (`cad/headlight-v4.scad`):
+- **Inward yaw becomes an aim trim:** since no beam swings inward (§5, turning behaviour), inward mirror travel drops from 7.5° to **2.5°**. That keeps ±5° of beam trim for a mount that isn't quite square. Outward stays 12.5° (beam 25°).
+- **Gimbal supports:** a 6 mm centre post holds both modules' inner pitch shafts, and a 4 mm post at each side holds the outer ones. The MR63 bearings move into the gimbal frames, so the posts only hold shaft ends.
+- **Servos and board:** the servos move outward to the tail, so the electronics board (≥ 55 mm) still fits between them.
+- **Shape tweaks to fit inside the wall at this width:**
+  - Body taper 8 → 4 mm each side, so the gimbal frames' rear-outer corners clear the side walls.
+  - Clear-corner radius 18 → 12 mm (still easy to drape-form in 1.5 mm PC), so the frames' front-outer corners clear the corner.
+  - Front clearance 4 → 5 mm. The stricter skin check found each mirror's outer end touching the inside of the front wall at full outward yaw and forward tilt. The 200 mm model had the same touch, hidden because the check only looked at the outer skin.
+- **Stricter skin check (C-PKG-18):** optics, servos, board and mirrors are now checked against the inner skin, so they also clear the wall. The lidar is checked against the outer skin (body plus chin), since its window cuts through the wall.
+- **Model result:** about **151 × 72 × 95 mm** body, down from 200 mm, and 112 mm tall with the heatsink fins. With the lidar under the beams nothing rises above the roof (the roof pod first tried added 18 mm). Head mass is **~331 g** with the lidar (C-MASS-01), down from ~399 g: about 48 g from the lidar, 10 g from the smaller shell, and 10 g from dropping the roof pod first tried (the model drew that pod as solid plastic round the lidar, so part of the last 10 g is the earlier figure overcounting).
+- **What sets the width now:** the two gimbals, the centre post and the outer posts, not the beams. The last millimetre to 150 would come from the outer posts; the 2.5° trim no longer affects the width.
+- **Checks:** C-PKG-14 and 16 are retired (they checked the lidar bay). C-PKG-15 now checks that the spots' light clears the centre post. C-PKG-18 checks the skin with the chin included. New C-PKG-19 checks the lidar in the nose (below).
+
+*Lidar under the beams (owner, 2026-11-21).* After seeing the roof pod as a box on the roof, the owner asked for the lidar to go underneath, with the casing rounded round it into a hump rather than a box.
+- **Where it fits:** the 12 mm gap between the two heatsinks is too narrow for the 21 mm sensor, but the strip of floor between the heatsink fins and the front wall is 15 mm deep. The lidar sits there, **inside the body** on the floor, centred between the modules and below the clear piece, looking out through its own small window in the front wall.
+- **The hump:** the body's bottom front edge is rounded (6 mm), which would cut across the bottom of the window. A shallow **chin**, a U shape seen from the front (about 42 mm wide, 10 mm deep, 2 mm below the underside), keeps the window face flat and fairs into the underside on both sides. It ends just ahead of the heatsink fins and stays far above their 16.5 mm depth, so the head is no taller: about **112 mm with the fins**, against 128 mm at the roof pod.
+- **Gains:** no roof pod or cable hole to seal (the lidar is inside the sealed body, behind one gasketed window), shaded from the sun, and a clean roof.
+- **Costs:** the lidar is now inside the head with the LED boards (spot optics about 8 mm away) and in front of the heatsinks, so its 60 °C limit depends on the internal air (B-THM-03 now measures it there). It sits about 110 mm lower, so the ray meets the road at a slightly shallower angle; the firmware learns the height `h` at calibration, so nothing changes there.
+- **C-PKG-19:** the lidar clears the spot optics, leaves at least 4 mm of wall between its window and the clear piece above it, and its chin ends ahead of the heatsink fins.
 
 **Waterproofing and vibration review (2026-11-21, v3 and v4).**
 
@@ -236,7 +263,7 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
 | Heatsink opening(s) in the floor, O-ring | 1 | 2 |
 | Service cover (top or back), O-ring | 1 | 1 |
 | Main window(s), gasket in bezel | 1 | 2 |
-| Lidar | in the brow, own gasket | lidar bay opening, gasket |
+| Lidar | in the brow, own gasket | small window in the nose under the clear piece, gasket (TFS20-L isn't IP-rated, so it sits inside the sealed body) |
 | Cornering-light windows | 2 | 0 |
 | Gland, vent, button | 3 | 3 |
 | Total static seal length (model) | ~0.7 m | ~1.25 m |
@@ -257,7 +284,7 @@ v4 has fewer separate openings but about 80% more seal length, so more places fo
 - **5 g servos** have weaker, often plastic, gears. Metal-gear versions are preferred, with the 12 g ES08MD II as the fallback if B-MIR-02/05 show jitter.
 - **Electronics:** heavy parts (BuckBlocks, capacitors, the Pololu) held down with silicone; wires strain-relieved; the XIAO soldered rather than socketed; the STEMMA QT plug glued after test.
 - **Fasteners:** LED boards and metal parts with low-strength threadlocker. **Never threadlocker near the polycarbonate window or the PMMA optics**, because anaerobic threadlockers crack them; use nylon-insert nuts or screws with a nylon patch there.
-- **Lidar:** clamped on a foam gasket; it's IP65 itself.
+- **Lidar:** v3's TF02-Pro is clamped on a foam gasket and is IP65 itself. v4's TFS20-L isn't rated, so it sits inside the sealed body, behind a gasketed window in the nose.
 - **Mount:** the 1/4"-20 joint can loosen under vibration: a lock washer on the metal adapter, and the leash always.
 
 *Verdict:* both layouts can be made waterproof to IP65 and vibration-resistant, because nothing moving passes through a wall. v4 carries more risk on both counts (longer seals, two-axis gimbals) and needs its extra tests passed before a ride.
@@ -295,7 +322,7 @@ v4 has fewer separate openings but about 80% more seal length, so more places fo
 - **Checks:** C-PKG-01 to 16 pass for v4 (14–16 are v4-only: lidar height, inward beam clearing the lidar bay, gimbal frame clearing the bay).
 - **Trade against v3:** v4 gains steering into turns, a roughly levelled cutoff when leaning (raise the inside half, lower the outside), software-adjustable spread and a brow-free shape. It costs four servos, gimbals, more firmware and calibration, and ~80 mm more width.
 - **Turning behaviour (owner decision, 2026-11-21):** in a turn, only the beam on the turn side swings into the curve, up to 25° outward through the clear wraparound side. The other beam stays straight ahead, so the road being left and anything coming the other way stay lit. Both mirrors still tilt to undo the lean. The yaw target is to be specified in the firmware spec if v4 is adopted (the ride demo uses "aim at the road 20 m ahead along the curve").
-  - **Consequence:** no beam ever swings inward. The inward travel (beam 15° inward, which sets C-PKG-15 and part of the body width) could be removed, making the body narrower and simplifying the gimbal. To check in the CAD model if v4 is adopted.
+  - **Consequence:** no beam ever swings inward. Done 2026-11-21: inward travel cut to a 2.5° aim trim, and the body narrowed (see "v4 at 150 mm" above).
 
 ## 6. Mounting
 
@@ -358,10 +385,21 @@ Seven LEDC channels are used (four servos, two DIM, the ring LED) of the ESP32-S
 
 ## 9. Optional: road-slope lidar (look-ahead)
 
-**Sensor: Benewake TF02-Pro**
-- IP65, 0.1–13.5 m at 10% reflectivity, 100 Hz, I²C/UART, 5–12 V.
-- Mounted on the **body** (never the mirror) in a gasketed pocket in the top cover, lenses flush with the front, aimed about 3–5° below the beam axis. To save about 72 g on the head, it can instead go in its own housing on the wheel shell (§5).
-- The TFmini Plus was rejected: only about 4 m range at 10% reflectivity.
+**Sensor: Benewake TFS20-L** (owner's choice, 2026-11-21, replacing the TF02-Pro so the body can narrow to ~150 mm)
+- **Size and mass:** 21 × 15 × 7.9 mm and 1.35 g, against the TF02-Pro's ~69 × 42 × 26 mm and ~50 g.
+- **Range:** 0.2–9 m at 10% reflectivity in 100 klux sunlight, 12 m in the dark (TF02-Pro: 13.5 m). The aim point is about 8 m ahead, so the margin is thin; Benewake's datasheet versions disagree, and these are the more cautious figures.
+- **Other specs:** 100 Hz default (up to 250 Hz), FoV under 2°, 905 nm VCSEL, Class 1 eye-safe, -20 to +60 °C.
+- **Supply and interface:** 3.3 V only (not 5 V), ≤ 0.43 W, peak under 130 mA. I²C at address 0x10 by default, with 3.3 V logic like the XIAO, so the one-time UART mode switch the TF02-Pro needed goes away.
+- **Mounting:** on the **body** (never the mirror), low in the nose: on the floor between the two modules, below the clear piece, aimed about 3–5° below the beam axis (on the roof until the owner moved it under, 2026-11-21; §5). The model draws it level; the 3–5° wedge in its printed seat isn't modelled.
+  - It has **no IP rating**, so it sits inside the sealed head behind its own small clear window, cut from the polycarbonate sheet and gasketed into the front wall over a shallow rounded chin.
+  - A divider between the two lenses, touching the window, stops the window reflecting the laser straight back into the receiver.
+  - Range through the window is to be measured on the bench (B-LID-02).
+- **Lens face to check:** the model assumes the lenses are on the 21 × 15 face, which makes the window 15 mm tall and needs the chin. Check Benewake's dimension drawing before the shell is printed. If the lenses are on the 21 × 7.9 face, the window is only 8 mm tall but the sensor is 15 mm deep, which reaches back over the heatsinks' front edge: C-PKG-19 has to be re-run and the seat moved.
+- **Temperature:** under the beams it's shaded from the sun, but it shares the head's internal air with the LED boards and sits just ahead of the heatsinks. The 60 °C limit applies there; to check in B-THM-03.
+- **Alternatives rejected:**
+  - TFmini Plus: only about 4 m at 10% reflectivity.
+  - TF-Luna: 2.5 m at 10%.
+  - TF02-Pro: dropped for its width, ~50 g and ~$40 more.
 - Asphalt is dark in infrared and the ray hits it at a shallow angle, so expect real range below the spec. Start aiming about 8 m ahead and tune.
 
 **Geometry:**
@@ -381,16 +419,23 @@ Seven LEDC channels are used (four servos, two DIM, the ring LED) of the ESP32-S
 - A missing return means a small downward bias, then a fall back to the IMU estimate.
 - The lidar estimate is always blended with the IMU estimate, never used alone.
 
-**Power and wiring:** about 1 W at 5 V. It shares the I²C bus after a one-time UART command switches it to I²C mode.
+**Power and wiring:** TFS20-L: about 0.4 W from the XIAO's 3.3 V rail (peak under 130 mA), on the shared I²C bus at its default address 0x10. No mode switch needed. (TF02-Pro, v3: about 1 W at 5 V, I²C after a one-time UART command.)
 
 ## 10. Open questions and risks
 
 - [x] ~~Does the 519A dome fit the Carclo 10734 holder?~~ No longer needed: the 519A was dropped for the FILIPPA low beam (2026-11-21).
 - [ ] BuckBlock analog dimming using 20 kHz PWM + RC: linearity, minimum level.
-- [ ] Mirror vibration and ringing at EUC vibration frequencies. Is the balance good enough?
+- [ ] Mirror vibration and ringing at EUC vibration frequencies. Is the balance good enough? (Owner asked about dampers, 2026-11-21.) The mirror doubles any wobble: 0.1° of mirror flutter moves the cutoff ~13 cm at 38 m. Decide after B-MIR-04/05 and a logged ride, trying these in order:
+  1. Balance the gimbals about both axes (already in the design).
+  2. A light preload spring on each linkage to take out servo gear backlash (a few grams).
+  3. Rubber or TPU isolators at the head mount against high-frequency buzz, without adding a slow wobble the IMU loop would have to chase.
+  4. Viscous damping grease on the pivot bearings, at some cost in response time.
+
+  Elastomer dampers on each mirror would fight the servos, so they come last.
 - [ ] Hobby servo deadband and jitter after the 4:1 linkage. Is a gimbal BLDC needed (GBM2804 + SimpleFOC + AS5600)?
 - [ ] Does the ASA housing stay sealed over thermal cycles? Long-term creep at the screw bosses?
-- [ ] Real TF02-Pro range and dropout rate on wet and dry asphalt at about 4° grazing angle.
+- [ ] Real TFS20-L range and dropout rate on wet and dry asphalt at about 4° grazing angle, through its window (B-LID-01, B-LID-02). Only about 9 m at 10% in sunlight on paper, against an ~8 m aim point.
+- [ ] TFS20-L lens face (21 × 15 or 21 × 7.9) from the dimension drawing: sets the window and chin in the nose (C-PKG-19).
 - [ ] Head weight on VHB mounts. Is the leash mandatory?
 - [ ] Two-axis gimbal backlash and ringing under EUC vibration (v4, B-MIR-05); 5 g servo gear durability.
 - [ ] Power-on flash: DIM floats until the firmware drives the 2N3904s, so both channels start at 2.1 A. Base pull-ups would stop it, but they also turn the light off if the MCU dies, which loses the full-on failsafe. Accept the flash, or find a way to keep both (e.g. an RC that holds the transistor on only for the first second)?
@@ -400,7 +445,7 @@ Seven LEDC channels are used (four servos, two DIM, the ring LED) of the ESP32-S
 - [ ] P6KE27A clamps at ~37.5 V, above the BuckBlock's 32 V maximum. Low risk with a 20 V bank, but a lower-clamp TVS would cover it.
 - [x] Cost over the limit: about $290 core + $98 lidar ≈ $388, against a $350 ceiling. Resolved 2026-11-20: the owner raised the limit to $450, so no parts change.
 - [x] **The flood has no cutoff.** Resolved 2026-11-21: the owner chose two LEDiL FILIPPA-STVZO cutoff optics with XP-L HI as the low beam (§3). A shield or masked mirror edge was rejected because a TIR beam isn't an image, so blocking part of it only dims it without making a sharp edge.
-- [ ] **Head weight is close to the 400 g limit** (raised from 350 g, owner, 2026-11-21): ~399 g with the lidar for v4 with the clear wraparound sides, 1 g of margin (v3 was ~401 g). The custom PCB should add ~20 g of margin; the part masses are estimates until weighed (E-MNT-01).
+- [ ] **Head weight against the 400 g limit** (raised from 350 g, owner, 2026-11-21): ~399 g with the TF02-Pro for v4 at 200 mm; ~331 g at 151 mm with the TFS20-L under the beams (2026-11-21), 69 g of margin (v3 was ~401 g). The custom PCB should add ~20 g of margin; the part masses are estimates until weighed (E-MNT-01).
 - [ ] Heatsink sized for moving air (§8): confirm the riding temperature and the parked derating on the bench (B-THM-01).
 - [ ] FILIPPA with XP-L HI: focus height, cutoff sharpness and cutoff orientation are not in LEDiL's data. Bench tests B-OPT-05 and B-OPT-06.
 - [ ] Larger mirror (115 × 55 mm, about 5× the moment of inertia): does the servo still settle in under 50 ms (B-MIR-01)?
@@ -408,5 +453,5 @@ Seven LEDC channels are used (four servos, two DIM, the ring LED) of the ESP32-S
 - [x] ~~Cornering-light glare and the toed-out cutoff tilt (B-CRN-01, B-OPT-08)~~ v3 only; v4 has neither (2026-11-21).
 - [ ] v4 turn steering: write the yaw rule into the firmware spec (the ride demo aims the turn-side beam at the road 20 m ahead, up to 25°) and the safety invariant that goes with it.
 - [x] Speed source for v4 (high-beam width and turn steering): estimated from the IMU, with resets when still and corrections in turns (owner's decision, 2026-11-21; firmware-spec §12). Its accuracy on long straights is checked in R-SPD-01.
-- [ ] v4 with no inward yaw: narrow the body and simplify the gimbals (§5), then re-run the checks and the mass budget.
+- [x] v4 with no inward yaw: narrow the body (§5). Done 2026-11-21 with the TFS20-L (now under the beams): ~151 mm, checks and mass re-run.
 - [x] How calibration and settings are controlled: a calibration page over the head's own Wi-Fi, with the button and remote kept as a full fallback (decided 2026-11-21; firmware-spec §11).

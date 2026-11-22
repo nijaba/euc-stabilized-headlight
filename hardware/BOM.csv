@@ -28,7 +28,7 @@ C. Optics & mechanism,Servos,"Digital micro servo, ~5 g class, metal gears prefe
 C. Optics & mechanism,Heatsinks (= floor),"Finned aluminium heatsink extrusion, cut into 2 × ~54×26 mm, ~2.5 mm base, 6 fins each ~14 mm, fins running fore-aft",1,9.00,9.00,https://www.amazon.com/s?k=aluminum+heatsink+extrusion+50mm+wide,search,Cut from extrusion; LED stars screw to the flat side; drill/tap M3. Fins must run front-to-back
 C. Optics & mechanism,Thermal paste,Arctic MX-4 (or similar),1,7.00,7.00,https://www.amazon.com/s?k=Arctic+MX-4,search,Skip if you have it
 D. Housing & sealing,Filament,ASA 1 kg (Polymaker / Prusament) – ~150 g used,1,25.00,25.00,https://www.amazon.com/s?k=ASA+filament+1kg,search,Black interior parts can be same spool
-D. Housing & sealing,Clear sides,"Polycarbonate sheet 1–1.5 mm, ~300×200 mm, thermoformed into 2 wraparound front-and-side pieces",1,12.00,12.00,https://www.amazon.com/s?k=polycarbonate+sheet+1.5mm,search,Dry it before forming (about 120 °C for a few hours) or it bubbles. Forms at ~170–190 °C
+D. Housing & sealing,Clear sides,"Polycarbonate sheet 1–1.5 mm, ~300×200 mm, thermoformed into one piece across the front and round both sides (~200 mm developed length), plus the small lidar window",1,12.00,12.00,https://www.amazon.com/s?k=polycarbonate+sheet+1.5mm,search,Dry it before forming (about 120 °C for a few hours) or it bubbles. Forms at ~170–190 °C
 D. Housing & sealing,Forming buck,"Plaster of Paris or casting resin, for the mould (ASA softens below the forming temperature)",1,8.00,8.00,https://www.amazon.com/s?k=plaster+of+paris,search,Or MDF or aluminium; or coat an ASA buck with high-temperature epoxy
 D. Housing & sealing,Anti-fog,Rain-X Anti-Fog (inside of window),1,6.00,6.00,https://www.amazon.com/s?k=Rain-X+anti+fog,search,
 D. Housing & sealing,O-ring,"Silicone O-ring cord, 2 mm, 2 m",1,8.00,8.00,https://www.amazon.com/s?k=silicone+o-ring+cord+2mm,search,Glue the ends with CA glue
@@ -56,12 +56,12 @@ G. Remote (DIY),Buttons,IP67 sealed tactile switch (e.g. C&K KSC series),2,1.20,
 G. Remote (DIY),Strap,"Hook-and-loop strap, 20 mm",1,5.00,5.00,https://www.amazon.com/s?k=velcro+strap+20mm,search,Case printed from the ASA spool
 G'. Remote (cheap alternative),BLE shutter / page-turner ring,Generic BLE HID remote,1,6.00,6.00,https://www.amazon.com/s?k=bluetooth+camera+shutter+remote,search,Replaces all of section G. May lose the first press after it sleeps
 Printed,Body,"ASA, 5 perimeters, open top, O-ring groove, vent + button + gland bosses",1,0.00,0.00,,printed,
-Printed,Clear-side clamps,"ASA, clamp each wraparound piece with its gasket, and frame the lidar bay",1,0.00,0.00,,printed,
+Printed,Clear-side clamps,"ASA, clamp the wraparound piece with its gasket; centre post and two outer posts carry the pitch shafts",1,0.00,0.00,,printed,
 Printed,Gimbals,"ASA outer frame pitching on MR63 bearings, mirror cradle yawing inside it on pins; each balanced about both axes",2,0.00,0.00,,printed,
 Printed,Servo brackets + lever arms,"ASA, two servos per side stacked in the back slot, each linkage about 4:1",2,0.00,0.00,,printed,
 Printed,Optic plates,"ASA, one per module, locate a Carclo holder and a FILIPPA optic on each heatsink. Slots key the FILIPPA rib toward the front; spacers set the FILIPPA focus height",2,0.00,0.00,,printed,
 Printed,Electronics tray,"ASA, holds the protoboard, BuckBlocks, Pololu",1,0.00,0.00,,printed,
 Printed,Mount boss,"ASA, on the back of the body, holds the 1/4""-20 insert",1,0.00,0.00,,printed,
 Printed,Remote case,"ASA or TPU, 2 buttons + strap slots",1,0.00,0.00,,printed,
-H. Road-slope lidar (optional),Lidar,"Benewake TF02-Pro, IP65, 13.5 m @10% reflectivity, UART/I2C, 5-12 V",1,92.49,92.49,https://www.racedayquads.com/products/benewake-tf02-pro-ip65-lidar,product,Also Lumenier / GetFPV (~$100). Shared I2C bus
-H. Road-slope lidar (optional),Lidar gasket + screws,EPDM foam gasket strip 3 mm + M2.5 stainless screws,1,6.00,6.00,https://www.amazon.com/s?k=EPDM+foam+gasket+tape+3mm,search,Seals the lidar face in its own cut-out
+H. Road-slope lidar (optional),Lidar,"Benewake TFS20-L, 21 x 15 x 7.9 mm, 1.35 g, 0.2-9 m @10% reflectivity in 100 klux sun, I2C/UART, 3.3 V",1,55.00,55.00,https://en.benewake.com/TFS20L/index.html,product,"Owner's choice 2026-11-21, replaces the TF02-Pro. Price estimated; not IP-rated, sits inside the body behind its own window in the nose. Shared I2C bus"
+H. Road-slope lidar (optional),Lidar window gasket + screws,EPDM foam gasket strip 3 mm + M2 stainless screws,1,4.00,4.00,https://www.amazon.com/s?k=EPDM+foam+gasket+tape+3mm,search,Seals the lidar window (window cut from the clear-side sheet)

@@ -185,7 +185,7 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
     <div class="status">Concept design: nothing built or tested yet. Every figure is an estimate.</div>
   </div>
   <figure class="render" style="margin:0">
-    <img src="img/v4-three-quarter.png" alt="Packaging model of the head: a rounded light bar with a mirror module each side, the lidar in the middle and clear wraparound sides" width="1600" height="1200">
+    <img src="img/v4-three-quarter.png" alt="Packaging model of the head: a rounded light bar with two mirror modules side by side, the lidar in a rounded chin under the beams and one clear piece wrapping the front and sides" width="1600" height="1200">
     <figcaption>Packaging model, layout v4 · OpenSCAD</figcaption>
   </figure>
 </header>
@@ -287,15 +287,16 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
 <section id="design">
   <div class="wrap">
     <div class="eyebrow">Design · layout v4</div>
-    <h2>A rounded light bar, 200 mm wide</h2>
-    <p class="intro">The packaging model checks that everything fits, sweeps and stays under the weight limit before any part is bought. Layout v4 was chosen on 2026-11-21 over a narrower single-mirror head (v3) with fixed cornering lights.</p>
+    <h2>A rounded light bar, about 150 mm wide</h2>
+    <p class="intro">The packaging model checks that everything fits, sweeps and stays under the weight limit before any part is bought. Layout v4 was chosen on 2026-11-21 over a single-mirror head (v3) with fixed cornering lights. After reviewing the renders the same day, a much smaller lidar moved low into the nose, under the beams, so the two modules sit side by side and the body narrowed from 200 to about 151 mm.</p>
     <div class="gallery">
       <figure><div class="shot"><img src="img/v4-turning.png" alt="Model in a left turn: the left beam swung outward, the right beam straight ahead" loading="lazy" width="1600" height="1200"></div><figcaption><b>Left turn.</b> The left beam swings 25° out through the clear side; the right one stays straight.</figcaption></figure>
-      <figure><div class="shot"><img src="img/v4-top.png" alt="Top view in a left turn: left beam swung out, right beam straight" loading="lazy" width="1600" height="1200"></div><figcaption><b>From above, left turn.</b> Two modules with the lidar bay between them and the servos in the back slot.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-top.png" alt="Top view in a left turn: left beam swung out, right beam straight" loading="lazy" width="1600" height="1200"></div><figcaption><b>From above, left turn.</b> Two modules side by side around the centre post, and the servos in the back slot.</figcaption></figure>
       <figure><div class="shot"><img src="img/v4-cutaway.png" alt="Cut-away side view showing LED, optic, mirror and heatsink" loading="lazy" width="1600" height="1200"></div><figcaption><b>Cut-away.</b> LED facing up, optic, 45° mirror, heatsink floor.</figcaption></figure>
       <figure><div class="shot"><img src="img/v4-under.png" alt="Underside with two finned heatsinks" loading="lazy" width="1600" height="1200"></div><figcaption><b>Underneath.</b> Two aluminium heatsinks, fins fore-aft in the airflow.</figcaption></figure>
       <figure><div class="shot"><img src="img/v4-on-wheel.png" alt="The head mounted on a generic wheel for scale" loading="lazy" width="1600" height="1200"></div><figcaption><b>On a wheel.</b> Generic 16-inch shell, for scale.</figcaption></figure>
-      <figure><div class="shot"><img src="img/v4-front.png" alt="Front view of the head" loading="lazy" width="1600" height="1200"></div><figcaption><b>Front.</b> Low beam outside, spot inside, behind one curved clear piece per side.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-front.png" alt="Front view of the head" loading="lazy" width="1600" height="1200"></div><figcaption><b>Front.</b> Low beam outside, spot inside, behind one curved clear piece; the lidar looks out of the rounded chin below them.</figcaption></figure>
+      <figure><div class="shot"><img src="img/v4-exploded.png" alt="Exploded view: shell lifted off, clear piece and lidar forward, servos and board back, optics and heatsinks below" loading="lazy" width="1600" height="1200"></div><figcaption><b>Exploded.</b> Shell, clear piece, lidar, mirrors, servos and board, optics, heatsinks.</figcaption></figure>
     </div>
   </div>
 </section>
@@ -330,7 +331,7 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
             <tr><td>Pitch correction</td><td class="num">~0.05 s</td></tr>
             <tr><td>Hill follow</td><td class="num">&lt; 1 s</td></tr>
             <tr><td>Turn swing</td><td class="num">up to 25°</td></tr>
-            <tr><td>Size</td><td class="num">~200 × 70 × 111 mm</td></tr>
+            <tr><td>Size</td><td class="num">~151 × 72 × 112 mm</td></tr>
             <tr><td>Sealing target</td><td class="num">IP65</td></tr>
           </tbody>
         </table>
@@ -340,13 +341,13 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
       <div class="panel budget">
         <h3>Limits, with the lidar fitted</h3>
         <div class="meter">
-          <div class="row"><span>Head weight</span><span>~399 / 400 g</span></div>
-          <div class="bar" role="img" aria-label="399 of 400 grams"><i style="width:99.75%"></i><b></b></div>
+          <div class="row"><span>Head weight</span><span>~331 / 400 g</span></div>
+          <div class="bar" role="img" aria-label="331 of 400 grams"><i style="width:82.75%"></i><b></b></div>
           <small>Printed parts measured from the model; bought parts from datasheets. Only 1 g of margin: the custom PCB should win some back.</small>
         </div>
         <div class="meter">
-          <div class="row"><span>Material cost per unit</span><span>~$440 / $450</span></div>
-          <div class="bar" role="img" aria-label="440 of 450 dollars"><i style="width:97.8%"></i><b></b></div>
+          <div class="row"><span>Material cost per unit</span><span>~$401 / $450</span></div>
+          <div class="bar" role="img" aria-label="401 of 450 dollars"><i style="width:89.1%"></i><b></b></div>
           <small>Excludes the power bank, tools and leftover packs. About $342 without the lidar.</small>
         </div>
       </div>
@@ -367,7 +368,7 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
     <div class="parts">
       <div class="part"><div class="role">Brain</div><div class="name">Seeed XIAO ESP32-S3</div><p>Control loop, BLE remote, Wi-Fi calibration page.</p></div>
       <div class="part"><div class="role">Sensor</div><div class="name">LSM6DSO32 IMU</div><p>6-axis, ±32 g, so crash detection doesn't saturate.</p></div>
-      <div class="part"><div class="role">Look-ahead</div><div class="name">Benewake TF02-Pro lidar</div><p>Measures the road slope ahead. Optional: everything works without it.</p></div>
+      <div class="part"><div class="role">Look-ahead</div><div class="name">Benewake TFS20-L lidar</div><p>A 1.35 g sensor low in the nose that measures the road slope ahead. Optional: everything works without it.</p></div>
       <div class="part"><div class="role">Light</div><div class="name">4 × Cree XP-L HI</div><p>Two behind FILIPPA cutoff optics, two behind Carclo spots.</p></div>
       <div class="part"><div class="role">Drivers</div><div class="name">2 × BuckBlock 2.1 A</div><p>Run at full current if the MCU dies: the light stays on.</p></div>
       <div class="part"><div class="role">Steering</div><div class="name">4 × 5 g servos, 2 mirrors</div><p>Front-surface glass on printed two-axis gimbals.</p></div>
@@ -433,7 +434,7 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
 
 <footer>
   <div class="wrap">
-    <p><b style="color:var(--fg);font-weight:500">A concept design.</b> Nothing here has been built or tested yet, so it isn't ready to build; ideas and doubts are welcome as <a href="https://github.com/nijaba/euc-stabilized-headlight/issues">GitHub issues</a>. Ride with a backup light until it's proven, and check your country's lighting rules: aim the low beam so it doesn't dazzle other road users. The optional TF02-Pro is a Class 1 (eye-safe) laser device.</p>
+    <p><b style="color:var(--fg);font-weight:500">A concept design.</b> Nothing here has been built or tested yet, so it isn't ready to build; ideas and doubts are welcome as <a href="https://github.com/nijaba/euc-stabilized-headlight/issues">GitHub issues</a>. Ride with a backup light until it's proven, and check your country's lighting rules: aim the low beam so it doesn't dazzle other road users. The optional TFS20-L lidar is a Class 1 (eye-safe) laser device.</p>
     <p>Hardware and firmware under GPL-3.0. <a href="https://github.com/nijaba/euc-stabilized-headlight">github.com/nijaba/euc-stabilized-headlight</a></p>
   </div>
 </footer>

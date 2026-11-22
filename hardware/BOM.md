@@ -1,10 +1,11 @@
 # EUC Stabilized Headlight – Bill of Materials (v4)
 
-Version: layout v4 (adopted 2026-11-21): XIAO ESP32-S3, 3D-printed ASA housing with two aluminium heatsinks and thermoformed polycarbonate wraparound sides, external USB-C PD power bank, two mirrors on 2-axis gimbals driven by four servos, optional road-slope lidar.  
+Version: layout v4 (adopted 2026-11-21): XIAO ESP32-S3, 3D-printed ASA housing with two aluminium heatsinks and one thermoformed polycarbonate piece wrapping the front and both sides, external USB-C PD power bank, two mirrors on 2-axis gimbals driven by four servos side by side, optional road-slope lidar (TFS20-L low in the nose).  
 Prices: approximate USD street prices, Nov 2026. **Check the live pages before ordering.** Links marked *search* go to a marketplace search because those parts are commodity items with many equivalent sellers.
 
 ## Changes since the last design
 
+- **150 mm body and a smaller lidar (owner, 2026-11-21):** the Benewake TFS20-L (21 × 15 × 7.9 mm, 1.35 g, 3.3 V I²C) replaces the TF02-Pro and moves out of the middle of the front (first to a roof pod, then, the same day, low in the nose under the beams), so the two mirror modules sit side by side and the body narrows to about 151 mm. One clear piece now wraps the whole front. About $39 less with the lidar.
 - **Layout v4 (2026-11-21):** two mirrors on 2-axis gimbals and four servos replace the single mirror and servo. The cornering lights, their drivers and optics, the toe-out wedges and the brow are gone. The flat window becomes two thermoformed polycarbonate wraparound pieces. Net about +$26 per unit.
 - **LED driver:** the Mean Well LDD-1500H is discontinued, so it's replaced by the **LEDdynamics BuckBlock A009-D-V-2100**. It's dimmable and rated 2.1 A. Firmware caps it at about 1.5 A in normal mode and allows 2.1 A in a time-limited boost mode.
 - **Dimming flicker:** BuckBlock PWM is specified at 200 Hz, which would flicker visibly on a moving wheel. Instead, the 2N3904 interface runs at about 20 kHz with a 10 µF cap on DIM, which turns it into smooth analog dimming. Verify this on the bench.
@@ -65,7 +66,7 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 | Item | Part / spec | Qty | Unit $ | Ext $ | Source | Notes |
 |---|---|---|---|---|---|---|
 | Filament | ASA 1 kg (Polymaker / Prusament) – ~150 g used | 1 | 25.00 | 25.00 | [search](https://www.amazon.com/s?k=ASA+filament+1kg) | Black interior parts can be same spool |
-| Clear sides | Polycarbonate sheet 1–1.5 mm, ~300×200 mm, thermoformed into 2 wraparound front-and-side pieces | 1 | 12.00 | 12.00 | [search](https://www.amazon.com/s?k=polycarbonate+sheet+1.5mm) | Dry it before forming (about 120 °C for a few hours) or it bubbles. Forms at ~170–190 °C |
+| Clear sides | Polycarbonate sheet 1–1.5 mm, ~300×200 mm, thermoformed into one piece across the front and round both sides (~200 mm developed length), plus the small lidar window | 1 | 12.00 | 12.00 | [search](https://www.amazon.com/s?k=polycarbonate+sheet+1.5mm) | Dry it before forming (about 120 °C for a few hours) or it bubbles. Forms at ~170–190 °C |
 | Forming buck | Plaster of Paris or casting resin, for the mould (ASA softens below the forming temperature) | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=plaster+of+paris) | Or MDF or aluminium; or coat an ASA buck with high-temperature epoxy |
 | Anti-fog | Rain-X Anti-Fog (inside of window) | 1 | 6.00 | 6.00 | [search](https://www.amazon.com/s?k=Rain-X+anti+fog) |  |
 | O-ring | Silicone O-ring cord, 2 mm, 2 m | 1 | 8.00 | 8.00 | [search](https://www.amazon.com/s?k=silicone+o-ring+cord+2mm) | Glue the ends with CA glue |
@@ -115,9 +116,9 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 
 | Item | Part / spec | Qty | Unit $ | Ext $ | Source | Notes |
 |---|---|---|---|---|---|---|
-| Lidar | Benewake TF02-Pro, IP65, 13.5 m @10% reflectivity, UART/I²C, 5–12 V | 1 | 92.49 | 92.49 | [link](https://www.racedayquads.com/products/benewake-tf02-pro-ip65-lidar) | Also Lumenier / GetFPV (~$100). Runs on the shared I²C bus (one-time UART command to switch modes) |
-| Lidar gasket + screws | EPDM foam gasket strip 3 mm + M2.5 stainless screws | 1 | 6.00 | 6.00 | [search](https://www.amazon.com/s?k=EPDM+foam+gasket+tape+3mm) | Seals the lidar face in its own front cut-out |
-| **Subtotal** | | | | **98.49** | | |
+| Lidar | Benewake TFS20-L, 21 × 15 × 7.9 mm, 1.35 g, 0.2–9 m @10% reflectivity in 100 klux sun (12 m in the dark), I²C/UART, 3.3 V | 1 | 55.00 | 55.00 | [link](https://en.benewake.com/TFS20L/index.html) | Owner's choice, 2026-11-21 (replaces the TF02-Pro). Price estimated from an AU$85 listing; also sold by GetFPV, DFRobot (SEN0672), Mouser. Not IP-rated: it sits inside the sealed body, behind its own window in the nose. 3.3 V only, on the shared I²C bus |
+| Lidar window gasket + screws | EPDM foam gasket strip 3 mm + M2 stainless screws (window cut from the clear-side sheet) | 1 | 4.00 | 4.00 | [search](https://www.amazon.com/s?k=EPDM+foam+gasket+tape+3mm) | Seals the lidar window; a divider between the lenses stops the window reflecting the laser back |
+| **Subtotal** | | | | **59.00** | | |
 
 ### Cheaper remote alternative (replaces section G)
 
@@ -127,7 +128,7 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 
 ## Bench kit (order first, build-plan phase 2)
 
-For firmware and bench testing before the protoboard or any PCB. Most of it is the real parts from the sections above and goes into the final build. Quantities cover both v3 and v4 (four servos). It is a one-off purchase list, so it is not in `BOM.csv` or the per-unit cost summary.
+For firmware and bench testing before the protoboard or any PCB. Most of it is the real parts from the sections above and goes into the final build. Quantities are for v4 (four servos, two LED channels). It is a one-off purchase list, so it is not in `BOM.csv` or the per-unit cost summary.
 
 | Item | Part / spec | Qty | Unit $ | Ext $ | Source | Reused in the build? |
 |---|---|---|---|---|---|---|
@@ -138,25 +139,26 @@ For firmware and bench testing before the protoboard or any PCB. Most of it is t
 | Mirror test pieces | Front-surface mirror offcuts, MR63ZZ bearings, 3 mm rod, pushrod kit (section C) | 1 | 31.00 | 31.00 | see section C | Bearings, rod and kit yes |
 | Laser module | 5 V 650 nm dot laser module | 1 | 5.00 | 5.00 | [search](https://www.amazon.com/s?k=5V+650nm+laser+dot+module) | No (test tool) |
 | Breadboard + jumpers | Full-size breadboard and jumper wire kit | 1 | 10.00 | 10.00 | [search](https://www.amazon.com/s?k=breadboard+jumper+wire+kit) | No (test tool) |
-| Optics bench | 1 BuckBlock, 2 XP-L HI on stars, 1 FILIPPA-STVZO, 1 Carclo 10003 + holder, the heatsink (sections B, C) | 1 | 50.00 | 50.00 | see sections B, C | Yes |
+| Optics bench | 2 BuckBlocks (phase 3 tests both channels), 2 XP-L HI on stars, 1 FILIPPA-STVZO, 1 Carclo 10003 + holder, the heatsink (sections B, C) | 1 | 71.00 | 71.00 | see sections B, C | Yes |
+| Lidar | Benewake TFS20-L (section H), to test its range through a window early | 1 | 55.00 | 55.00 | [link](https://en.benewake.com/TFS20L/index.html) | Yes |
 | Power | PD trigger cable 15 V, Pololu 5 V regulator, passives (section B, F); RXEF300 as well as RXEF250 to compare | 1 | 45.00 | 45.00 | see sections B, F | Yes |
 | USB-C power meter | Inline USB-C voltage/current meter | 1 | 20.00 | 20.00 | [search](https://www.amazon.com/s?k=usb+c+power+meter) | No (test tool) |
 | Lux meter | Basic digital lux meter | 1 | 20.00 | 20.00 | [search](https://www.amazon.com/s?k=digital+lux+meter) | No (test tool) |
-| **Total** | | | | **263.43** | | about $200 of it goes into the build |
+| **Total** | | | | **339.43** | | about $260 of it goes into the build |
 
 ## 3D-printed parts (no purchase)
 
 | Part | Notes |
 |---|---|
 | Body | ASA, 5 perimeters, open top, O-ring groove, vent + button + gland bosses |
-| Clear-side clamps | ASA, clamp each wraparound piece with its gasket, and frame the lidar bay |
+| Clear-side clamps | ASA, clamp the wraparound piece with its gasket; centre post and two outer posts carry the pitch shafts |
 | Gimbals (×2) | ASA outer frame pitching on MR63 bearings, mirror cradle yawing inside it on pins; each balanced about both axes |
 | Servo brackets + lever arms (×2) | ASA, two servos per side stacked in the back slot, each linkage about 4:1 |
 | Optic plates (×2) | ASA, one per module, locate a Carclo holder and a FILIPPA optic on each heatsink. Slots key the FILIPPA ribs toward the front; spacers set the FILIPPA focus height |
 | Electronics tray | ASA, holds the protoboard, BuckBlocks, Pololu |
 | Mount boss | ASA, on the back of the body, holds the 1/4"-20 insert |
 | Remote case | ASA or TPU, 2 buttons + strap slots |
-| Lidar bay (if section H) | ASA, in the body between the two modules, lidar on its side, aimed ~3–5° below the beam axis; gasketed front opening |
+| Lidar seat and chin (if section H) | Seat on the floor in the nose, between the modules and below the clear piece; a shallow rounded chin (~42 mm wide, 2 mm below the underside) keeps its window face flat. TFS20-L aimed ~3–5° below the beam axis behind a gasketed window; printed as part of the body |
 
 ## Cost summary
 
@@ -164,11 +166,11 @@ For firmware and bench testing before the protoboard or any PCB. Most of it is t
 |---|---|
 | Core build, cash outlay (sections A–G, excluding the 2 optional items) | **528** |
 | Optional extras (XTC-3D coating, magnetic breakaway) | +35 |
-| Road-slope lidar (section H) | +98 |
+| Road-slope lidar (section H) | +59 |
 | Subtract if you already own a power bank, filament, resistor kit, wire, paste | −100 |
 | Packs and spools left over after one unit (inserts, screws, O-ring cord, bearings, mounts, sheet, plaster…) | ≈ 136 |
 | **Material actually used per unit, without lidar or power bank** | **≈ 342** |
-| **With the lidar (the $450 limit applies here)** | **≈ 440** |
+| **With the lidar (the $450 limit applies here)** | **≈ 401** |
 
 Tools not included: 3D printer, soldering iron with a heat-set insert tip, multimeter, glass cutter, drill and M3 tap.
 

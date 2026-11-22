@@ -11,7 +11,7 @@ Phases in order. Work on the current phase only, and tick each item when it pass
 - [x] `CLAUDE.md`, build plan, test plan, changelog
 - [x] `CONTRIBUTING.md` and `SECURITY.md`
 - [x] Branch protection on `main` (signed commits, PR required)
-- [x] Material cost within the limit: ~$388 with the lidar (~$423 after the FILIPPA low beam, cornering lights and lean package), under the $450 limit set on 2026-11-20; ~$440 for layout v4 (2026-11-21)
+- [x] Material cost within the limit: ~$388 with the lidar (~$423 after the FILIPPA low beam, cornering lights and lean package), under the $450 limit set on 2026-11-20; ~$440 for layout v4, ~$401 with the TFS20-L lidar (2026-11-21)
 
 ## Phase 1: Packaging study
 
@@ -26,7 +26,7 @@ Goal: a parametric model and renders of the whole head prove it fits, sweeps and
 - [x] Layout v3: aerodynamic tapered shape and lean package; printed parts measured from the model
 - [x] Layout v4 study: two 2-axis mirrors, lidar in the body, no cornering lights or brow (~410 g)
 - [x] Owner decision: v4 adopted, with one clear wraparound piece per side (2026-11-21)
-- [ ] Owner review of the renders; update the design doc with what the model shows
+- [x] Owner review of the renders (2026-11-21): narrow the body (target ~150 mm), fins fine, sides stay clear, add an exploded view. Done with the TFS20-L lidar, moved low into the nose under the beams: ~151 mm body, design §5 updated
 
 ## Phase 2: Firmware core on the bench
 
@@ -97,7 +97,7 @@ Goal: the mirror size and window height are proven before CAD fixes them.
 ## Phase 8: Optional road-slope lidar
 
 - [ ] Lidar rules in firmware (U-LID)
-- [ ] Range and dropouts on real asphalt (B-LID-01)
+- [ ] Range through the nose window, then dropouts on real asphalt (B-LID-02, B-LID-01); lidar temperature inside the head (B-THM-03)
 - [ ] Ride test at crests, dips and obstacles (R-LID-01)
 
 ## Phase 9: Custom PCB
