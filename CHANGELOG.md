@@ -5,6 +5,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ## [Unreleased]
 
 ### Added
+- Firmware README: how to fix the board build when pioarduino's own PlatformIO fork (6.2.0.post1) makes the platform refuse to install.
 - BOM bench kit: a list of five bench tools the phase 2–3 tests need (bench power supply, multimeter, thermometer, USB-C data cable, soldering iron; ~$153, skip what you own), kept out of the kit total. Site's phase 2 bench-kit figure corrected from ~$263 to ~$339.
 - Board build (owner's platform decision, 2026-11-22): `pio run -e xiao_esp32s3` builds with Arduino-ESP32 3.3.12 through the community pioarduino platform, pinned to release 55.03.312-1 with its digest noted; needs PlatformIO Core 6.2. A minimal `src/main.cpp` prints a boot line. Design §7/§10, firmware-spec, build plan and CLAUDE.md updated. Not yet flashed to a board.
 - Firmware phase 2 start: PlatformIO project in `firmware/` with host tests (`pio test -e native`). Pure modules for the gated pitch filter, the hill follower and the mirror/servo command (firmware-spec §2), with tests U-FILT-01..04, U-ROAD-01..06, U-MIR-01..03 and the test-plan ID check U-PLAN-01 (now: tests must be in the plan, and rows marked as passing must have tests). Each test was checked to fail with its logic broken. Open question added: Arduino-ESP32 3.x needs the community pioarduino platform.
