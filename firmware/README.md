@@ -17,6 +17,19 @@ pio run -e xiao_esp32s3
 pio run -e xiao_esp32s3 -t upload && pio device monitor
 ```
 
+### If the board build says "not compatible with PlatformIO Core v6.2.0-post.1"
+
+Found 2026-11-22 with pioarduino 55.03.312-1. On its first build, the platform installs its own fork of PlatformIO (the `pioarduino` Python package) into PlatformIO's environment, over the `platformio` package. The fork calls itself 6.2.0.post1, which the platform's own check (`>=6.2.0`) reads as older than 6.2.0. Nothing breaks while the platform stays installed, but the next time it has to be installed (a new computer, CI, a cleared cache) PlatformIO refuses it.
+
+Put the real core back, then build. The fork stays installed, so the build doesn't overwrite the core again:
+
+```bash
+~/.platformio/penv/bin/python -m pip install --force-reinstall --no-deps "platformio==6.2.0"
+pio run -e xiao_esp32s3
+```
+
+`pio --version` should then say 6.2.0. Check whether a newer pioarduino release still does this before moving to it.
+
 ## Layout
 
 ```
