@@ -30,20 +30,39 @@ pio run -e xiao_esp32s3
 
 `pio --version` should then say 6.2.0. Check whether a newer pioarduino release still does this before moving to it.
 
+## On the bench
+
+Wire the IMU to D4/D5 (STEMMA QT), the left pitch servo to D10 and the left yaw servo to D3, power the servos from a 5 V supply (not the XIAO's pin), and open the serial monitor at 115200 baud. Each line reads like `t=12345 pitch=+1.23 road=+0.40 mirror=-0.42 sl=88.3 sr=91.7 timu=31.5 st=RUN`. Tilt the board: the left pitch servo should move half the tilt times the 4:1 linkage, the other way. `st=IMU_LOST` means the IMU stopped answering and the mirrors hold the aim. The right side's servos go on the XIAO's back pads (GPIO41/42), which still need confirming on Seeed's pinout.
+
+## CI
+
+`.github/workflows/ci.yml` runs the host tests and the board build on every PR and on main, only when something they read changes: `firmware/` (except its Markdown), `docs/test-plan.md` (U-PLAN-01) or the workflow. Other PRs (BOM, design, site) skip both jobs. "CI passed" is required to merge into main (branch protection, 2026-11-22). It runs on every PR, and passes when the firmware jobs pass or were skipped because nothing they cover changed. Actions are pinned by SHA; Dependabot proposes updates after 14 days.
+
 ## Layout
 
 ```
 platformio.ini            environments: native (host tests), xiao_esp32s3 (board)
-src/main.cpp              board entry point (Arduino); not built on the host
+src/                      board code (Arduino); not built on the host
+  main.cpp                200 Hz loop: IMU -> filter -> hill follower -> mirror servos, telemetry
+  board.h                 pins (design §7) and bench defaults until calibration
+  imu_lsm6dso32.*         LSM6DSO32 over I2C: configure, burst-read one sample
+  servo_out.*             servo PWM on LEDC
 lib/headlight_core/src/   pure logic: no Arduino, no clock, no hardware I/O
   pitch_filter.*          gated complementary pitch filter (spec §2)
   road_follow.*           hill follower: road grade from the IMU (spec §2)
   mirror_cmd.*            mirror and servo command (spec §2)
+  imu_convert.*           raw counts to units, pitch inputs for any mounting
+  imu_watch.*             IMU-lost detection (spec §1.3)
+  servo_pwm.*             servo angle -> pulse -> LEDC duty
+  telemetry.*             serial telemetry line (spec §9)
 test/
   imu_sim.h               ideal IMU used by the tests
   test_filter/            U-FILT
   test_road/              U-ROAD
   test_mirror/            U-MIR
+  test_imu/               U-IMU
+  test_servo/             U-SRV
+  test_telemetry/         U-TEL
   test_plan/              U-PLAN-01: tests and test plan agree
 ```
 

@@ -23,7 +23,7 @@
 // gated complementary filter: trust the accelerometer only when not accelerating
 pitch += gyro_pitch_rate * dt;                       // rate about the learned pitch axis
 bool steady = fabsf(norm(acc)/G - 1) < 0.03f && fabsf(gyro_pitch_rate) < 5.0f;
-if (steady) pitch += 0.02f * (acc_pitch - pitch);    // slow absolute correction
+if (steady) pitch += (dt / TAU_ACC) * (acc_pitch - pitch);   // slow absolute correction, TAU_ACC = 0.25 s
 
 // hill following: remove the pitch the acceleration explains, then follow fast
 float a_long = G * (sinf(acc_pitch) - sinf(pitch));  // longitudinal acceleration
@@ -39,6 +39,9 @@ servo_write_deg(trim + mirror * LINKAGE_RATIO);                // ≈ 4:1
 ```
 
 - **Why the gate:** the accelerometer can't tell braking from tilting. 0.5 g of braking reads as about 27° of false tilt.
+- **Loop rate and the correction's time constant (2026-11-22):** the loop runs at **200 Hz**. The accelerometer correction is set as a time constant, `TAU_ACC` = 0.25 s, rather than a per-step gain: the earlier 0.02 per step was the same speed at 200 Hz but twice as fast at 100 Hz and half as fast at 400 Hz. U-FILT-05 checks the speed doesn't depend on the loop rate.
+- **IMU (design §7):** read at the loop rate, configured for ±32 g and ±500 dps at 416 Hz. Pitch is the rate about the head's right axis (forward × up) and `atan2(acc·forward, acc·up)`. Until calibration (§3 B and C) learns the axes, the bench firmware assumes the breakout lies flat with its x axis forward and z up.
+- **IMU lost (invariant 3):** 5 failed reads in a row (25 ms) switch both mirrors to the calibrated aim; 20 good reads in a row (100 ms) switch back. A single failed read reuses the last sample. Reduced brightness comes with the LED control (phase 3).
 - **Road reference:** `follow_road` (on by default) aims the beam at the road. When off, the beam holds pure gravity level.
 - **Response time (owner requirement, 2026-11-21).** The wheel pitches up to **±10°** when accelerating or braking, and the beam must adapt in **under 1 s**.
   - **Pitch from accelerating or braking:** the mirror cancels it directly. A 10° change needs 5° of mirror, and the servo moves that in under 50 ms (design §2, B-MIR-01), so the beam is corrected within about 0.1 s.
@@ -66,7 +69,7 @@ servo_write_deg(trim + mirror * LINKAGE_RATIO);                // ≈ 4:1
   - **If the wheel pitches 20% more or less than `K_TILT` assumes:** the cutoff stays between 31 and 50 m through hard acceleration and braking.
   - **Not fixable by the IMU:** before a crest, a beam parallel to the climbing road passes over the top; at the bottom of a hill, the rising road ahead catches the beam short (about 11 m). Only the lidar, which sees the road ahead, removes these.
   - **Tests:** U-ROAD-01 and U-ROAD-03 to 06, B-MIR-01, R-AIM-02 and R-ROAD-01 to 02 in the test plan. The thresholds (1 m/s², 0.2 g, 0.3 s) and `K_TILT` are starting values to tune with bench and ride logs.
-- **Servo output (v4: four servos, pitch and yaw for each mirror, each with its own trim):** 50–333 Hz PWM from the ESP32's LEDC peripheral, clamped to the mechanical limits.
+- **Servo output (v4: four servos, pitch and yaw for each mirror, each with its own trim):** 50–333 Hz PWM from the ESP32's LEDC peripheral, clamped to the mechanical limits. The bench firmware starts at 50 Hz with 14-bit duty and a 500–2500 µs pulse for 0–180° (check each servo's range in B-MIR-03), and a direction sign per servo, since the right side is mirror-image. Until the turn rule is decided (build plan phase 5), the yaw servos hold their trim.
 
 ## 3. Calibration (saved in NVS)
 
@@ -158,6 +161,7 @@ If the remote disconnects, the light keeps its current mode. The button on the h
 ## 9. Telemetry and debugging
 
 - Serial log over the XIAO's USB-C: pitch, mirror command, temperatures, input voltage, state.
+- **Format (2026-11-22):** one line of key=value pairs at 20 Hz, 115200 baud, for example `t=12345 pitch=+1.23 road=+0.40 mirror=-0.42 sl=88.3 sr=91.7 timu=31.5 st=RUN` (time in ms, filtered pitch, road grade, pitch mirror command, left and right pitch servo angles, IMU temperature, state). Input voltage and the heatsink temperature join it with the phase 3 hardware.
 - Optional: log to flash at 50 Hz for analysing rides afterwards.
 
 ## 10. Cornering lights (v3 only)

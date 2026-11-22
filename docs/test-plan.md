@@ -31,29 +31,53 @@ Status is "–" until a test exists or has been run.
 
 | ID | What it checks | Spec | Status |
 |---|---|---|---|
-| U-FILT-01 | Gyro integration tracks a known pitch rate | FW §2 || Pass (host), 2026-11-22 |
-| U-FILT-02 | 0.5 g of braking with the wheel level produces no tilt correction (accelerometer gated off) | FW §2 || Pass (host), 2026-11-22 |
-| U-FILT-03 | The gate rejects accelerometer correction when the pitch rate is above 5°/s | FW §2 || Pass (host), 2026-11-22 |
-| U-FILT-04 | When steady, pitch converges to the accelerometer pitch | FW §2 || Pass (host), 2026-11-22 |
+| U-FILT-01 | Gyro integration tracks a known pitch rate | FW §2 | Pass (host), 2026-11-22 |
+| U-FILT-02 | 0.5 g of braking with the wheel level produces no tilt correction (accelerometer gated off) | FW §2 | Pass (host), 2026-11-22 |
+| U-FILT-03 | The gate rejects accelerometer correction when the pitch rate is above 5°/s | FW §2 | Pass (host), 2026-11-22 |
+| U-FILT-04 | When steady, pitch converges to the accelerometer pitch | FW §2 | Pass (host), 2026-11-22 |
+| U-FILT-05 | The accelerometer correction has the same speed at any loop rate (time constant 0.25 s: error ≈ 1/e after 0.25 s at 100, 200 and 400 Hz) | FW §2 | Pass (host), 2026-11-22 |
 
 ### Road follow
 
 | ID | What it checks | Spec | Status |
 |---|---|---|---|
-| U-ROAD-01 | A step in road grade at steady speed settles to 95% within 1 s (τ = 0.3 s) | FW §2 || Pass (host), 2026-11-22 |
-| U-ROAD-02 | With `follow_road` off, the beam holds gravity level | FW §2 || Pass (host), 2026-11-22 |
-| U-ROAD-03 | A 10° acceleration lean (1.7 m/s², `K_TILT` correct) moves `road_imu` by under 0.3° | FW §2 || Pass (host), 2026-11-22 |
-| U-ROAD-04 | A gentle 0.15 m/s² acceleration for 8 s moves `road_imu` by under 0.3° | FW §2 || Pass (host), 2026-11-22 |
-| U-ROAD-05 | `a_long` over 1 m/s² or a 0.2 g jolt freezes the follower; it resumes 0.3 s after | FW §2 || Pass (host), 2026-11-22 |
-| U-ROAD-06 | `a_long` from `G·(sin acc_pitch − sin pitch)` matches a known acceleration on a tilted IMU (within 5% for ±1.7 m/s² with the head pitched up to ±10°) | FW §2 || Pass (host), 2026-11-22 |
+| U-ROAD-01 | A step in road grade at steady speed settles to 95% within 1 s (τ = 0.3 s) | FW §2 | Pass (host), 2026-11-22 |
+| U-ROAD-02 | With `follow_road` off, the beam holds gravity level | FW §2 | Pass (host), 2026-11-22 |
+| U-ROAD-03 | A 10° acceleration lean (1.7 m/s², `K_TILT` correct) moves `road_imu` by under 0.3° | FW §2 | Pass (host), 2026-11-22 |
+| U-ROAD-04 | A gentle 0.15 m/s² acceleration for 8 s moves `road_imu` by under 0.3° | FW §2 | Pass (host), 2026-11-22 |
+| U-ROAD-05 | `a_long` over 1 m/s² or a 0.2 g jolt freezes the follower; it resumes 0.3 s after | FW §2 | Pass (host), 2026-11-22 |
+| U-ROAD-06 | `a_long` from `G·(sin acc_pitch − sin pitch)` matches a known acceleration on a tilted IMU (within 5% for ±1.7 m/s² with the head pitched up to ±10°) | FW §2 | Pass (host), 2026-11-22 |
 
 ### Mirror command
 
 | ID | What it checks | Spec | Status |
 |---|---|---|---|
-| U-MIR-01 | The mirror moves by half the pitch error, in the opposite direction | FW §2, design §2 || Pass (host), 2026-11-22 |
-| U-MIR-02 | The mirror command is clamped to ±7.5° | FW §2 || Pass (host), 2026-11-22 |
-| U-MIR-03 | Servo command = trim + mirror × linkage ratio, clamped to the mechanical limits | FW §2 || Pass (host), 2026-11-22 |
+| U-MIR-01 | The mirror moves by half the pitch error, in the opposite direction | FW §2, design §2 | Pass (host), 2026-11-22 |
+| U-MIR-02 | The mirror command is clamped to ±7.5° | FW §2 | Pass (host), 2026-11-22 |
+| U-MIR-03 | Servo command = trim + mirror × linkage ratio, clamped to the mechanical limits | FW §2 | Pass (host), 2026-11-22 |
+
+### IMU conversion and loss
+
+| ID | What it checks | Spec | Status |
+|---|---|---|---|
+| U-IMU-01 | Raw LSM6DSO32 counts convert at the configured full scales (±32 g, ±500 dps, temperature 256 LSB/°C from 25 °C) | design §7 | Pass (host), 2026-11-22 |
+| U-IMU-02 | The accelerometer pitch is the same head pitch whichever way the IMU is mounted (mount given as forward and up axes) | FW §2, §3 | Pass (host), 2026-11-22 |
+| U-IMU-03 | The pitch rate is the gyro rate about the head's right axis, positive nose up, for any mounting | FW §2 | Pass (host), 2026-11-22 |
+| U-IMU-04 | 5 failed IMU reads in a row trip the IMU-lost fallback; 20 good reads in a row recover; a glitch shorter than that is ridden through | FW §1.3 | Pass (host), 2026-11-22 |
+
+### Servo output
+
+| ID | What it checks | Spec | Status |
+|---|---|---|---|
+| U-SRV-01 | Servo angle maps linearly to a 500–2500 µs pulse over 0–180° and is clamped | FW §2 | Pass (host), 2026-11-22 |
+| U-SRV-02 | The pulse converts to LEDC duty counts at the frame rate and resolution (50 Hz and 200 Hz, 14 bit), never past a full frame | FW §2 | Pass (host), 2026-11-22 |
+
+### Telemetry
+
+| ID | What it checks | Spec | Status |
+|---|---|---|---|
+| U-TEL-01 | The serial line carries time, pitch, road, mirror command, both pitch servos, IMU temperature and state, as key=value pairs | FW §9 | Pass (host), 2026-11-22 |
+| U-TEL-02 | A buffer too small for the line gives an empty line, never a truncated one | FW §9 | Pass (host), 2026-11-22 |
 
 ### Calibration
 

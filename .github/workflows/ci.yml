@@ -1,0 +1,103 @@
+# Firmware CI: host tests (including the test-plan ID check) and the board build.
+# Actions are pinned by commit SHA to releases at least 14 days old; Dependabot proposes updates.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: What changed
+    runs-on: ubuntu-24.04
+    outputs:
+      firmware: ${{ steps.diff.outputs.firmware }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: diff
+        name: Firmware code, test plan or CI touched?
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.sha }}
+        run: |
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            echo "firmware=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          # What the jobs read: firmware/ (but not its Markdown), the test plan (U-PLAN-01), this workflow.
+          # No grep -q: under pipefail its early exit can SIGPIPE the command before it.
+          relevant=$(git diff --name-only "$BASE" "$HEAD" | grep -vE '^firmware/.*\.md$' \
+                       | grep -E '^(firmware/|docs/test-plan\.md$|\.github/workflows/)' || true)
+          echo "Files the firmware jobs depend on:"; echo "${relevant:-  (none)}"
+          if [ -n "$relevant" ]; then
+            echo "firmware=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "firmware=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  host-tests:
+    name: Host tests
+    needs: changes
+    if: needs.changes.outputs.firmware == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Install PlatformIO Core
+        run: pip install "platformio==6.2.0"
+      - name: Run host tests
+        run: pio test -d firmware -e native
+
+  board-build:
+    name: Board build
+    needs: changes
+    if: needs.changes.outputs.firmware == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.platformio/platforms
+            ~/.platformio/packages
+          key: pio-${{ runner.os }}-${{ hashFiles('firmware/platformio.ini') }}
+      - name: Install PlatformIO Core
+        run: pip install "platformio==6.2.0"
+      - name: Build for the XIAO ESP32-S3
+        run: pio run -d firmware -e xiao_esp32s3
+
+  ci-passed:
+    name: CI passed
+    needs: [changes, host-tests, board-build]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Summarize
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Job results: $RESULTS"
+          for r in $RESULTS; do
+            case "$r" in success|skipped) ;; *) echo "A required job did not pass."; exit 1 ;; esac
+          done

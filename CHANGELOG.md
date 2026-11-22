@@ -5,6 +5,8 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ## [Unreleased]
 
 ### Added
+- Firmware hardware layer (build plan phase 2): LSM6DSO32 driver over I²C (±32 g, ±500 dps, 416 Hz), servo PWM on LEDC (50 Hz, 14 bit, 500–2500 µs), and a 200 Hz bench loop that drives both mirrors' pitch servos from the pitch filter and hill follower, holds the yaw servos at trim, falls back to the calibrated aim if the IMU stops answering, and prints a key=value telemetry line at 20 Hz. Pure parts tested on the host: U-IMU-01..04, U-SRV-01..02, U-TEL-01..02. Builds for the board; not yet run on hardware.
+- CI (`.github/workflows/ci.yml`): host tests and the board build on every PR and on main, actions pinned by SHA, one "CI passed" summary check, now required to merge into main; Dependabot for the actions with a 14-day cooldown.
 - Service access (2026-11-22): design §10 gains three open questions to settle before the housing CAD (service cover on the top or the back; firmware updates without opening the head, by OTA or a sealed USB-C port; the power cable entry, since design §5 says an M12 gland and the BOM an M8 one). Design §5 and the printed-parts list gain a desiccant holder just inside the service cover (owner). Build plan phase 6 updated.
 - Firmware README: how to fix the board build when pioarduino's own PlatformIO fork (6.2.0.post1) makes the platform refuse to install.
 - BOM bench kit: a list of five bench tools the phase 2–3 tests need (bench power supply, multimeter, thermometer, USB-C data cable, soldering iron; ~$153, skip what you own), kept out of the kit total. Site's phase 2 bench-kit figure corrected from ~$263 to ~$339.
@@ -37,6 +39,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - `CONTRIBUTING.md` and `SECURITY.md` (private reporting for safety faults as well as security issues).
 
 ### Changed
+- Pitch filter (firmware-spec §2, 2026-11-22): the accelerometer correction is a time constant (0.25 s) instead of a per-step gain of 0.02, so its speed no longer depends on the loop rate (U-FILT-05); the loop rate is set at 200 Hz. Test plan: 13 rows had a stray empty column, fixed. README's next step updated.
 - 5 V regulator (2026-11-22): the Pololu D36V28F5 is out of stock, so the Pololu D30V30F5 (5 V 3.4 A, 5–45 V in, same footprint, $29.95) replaces it; design §7 updated. Material ~$409 with the lidar (limit $450), cash outlay ~$541, bench kit $351.03.
 - Spot optics (2026-11-22): the Carclo 10003 is bought from Mouser ($2.46, in stock), alongside the FILIPPA optics. Section C $153.56, cash outlay ~$535, bench kit $345.03; per-unit cost still ~$403 with the lidar.
 - Bench mirror (2026-11-22): the test piece is a 1 mm glass front-surface mirror, a 6″ × 6″ sample from opticalmirror.com ($9.95), because 1.1 mm is hard to find in the US; section C notes the US 1.0 mm sources for the build. 2N3904 row says single TO-92 parts, buy ~10. Bench kit $345.32.

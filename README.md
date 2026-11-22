@@ -89,7 +89,7 @@ The low-beam figures were estimated with v3's 4° toe-out; v4 aims both low beam
 
 ## Roadmap
 
-The phases and their progress are in [`docs/build-plan.md`](docs/build-plan.md). Next: order the bench kit and start the firmware core (phase 2).
+The phases and their progress are in [`docs/build-plan.md`](docs/build-plan.md). Next: the bench kit is on order and the firmware core is written; bench-test it when the parts arrive (phase 2).
 
 ## Safety and legality
 
