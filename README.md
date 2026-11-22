@@ -21,7 +21,7 @@ An EUC pitches nose-down when it accelerates and nose-up when it brakes, by up t
 | See into turns | The turn-side beam swings up to 25° into the curve, through a clear wraparound side; the other stays straight ahead |
 | Fits any EUC, keeps the stock light | 1/4"-20 insert, so GoPro mounts work. Clamp it to the trolley handle or stick it to the shell with curved VHB bases |
 | ≥ 2 h runtime | External 20 Ah USB-C PD power bank at 15 V: about 2.4 h in normal mode, about 1.7 h in boost |
-| USB-C charging | The power bank charges over USB-C. The head runs on 15 V DC from a PD trigger cable |
+| USB-C charging | The power bank charges over USB-C. The head runs on 15 V DC from a PD trigger board in the pouch |
 | Waterproof | Printed ASA body, two thermoformed polycarbonate sides, O-ring-sealed aluminium heatsink floors, gasketed lidar opening, ePTFE pressure vent, IP68 connector. Nothing moving passes through a wall |
 | Mostly off-the-shelf | XIAO ESP32-S3, Adafruit IMU breakout, BuckBlock LED drivers, LEDiL and Carclo optics, hobby servos, GoPro mounts |
 
