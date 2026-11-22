@@ -161,12 +161,13 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 | C-PKG-11 | The sloping roof leaves the electronics board at least 45 mm tall | Board height ≥ 45 mm | Pass (v3), 2026-11-21 |
 | C-PKG-12 | The servo fits inside the rounded, tapered tail | Servo inside the tail's inner wall | Pass (v3), 2026-11-21 |
 | C-PKG-13 | The electronics board fits the flat part of the tail | Board width ≥ 55 mm | Pass (v3), 2026-11-21 |
-| C-PKG-14 | v4 only: the lidar on its side fits inside the body | Lidar top below the inner roof | Retired 2026-11-21: the lidar moved to a roof pod (C-PKG-18 covers it) |
+| C-PKG-14 | v4 only: the lidar on its side fits inside the body | Lidar top below the inner roof | Retired 2026-11-21: the lidar moved out of the bay (C-PKG-18 and C-PKG-19 cover it) |
 | C-PKG-15 | v4 only: each spot's light column, from LED to mirror, clears the centre post that holds the inner pitch shafts (until 2026-11-21: beam clears the lidar bay) | Inner edge of the column outside the post | Pass at 151 mm, 2026-11-21 |
 | C-PKG-16 | v4 only: the gimbal frames clear the lidar bay | No overlap | Retired 2026-11-21: no lidar bay (the frames clear the centre post by construction) |
 | C-PKG-17 | v4 with clear wrap: the clear side stops ahead of the servo slot | Wrap ends in front of the back slot | Pass (study), 2026-11-21 |
-| C-PKG-18 | v4: no internal part (optics, servos, electronics, lidar in its roof pod, mirrors at every corner of their pitch and yaw travel) pokes into the wall: checked against the inner skin since 2026-11-21 (the lidar against the outer skin of its roof pod) | Nothing left outside (`cad/fit-v4.scad`) | Pass at 151 mm (inner skin), 2026-11-21 |
-| C-MASS-01 | Head mass with the lidar, printed parts measured from the model's STL volumes, bought parts from datasheets | ≤ 400 g | See `cad/renders/checks.txt`; ~341 g for v4 at 151 mm with the TFS20-L, 2026-11-21 (v3: ~401 g) |
+| C-PKG-18 | v4: no internal part (optics, servos, electronics, lidar in the nose, mirrors at every corner of their pitch and yaw travel) pokes into the wall: checked against the inner skin since 2026-11-21 (the lidar against the outer skin, body plus chin, since its window cuts the wall) | Nothing left outside (`cad/fit-v4.scad`) | Pass at 151 mm (inner skin), 2026-11-21 |
+| C-PKG-19 | v4: the lidar in the nose (since 2026-11-21) clears the spot optics, leaves at least 4 mm of wall between its window and the clear piece, and its chin ends ahead of the heatsink fins | All three hold (`cad/headlight-v4.scad` asserts) | Pass at 151 mm, 2026-11-21 |
+| C-MASS-01 | Head mass with the lidar, printed parts measured from the model's STL volumes, bought parts from datasheets | ≤ 400 g | See `cad/renders/checks.txt`; ~331 g for v4 at 151 mm with the TFS20-L under the beams, 2026-11-21 (v3: ~401 g) |
 
 ## Bench tests (`B-`)
 
@@ -224,13 +225,13 @@ Each check's message in `cad/headlight.scad` or `cad/weight.py` starts with its 
 |---|---|---|---|
 | B-THM-01 | Heatsink rise in still air, at walking pace and at 25 km/h, with the airflow along the fins (fore-aft) | Within 25% of design §8 | – |
 | B-THM-02 | NTC reading against a thermocouple | Within 3 °C | – |
-| B-THM-03 | v4: lidar pod temperature, parked in sun at full power then riding, with a thermocouple by the TFS20-L | Stays below 60 °C (TFS20-L rating) | – |
+| B-THM-03 | v4: lidar temperature inside the head (in the nose, near the LED boards and ahead of the heatsinks since 2026-11-21), parked in sun at full power then riding, with a thermocouple on the TFS20-L | Stays below 60 °C (TFS20-L rating) | – |
 | B-SLP-01 | Sleep current and wake on motion | Wakes on a nudge; sleep current recorded | – |
 | B-REM-01 | DIY nRF52840 remote | Press-to-action latency ≤ 100 ms; battery life estimate recorded | – |
 | B-REM-02 | Cheap BLE shutter remote | First-press-after-sleep behaviour recorded | – |
 | B-CFG-01 | Calibration page on an iPhone and an Android phone | Joins the hotspot, shows live pitch, runs steps A–D and saves; every step also works with button and remote only | – |
-| B-LID-01 | TFS20-L (TF02-Pro until 2026-11-21) on dry and wet asphalt at a grazing angle of about 4°, in its pod behind the window | Usable range and dropout rate recorded | – |
-| B-LID-02 | TFS20-L through its polycarbonate pod window, with the lens divider, against bare: a 10% target in daylight | Range at least 8 m through the window; no false close returns from the window | – |
+| B-LID-01 | TFS20-L (TF02-Pro until 2026-11-21) on dry and wet asphalt at a grazing angle of about 4°, in the nose behind its window | Usable range and dropout rate recorded | – |
+| B-LID-02 | TFS20-L through its polycarbonate window in the nose, with the lens divider, against bare: a 10% target in daylight | Range at least 8 m through the window; no false close returns from the window | – |
 
 ## Enclosure and mount tests (`E-`)
 

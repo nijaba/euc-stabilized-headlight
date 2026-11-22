@@ -1,11 +1,11 @@
 # EUC Stabilized Headlight – Bill of Materials (v4)
 
-Version: layout v4 (adopted 2026-11-21): XIAO ESP32-S3, 3D-printed ASA housing with two aluminium heatsinks and one thermoformed polycarbonate piece wrapping the front and both sides, external USB-C PD power bank, two mirrors on 2-axis gimbals driven by four servos side by side, optional road-slope lidar (TFS20-L in a roof pod).  
+Version: layout v4 (adopted 2026-11-21): XIAO ESP32-S3, 3D-printed ASA housing with two aluminium heatsinks and one thermoformed polycarbonate piece wrapping the front and both sides, external USB-C PD power bank, two mirrors on 2-axis gimbals driven by four servos side by side, optional road-slope lidar (TFS20-L low in the nose).  
 Prices: approximate USD street prices, Nov 2026. **Check the live pages before ordering.** Links marked *search* go to a marketplace search because those parts are commodity items with many equivalent sellers.
 
 ## Changes since the last design
 
-- **150 mm body and a smaller lidar (owner, 2026-11-21):** the Benewake TFS20-L (21 × 15 × 7.9 mm, 1.35 g, 3.3 V I²C) replaces the TF02-Pro and moves to a small pod on the roof, so the two mirror modules sit side by side and the body narrows to about 151 mm. One clear piece now wraps the whole front. About $39 less with the lidar.
+- **150 mm body and a smaller lidar (owner, 2026-11-21):** the Benewake TFS20-L (21 × 15 × 7.9 mm, 1.35 g, 3.3 V I²C) replaces the TF02-Pro and moves out of the middle of the front (first to a roof pod, then, the same day, low in the nose under the beams), so the two mirror modules sit side by side and the body narrows to about 151 mm. One clear piece now wraps the whole front. About $39 less with the lidar.
 - **Layout v4 (2026-11-21):** two mirrors on 2-axis gimbals and four servos replace the single mirror and servo. The cornering lights, their drivers and optics, the toe-out wedges and the brow are gone. The flat window becomes two thermoformed polycarbonate wraparound pieces. Net about +$26 per unit.
 - **LED driver:** the Mean Well LDD-1500H is discontinued, so it's replaced by the **LEDdynamics BuckBlock A009-D-V-2100**. It's dimmable and rated 2.1 A. Firmware caps it at about 1.5 A in normal mode and allows 2.1 A in a time-limited boost mode.
 - **Dimming flicker:** BuckBlock PWM is specified at 200 Hz, which would flicker visibly on a moving wheel. Instead, the 2N3904 interface runs at about 20 kHz with a 10 µF cap on DIM, which turns it into smooth analog dimming. Verify this on the bench.
@@ -116,8 +116,8 @@ Prices: approximate USD street prices, Nov 2026. **Check the live pages before o
 
 | Item | Part / spec | Qty | Unit $ | Ext $ | Source | Notes |
 |---|---|---|---|---|---|---|
-| Lidar | Benewake TFS20-L, 21 × 15 × 7.9 mm, 1.35 g, 0.2–9 m @10% reflectivity in 100 klux sun (12 m in the dark), I²C/UART, 3.3 V | 1 | 55.00 | 55.00 | [link](https://en.benewake.com/TFS20L/index.html) | Owner's choice, 2026-11-21 (replaces the TF02-Pro). Price estimated from an AU$85 listing; also sold by GetFPV, DFRobot (SEN0672), Mouser. Not IP-rated: it sits behind its own window in the sealed roof pod. 3.3 V only, on the shared I²C bus |
-| Lidar window gasket + screws | EPDM foam gasket strip 3 mm + M2 stainless screws (window cut from the clear-side sheet) | 1 | 4.00 | 4.00 | [search](https://www.amazon.com/s?k=EPDM+foam+gasket+tape+3mm) | Seals the pod window; a divider between the lenses stops the window reflecting the laser back |
+| Lidar | Benewake TFS20-L, 21 × 15 × 7.9 mm, 1.35 g, 0.2–9 m @10% reflectivity in 100 klux sun (12 m in the dark), I²C/UART, 3.3 V | 1 | 55.00 | 55.00 | [link](https://en.benewake.com/TFS20L/index.html) | Owner's choice, 2026-11-21 (replaces the TF02-Pro). Price estimated from an AU$85 listing; also sold by GetFPV, DFRobot (SEN0672), Mouser. Not IP-rated: it sits inside the sealed body, behind its own window in the nose. 3.3 V only, on the shared I²C bus |
+| Lidar window gasket + screws | EPDM foam gasket strip 3 mm + M2 stainless screws (window cut from the clear-side sheet) | 1 | 4.00 | 4.00 | [search](https://www.amazon.com/s?k=EPDM+foam+gasket+tape+3mm) | Seals the lidar window; a divider between the lenses stops the window reflecting the laser back |
 | **Subtotal** | | | | **59.00** | | |
 
 ### Cheaper remote alternative (replaces section G)
@@ -158,7 +158,7 @@ For firmware and bench testing before the protoboard or any PCB. Most of it is t
 | Electronics tray | ASA, holds the protoboard, BuckBlocks, Pololu |
 | Mount boss | ASA, on the back of the body, holds the 1/4"-20 insert |
 | Remote case | ASA or TPU, 2 buttons + strap slots |
-| Lidar pod (if section H) | ASA hump on the front of the roof (~26 mm wide, 46 mm long faired, 18 mm tall), TFS20-L aimed ~3–5° below the beam axis behind a gasketed window; printed as part of the body |
+| Lidar seat and chin (if section H) | Seat on the floor in the nose, between the modules and below the clear piece; a shallow rounded chin (~42 mm wide, 2 mm below the underside) keeps its window face flat. TFS20-L aimed ~3–5° below the beam axis behind a gasketed window; printed as part of the body |
 
 ## Cost summary
 

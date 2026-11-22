@@ -63,5 +63,5 @@ Printed,Optic plates,"ASA, one per module, locate a Carclo holder and a FILIPPA 
 Printed,Electronics tray,"ASA, holds the protoboard, BuckBlocks, Pololu",1,0.00,0.00,,printed,
 Printed,Mount boss,"ASA, on the back of the body, holds the 1/4""-20 insert",1,0.00,0.00,,printed,
 Printed,Remote case,"ASA or TPU, 2 buttons + strap slots",1,0.00,0.00,,printed,
-H. Road-slope lidar (optional),Lidar,"Benewake TFS20-L, 21 x 15 x 7.9 mm, 1.35 g, 0.2-9 m @10% reflectivity in 100 klux sun, I2C/UART, 3.3 V",1,55.00,55.00,https://en.benewake.com/TFS20L/index.html,product,"Owner's choice 2026-11-21, replaces the TF02-Pro. Price estimated; not IP-rated, sits behind its own window in the roof pod. Shared I2C bus"
-H. Road-slope lidar (optional),Lidar window gasket + screws,EPDM foam gasket strip 3 mm + M2 stainless screws,1,4.00,4.00,https://www.amazon.com/s?k=EPDM+foam+gasket+tape+3mm,search,Seals the pod window (window cut from the clear-side sheet)
+H. Road-slope lidar (optional),Lidar,"Benewake TFS20-L, 21 x 15 x 7.9 mm, 1.35 g, 0.2-9 m @10% reflectivity in 100 klux sun, I2C/UART, 3.3 V",1,55.00,55.00,https://en.benewake.com/TFS20L/index.html,product,"Owner's choice 2026-11-21, replaces the TF02-Pro. Price estimated; not IP-rated, sits inside the body behind its own window in the nose. Shared I2C bus"
+H. Road-slope lidar (optional),Lidar window gasket + screws,EPDM foam gasket strip 3 mm + M2 stainless screws,1,4.00,4.00,https://www.amazon.com/s?k=EPDM+foam+gasket+tape+3mm,search,Seals the lidar window (window cut from the clear-side sheet)

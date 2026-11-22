@@ -50,7 +50,7 @@ Top view of the head (layout v4, front at the top):
    │   ╲  mirror  ╱    ┃      ┃    ╲  mirror  ╱            │
    │  2 servos ──── electronics board ──── 2 servos        │
    ╰── left module ────────────────────── right module ────╯
-     lidar (TFS20-L) in a small pod on the roof, at the front
+     lidar (TFS20-L) low in the nose, under the beams, behind a rounded chin
         aluminium heatsink floors, fins fore-aft
                 1/4"-20 mount on the back
 ```
@@ -64,8 +64,8 @@ Top view of the head (layout v4, front at the top):
 | Low beam (cutoff) at 10 m | ~62 lux | ~81 lux |
 | Input power | ~21 W | ~30 W |
 | Runtime on a 20 Ah bank (~50 Wh usable at 15 V) | ~2.4 h | ~1.7 h |
-| Head weight (limit: 400 g with lidar) | ~341 g with lidar (packaging model, measured shell; 59 g of margin, see design §10) | |
-| Head size | ~151 × 72 × 112 mm, a rounded light bar (~128 mm tall at the lidar pod) | |
+| Head weight (limit: 400 g with lidar) | ~331 g with lidar (packaging model, measured shell; 69 g of margin, see design §10) | |
+| Head size | ~151 × 72 × 112 mm with the fins, a rounded light bar (nothing on the roof) | |
 | Material cost per unit (limit: $450 with lidar) | ~$401 with the lidar, + power bank (~$342 without the lidar) | |
 
 The low-beam figures were estimated with v3's 4° toe-out; v4 aims both low beams straight ahead outside turns, so the centre should be a little brighter.

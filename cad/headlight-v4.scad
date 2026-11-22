@@ -4,7 +4,8 @@
 // on two axes: pitch (levelling) and yaw (swinging into turns). The yaw steering
 // replaces the fixed cornering lights and the toe-out wedges, so there is no brow.
 // Since 2026-11-21 (owner: width ideally 150 mm) the two modules sit side by side around a thin centre post,
-// one clear piece wraps the whole front and both sides, and a small TFS20-L lidar rides in a pod on the roof.
+// one clear piece wraps the whole front and both sides, and a small TFS20-L lidar sits low in the nose, under the beams
+// (on the roof until the owner moved it under, same day), behind its own window over a shallow rounded chin.
 //
 // Same conventions as headlight.scad (layout v3): heatsink at the bottom with fins
 // fore-aft, LEDs facing up, mount on the back, rounded tapered body.
@@ -105,8 +106,16 @@ wrap_len = (2*half_L - 2*r_front) + 2*(3.14159*r_front/2 + (wrap_depth - r_front
 win_half = fil_d/2 + win_d*tan(steer) + win_d*tan(fil_fwtm);
 win_zc = mir_z;  win_top = win_zc + win_half;  win_bot = win_zc - win_half;
 top_z = max(win_top + bezel_lip + r_edge, mir_z + half_z(tilt_max) + 2 + wall);
-// Lidar pod on the roof, at the front: the lidar sits on the roof, behind its own small clear window.
-pod_w = lidar[0] + 2*(wall + 1);  pod_h = lidar[1] + 1 + wall;  pod_len = 46;
+// Lidar under the beams (owner, 2026-11-21; on the roof until then): inside the body, on the floor between the two modules,
+// looking out through its own small window in the front wall below the clear piece. A shallow chin, rounded into the
+// underside on both sides, keeps that window face flat down past the body's rounded bottom edge.
+chin_drop = 2;                      // chin below the body's underside (the heatsink fins hang 16.5 mm, so no extra height)
+chin_r = 3;
+chin_w = lidar[0] + 2*(wall + 1);
+chin_blend = 8;                     // the chin's U reaches this far beyond the lidar window on each side
+pod_front = in_front + wall;
+lidar_y0 = pod_front - wall - 0.5 - lidar[2];
+lidar_z0 = 0.5;                     // on the floor
 top_rear = top_z - roof_drop;
 
 out_L = 2*half_L;
@@ -145,9 +154,15 @@ function flat_half(y) = let(yf = in_front + wall - r_edge, yr = in_back - wall +
     (out_L/2 - t*taper) - (r_edge + t*(r_tail - r_edge));
 assert(hs_x1 <= flat_half(hs_y0) - 1, "C-PKG-07 heatsink runs into the rounded, tapering edge");
 assert(x_c + spot_rx - spot_d/2 >= post_w/2 + 1, "C-PKG-15 a spot's light column hits the centre post");
+// C-PKG-19: the lidar in the nose clears the spot optics, leaves a 4 mm flange under the clear piece, and its chin ends
+// ahead of the heatsink fins.
+fin_front = -hs_y0 - hs_fin_h*0.7 + hs_fin_h;
+assert(lidar_y0 - 1 >= spot_d/2 + 1, "C-PKG-19 lidar hits a spot optic");
+assert(lidar_z0 + lidar[1] - 1 + 4 <= win_bot, "C-PKG-19 lidar window leaves under 4 mm of wall below the clear piece");
+assert(lidar_y0 - 0.5 >= fin_front + 0.5, "C-PKG-19 lidar chin runs into the heatsink fins");
 
 echo(str("PKG config=v4-2x2axis+lidar body_outer_mm=", out_L, "x", out_D, "x", out_H,
-         " head_height_mm=", out_H + hs_base + hs_fin_h, " lidar_pod_mm=", pod_w, "x", pod_len, "x", pod_h,
+         " head_height_mm=", out_H + hs_base + hs_fin_h, " lidar_chin_mm=", chin_w + 2*chin_blend, "x", pod_front - (lidar_y0 - 0.5), "x", chin_drop,
          " clear_piece_mm=", wrap_len, "x", 2*win_half, " mirrors_mm=2x", mir_L, "x", mir_W,
          " heatsinks_mm=2x", hs_L, "x", hs_D, " fins=2x", hs_fins, " beam_yaw_in=", beam_yaw_in,
          wrap_sides ? str(" wrap_depth_mm=", wrap_depth, " outward_beam=", 2*yaw_out_max) : " wrap=none"));
@@ -230,30 +245,27 @@ function body_pts(inset) = [
     for (sx = [-1,1], z = [-wall + r_tail, top_rear - r_tail]) [[sx*(out_L/2 - taper - r_tail), in_back - wall + r_tail, z], r_tail - inset]];
 module body_outer() blob(body_pts(0));
 module body_inner() blob(body_pts(wall));
-// Lidar pod: a small rounded hump on the front of the roof, faired back into it.
-pod_front = in_front + wall;
-function pod_pts(inset) = [
-    for (sx = [-1,1]) each [
-        [[sx*(pod_w/2 - 3), pod_front - 3, top_z + pod_h - 3], 3 - inset],
-        [[sx*(pod_w/2 - 3), lidar_y0 - 4, top_z + pod_h - 3], 3 - inset],          // flat top over the whole lidar
-        [[sx*(pod_w/2 - 3), pod_front - 3, top_z - r_edge], 3 - inset],
-        [[sx*(pod_w/2 - 5), pod_front - pod_len, top_z - r_edge - roof_drop*pod_len/out_D], 3 - inset]]];
-module pod_outer() blob(pod_pts(0));
-module skin_outer() union() { body_outer(); pod_outer(); }   // everything inside must stay within this (C-PKG-18)
-lidar_y0 = pod_front - wall - 0.5 - lidar[2];
-lidar_z0 = top_z + 0.5;
+// Lidar chin: a shallow hump under the nose, rounded into the underside on both sides.
+// Seen from the front the chin is a U: a half-ellipse from the lidar's top down to 2 mm below the underside, traced by
+// small spheres on a front ring and a back ring (the back ring ends just ahead of the heatsink fins).
+chin_a = chin_w/2 + chin_blend - chin_r;  chin_top = lidar_z0 + lidar[1];  chin_b = chin_top - (-wall - chin_drop + chin_r);
+function chin_pts(inset) = [
+    for (y = [pod_front - chin_r, lidar_y0 - 0.5 + chin_r], t = [0:10:180])
+        [[chin_a*cos(t), y, chin_top - chin_b*sin(t)], chin_r - inset]];
+module chin_outer() blob(chin_pts(0));
+module skin_outer() union() { body_outer(); chin_outer(); }   // everything inside must stay within this (C-PKG-18)
 
 module window_openings() for (sx = [-1,1]) translate([sx*win_xc, in_front + wall/2, win_zc]) rrect(win_w, 2*win_half, wall + 4, 6);
 module lidar_cavity() {
-    translate([-lidar[0]/2 - 0.5, lidar_y0 - 1, top_z - wall/2]) cube([lidar[0] + 1, lidar[2] + 1.5, lidar[1] + 1 + wall/2]);
-    translate([0, pod_front - wall/2, lidar_z0 + lidar[1]/2]) rrect(lidar[0] - 2, lidar[1] - 2, wall + 2, 2);   // window opening
-    translate([0, lidar_y0 + lidar[2]/2, top_z - wall]) cylinder(d=4, h=wall + 2, $fn=16);                      // cable hole
+    translate([-lidar[0]/2 - 0.5, lidar_y0 - 1, lidar_z0 - 0.5]) cube([lidar[0] + 1, lidar[2] + 1.5, lidar[1] + 1]);
+    translate([0, (lidar_y0 + lidar[2] + pod_front + 1)/2, lidar_z0 + lidar[1]/2])
+        rrect(lidar[0] - 2, lidar[1] - 2, pod_front + 1 - (lidar_y0 + lidar[2]) + 0.2, 2);                     // window opening
 }
 // The clear wrap: the front corners within the window band, from the flat front back to wrap_depth.
 module wrap_region() translate([-out_L/2 - 1, in_front + wall - wrap_depth, win_bot]) cube([out_L + 2, wrap_depth + 1, 2*win_half]);
 module wrap_clear() intersection() { difference() { body_outer(); body_inner(); } wrap_region(); }
 module shell_solid() difference() {
-    union() { difference() { body_outer(); body_inner(); } difference() { pod_outer(); body_outer(); } }
+    difference() { skin_outer(); body_inner(); }
     if (wrap_sides) wrap_region();
     for (sx = [-1,1]) translate([sx*hs_xc - hs_L/2, hs_y0, -wall - 1]) cube([hs_L, hs_D, wall + 2]);
     if (!wrap_sides) window_openings();
@@ -291,7 +303,7 @@ module beams() for (sx = [-1,1]) for (o = [[spot_rx, spot_d, spot_h, spot_fwtm, 
 }
 
 module head(explode = 0) {
-    // Exploded: shell lifted well clear, clear sides forward, lidar further forward, servos and board back,
+    // Exploded: shell lifted well clear, clear sides forward, lidar forward and down, servos and board back,
     // mirrors up a little, optics and heatsinks down in steps.
     translate([0,0,-explode*75]) heatsink();
     translate([0,0,-explode*35]) for (sx = [-1,1]) module_optics(sx);
@@ -299,7 +311,7 @@ module head(explode = 0) {
     translate([0,-explode*70,explode*10]) { servos_and_links(); electronics(); }
     translate([0,0,explode*130]) body_shell();
     translate([0,explode*70,explode*10]) windows();
-    translate([0,explode*40,explode*160]) lidar_unit();
+    translate([0,explode*55,-explode*20]) lidar_unit();
     if (show_beams && explode == 0) beams();
 }
 

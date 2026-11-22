@@ -48,7 +48,7 @@ python3 -I weight.py "$OUT/model.echo" "$OUT/shell.stl" "$OUT/hood.stl" > "$OUT/
 rm -f "$OUT/model.echo" "$OUT/shell.stl" "$OUT/hood.stl"
 tail -1 "$OUT/mass.txt" >> "$LOG"
 
-# Layout v4, adopted 2026-11-21 (two 2-axis mirrors side by side, TFS20-L lidar in a roof pod since 2026-11-21). Its C-PKG checks and mass gate the exit status. Only the clear-wraparound version is modelled now (owner, 2026-11-21).
+# Layout v4, adopted 2026-11-21 (two 2-axis mirrors side by side, TFS20-L lidar low in the nose since 2026-11-21). Its C-PKG checks and mass gate the exit status. Only the clear-wraparound version is modelled now (owner, 2026-11-21).
 render4() { name=$1; view=$2; cam=$3; shift 3
   fit=""; case "$cam" in *,0) fit="--viewall --autocenter" ;; esac
   # shellcheck disable=SC2086
@@ -64,7 +64,7 @@ render4 on-wheel      wheel    0,0,0,75,0,125,0 -D show_beams=false
 render4 exploded      exploded 0,0,0,65,0,145,0 -D show_beams=false
 if grep -q 'C-PKG' "$LOG.v4"; then status=1; echo "v4: $(grep -o 'C-PKG[^"]*' "$LOG.v4" | sort -u | head -3)" >> "$LOG"; else echo "v4: C-PKG checks passed" >> "$LOG"; fi
 rm -f "$LOG.v4"
-# C-PKG-18: nothing inside pokes into the wall (inner skin; the lidar against its pod), with the mirrors at every corner of their travel.
+# C-PKG-18: nothing inside pokes into the wall (inner skin; the lidar against the body plus its chin), with the mirrors at every corner of their travel.
 fit_fail=""
 fit_check() { "$OPENSCAD" -o "$OUT/fit.stl" -D 'view="none"' "$@" fit-v4.scad 2>&1 | grep -q "top level object is empty"; }
 fit_check -D 'part="fixed"' || fit_fail="$fit_fail fixed-parts"
