@@ -207,6 +207,7 @@ Sources: [EUC forum: charging a laptop from a wheel](https://forum.electricunicy
   - Treat the inside with anti-fog.
   - If you bond it, use **neutral-cure / sensor-safe** RTV only. Acetoxy silicone releases acetic acid, which tarnishes the mirror and LED phosphor.
 - **Vent:** an Amphenol LTW M8 ePTFE pressure vent plus desiccant. Without it, warm-up/cool-down cycles pull moisture past the seals and fog the window.
+- **Desiccant holder (owner, 2026-11-22):** a small printed clip just inside the service cover holds the 1–2 g silica gel pack, so it can be swapped whenever the cover is off, without touching anything else. Keep it clear of the mirrors' and linkages' travel and away from the optics, and use a pack that can't shed beads.
 - **Penetrations:**
   - M12 IP68 cable gland, or a panel-mount IP68 connector.
   - Adafruit 16 mm rugged button with an LED ring (comes with a gasket).
@@ -473,3 +474,6 @@ Seven LEDC channels are used (four servos, two DIM, the ring LED) of the ESP32-S
 - [x] Speed source for v4 (high-beam width and turn steering): estimated from the IMU, with resets when still and corrections in turns (owner's decision, 2026-11-21; firmware-spec §12). Its accuracy on long straights is checked in R-SPD-01.
 - [x] v4 with no inward yaw: narrow the body (§5). Done 2026-11-21 with the TFS20-L (now under the beams): ~151 mm, checks and mass re-run.
 - [x] How calibration and settings are controlled: a calibration page over the head's own Wi-Fi, with the button and remote kept as a full fallback (decided 2026-11-21; firmware-spec §11).
+- [ ] **Service cover position (raised 2026-11-22):** the design says the removable O-ring cover is on the top or the back, and the CAD model doesn't split it out yet. Top: the mirrors, gimbals and servos come out without unscrewing the head from its mount, but the cover seal faces the rain. Back: the seal is sheltered, but the head may have to come off the mount first. Decide before the housing CAD (build plan phase 6).
+- [ ] **Firmware updates without opening the head (raised 2026-11-22):** the XIAO's USB-C port is inside the sealed body, so today every update means opening the service cover. Options: over-the-air updates over the head's own Wi-Fi (the calibration page already starts it; firmware-spec §10 lists OTA as "possibly later"), or a sealed USB-C panel port (one more seal; the port must stay cut off from the 15 V input). Decide before the housing CAD.
+- [ ] **Power cable entry: gland size or panel connector (raised 2026-11-22):** §5 calls for an M12 IP68 cable gland or a panel-mount IP68 connector, but the BOM lists an M8 gland for 2–5 mm cable. The right size depends on the power cable's outer diameter (two cores, roughly 18–20 AWG for 2 A), and a panel connector would replace the gland and the inline IP68 pair (section F). Choose the cable first, then fix §5, the BOM and the body's boss together, before the housing CAD.

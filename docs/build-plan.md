@@ -84,7 +84,8 @@ Dropped with layout v4 (2026-11-21), kept in the test plan for v3: toe-out wedge
 
 ## Phase 6: Housing
 
-- [ ] Parametric CAD: body, bezel, mirror cradle, servo bracket, optic plate, electronics tray, mount boss, remote case
+- [ ] Decide the service cover position, how firmware updates reach the head without opening it, and the power cable entry (gland size or panel connector) (design §10)
+- [ ] Parametric CAD: body, bezel, mirror cradle, servo bracket, optic plate, electronics tray, desiccant holder, mount boss, remote case
 - [ ] Print in ASA, fit-check every part
 - [ ] Leak test empty, then after thermal cycling (E-SEAL-01 to E-SEAL-03)
 - [ ] Weight and mount pull test (E-MNT-01, E-MNT-02)

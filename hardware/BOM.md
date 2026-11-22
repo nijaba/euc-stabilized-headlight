@@ -168,6 +168,7 @@ For firmware and bench testing before the protoboard or any PCB. Most of it is t
 | Servo brackets + lever arms (×2) | ASA, two servos per side stacked in the back slot, each linkage about 4:1 |
 | Optic plates (×2) | ASA, one per module, locate a Carclo holder and a FILIPPA optic on each heatsink. Slots key the FILIPPA ribs toward the front; spacers set the FILIPPA focus height |
 | Electronics tray | ASA, holds the protoboard, BuckBlocks, Pololu |
+| Desiccant holder | ASA clip just inside the service cover, holds the 1–2 g silica gel pack so it can be swapped whenever the cover is off (design §5) |
 | Mount boss | ASA, on the back of the body, holds the 1/4"-20 insert |
 | Remote case | ASA or TPU, 2 buttons + strap slots |
 | Lidar seat and chin (if section H) | Seat on the floor in the nose, between the modules and below the clear piece; a shallow rounded chin (~42 mm wide, 2 mm below the underside) keeps its window face flat. TFS20-L aimed ~3–5° below the beam axis behind a gasketed window; printed as part of the body |
