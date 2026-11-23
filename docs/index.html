@@ -182,7 +182,7 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
       <a class="btn primary" href="v4-ride-demo.html">Try the ride demo</a>
       <a class="btn" href="https://github.com/nijaba/euc-stabilized-headlight">Source on GitHub</a>
     </div>
-    <div class="status">Concept design: nothing built or tested yet. Every figure is an estimate.</div>
+    <div class="status">Concept design, now on the bench: firmware core written, no hardware built yet. Every figure is an estimate.</div>
   </div>
   <figure class="render" style="margin:0">
     <img src="img/v4-three-quarter.png" alt="Packaging model of the head: a rounded light bar with two mirror modules side by side, the lidar in a rounded chin under the beams and one clear piece wrapping the front and sides" width="1600" height="1200">
@@ -195,7 +195,7 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
     <div>
       <div class="eyebrow" style="color:var(--right)">A concept, not a kit</div>
       <h2 style="font-size:clamp(26px,3.4vw,34px);margin:8px 0 8px">Ideas welcome. Please don't build it yet.</h2>
-      <p>This is a concept design at the packaging-study stage: no prototype exists, the parts list hasn't been ordered, the firmware isn't written, and the numbers on this page come from datasheets and a CAD model. It will change. If you ride an EUC, know optics, servos or embedded firmware, or just see a better way, open an issue with your idea or doubt.</p>
+      <p>This is a concept design. The packaging study is done and the bench stage has started: the bench parts are on order and the firmware core (levelling, IMU, servo output) is written and tested on a computer. But no prototype exists, nothing has run on hardware yet, and the numbers on this page come from datasheets and a CAD model. It will change. If you ride an EUC, know optics, servos or embedded firmware, or just see a better way, open an issue with your idea or doubt.</p>
     </div>
     <div class="cta" style="align-self:center">
       <a class="btn primary" href="https://github.com/nijaba/euc-stabilized-headlight/issues/new">Suggest an idea</a>
@@ -343,12 +343,12 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
         <div class="meter">
           <div class="row"><span>Head weight</span><span>~331 / 400 g</span></div>
           <div class="bar" role="img" aria-label="331 of 400 grams"><i style="width:82.75%"></i><b></b></div>
-          <small>Printed parts measured from the model; bought parts from datasheets. Only 1 g of margin: the custom PCB should win some back.</small>
+          <small>Printed parts measured from the model; bought parts from datasheets. About 69 g of margin since the narrower 150 mm body.</small>
         </div>
         <div class="meter">
           <div class="row"><span>Material cost per unit</span><span>~$409 / $450</span></div>
           <div class="bar" role="img" aria-label="409 of 450 dollars"><i style="width:90.9%"></i><b></b></div>
-          <small>Excludes the power bank, tools and leftover packs. About $342 without the lidar.</small>
+          <small>Excludes the power bank, tools and leftover packs. About $350 without the lidar.</small>
         </div>
       </div>
       <div class="panel">
@@ -399,15 +399,15 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
   <div class="wrap">
     <div class="eyebrow">Roadmap</div>
     <h2>Where the project stands</h2>
-    <p class="intro">Phases run in order, each with its tests. Nothing past the packaging study has started, so this is the best time to change the design: <a href="https://github.com/nijaba/euc-stabilized-headlight/issues/new">open an issue</a>. The packaging study is nearly done; next is ordering a bench kit and writing the firmware core, with the pure logic tested on a computer first.</p>
+    <p class="intro">Phases run in order, each with its tests. The packaging study is done and the firmware core is written, with 23 automated tests that run on every change. The bench parts are on order; when they arrive, the firmware meets real hardware. Nothing is built yet, so this is still the best time to change the design: <a href="https://github.com/nijaba/euc-stabilized-headlight/issues/new">open an issue</a>.</p>
     <ol class="phases">
       <li><span class="ph">PHASE 0</span><span class="t">Project setup and budget</span><span class="prog"><span class="bar"><i style="width:100%"></i></span>6/6</span></li>
-      <li class="now"><span class="ph">PHASE 1</span><span class="t">Packaging study<small>v4 chosen; renders to review</small></span><span class="prog"><span class="bar"><i style="width:90%"></i></span>9/10</span></li>
-      <li><span class="ph">PHASE 2</span><span class="t">Firmware core on the bench<small>Order the bench kit first (~$351, mostly parts reused in the build, plus test tools you may already own)</small></span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/7</span></li>
+      <li><span class="ph">PHASE 1</span><span class="t">Packaging study<small>Layout v4 chosen and packaged</small></span><span class="prog"><span class="bar"><i style="width:100%"></i></span>10/10</span></li>
+      <li class="now"><span class="ph">PHASE 2</span><span class="t">Firmware core on the bench<small>Firmware core written and tested on a computer; bench kit (~$351, mostly parts reused in the build) on order</small></span><span class="prog"><span class="bar"><i style="width:42.9%"></i></span>3/7</span></li>
       <li><span class="ph">PHASE 3</span><span class="t">Power and LED drivers on the bench</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/5</span></li>
-      <li><span class="ph">PHASE 4</span><span class="t">Optics and mirror mechanism</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/6</span></li>
-      <li><span class="ph">PHASE 5</span><span class="t">Firmware features</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/8</span></li>
-      <li><span class="ph">PHASE 6</span><span class="t">Housing</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/4</span></li>
+      <li><span class="ph">PHASE 4</span><span class="t">Optics and mirror mechanism</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/5</span></li>
+      <li><span class="ph">PHASE 5</span><span class="t">Firmware features</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/9</span></li>
+      <li><span class="ph">PHASE 6</span><span class="t">Housing</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/5</span></li>
       <li><span class="ph">PHASE 7</span><span class="t">Integration and ride tests</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/4</span></li>
       <li><span class="ph">PHASE 8</span><span class="t">Road-slope lidar</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/3</span></li>
       <li><span class="ph">PHASE 9</span><span class="t">Custom PCB</span><span class="prog"><span class="bar"><i style="width:0"></i></span>0/2</span></li>
@@ -422,7 +422,7 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
     <div class="docs">
       <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/docs/design.md"><span class="path">docs/design.md</span><p>Hardware design: optics, mirrors, power, housing, thermal, electronics, lidar, open questions.</p></a>
       <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/docs/firmware-spec.md"><span class="path">docs/firmware-spec.md</span><p>Control loop, calibration, auto-off, derating, remote, lidar fusion, calibration page.</p></a>
-      <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/docs/test-plan.md"><span class="path">docs/test-plan.md</span><p>Every test by ID: automated, bench, enclosure and ride. 125 so far.</p></a>
+      <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/docs/test-plan.md"><span class="path">docs/test-plan.md</span><p>Every test by ID: automated, bench, enclosure and ride. 139 so far, 23 automated and passing.</p></a>
       <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/docs/build-plan.md"><span class="path">docs/build-plan.md</span><p>The phases in order, with checkboxes.</p></a>
       <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/hardware/BOM.md"><span class="path">hardware/BOM.md</span><p>Parts, links, prices, the bench kit and the cost summary.</p></a>
       <a class="doc" href="https://github.com/nijaba/euc-stabilized-headlight/blob/main/docs/options-study.md"><span class="path">docs/options-study.md</span><p>Alternatives weighed: convex mirror, crossing beams, masks, LCD, two 2-axis mirrors.</p></a>
@@ -434,7 +434,7 @@ footer p { margin: 0 0 8px; max-width: 80ch; }
 
 <footer>
   <div class="wrap">
-    <p><b style="color:var(--fg);font-weight:500">A concept design.</b> Nothing here has been built or tested yet, so it isn't ready to build; ideas and doubts are welcome as <a href="https://github.com/nijaba/euc-stabilized-headlight/issues">GitHub issues</a>. Ride with a backup light until it's proven, and check your country's lighting rules: aim the low beam so it doesn't dazzle other road users. The optional TFS20-L lidar is a Class 1 (eye-safe) laser device.</p>
+    <p><b style="color:var(--fg);font-weight:500">A concept design.</b> No hardware has been built or tested yet, so it isn't ready to build; ideas and doubts are welcome as <a href="https://github.com/nijaba/euc-stabilized-headlight/issues">GitHub issues</a>. Ride with a backup light until it's proven, and check your country's lighting rules: aim the low beam so it doesn't dazzle other road users. The optional TFS20-L lidar is a Class 1 (eye-safe) laser device.</p>
     <p>Hardware and firmware under GPL-3.0. <a href="https://github.com/nijaba/euc-stabilized-headlight">github.com/nijaba/euc-stabilized-headlight</a></p>
   </div>
 </footer>
