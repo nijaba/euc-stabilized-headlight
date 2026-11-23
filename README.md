@@ -1,12 +1,14 @@
 # EUC Stabilized Headlight
 
+[![CI](https://github.com/nijaba/euc-stabilized-headlight/actions/workflows/ci.yml/badge.svg)](https://github.com/nijaba/euc-stabilized-headlight/actions/workflows/ci.yml)
+
 An open-hardware, self-levelling headlight for electric unicycles (EUCs).
 
 An EUC pitches nose-down when it accelerates and nose-up when it brakes, by up to about 10°. A fixed headlight swings with it, and when you brake it shines straight into oncoming drivers' eyes. This light keeps its beam level. A small IMU measures pitch, and servos tilt **two lightweight mirrors** that steer the two beams. In a turn, the beam on that side swings into the curve while the other stays straight. The LEDs and heatsinks never move.
 
 **Project site:** [nijaba.github.io/euc-stabilized-headlight](https://nijaba.github.io/euc-stabilized-headlight/): the idea, the ride demo, renders, the anticipated spec and the roadmap on one page.
 
-> **Status: concept design.** Layout v4 was chosen on 2026-11-21. Nothing has been built or tested yet, all figures are estimates, and the design will change, so please don't start building from it. Ideas and doubts are welcome as [issues](https://github.com/nijaba/euc-stabilized-headlight/issues).
+> **Status: concept design, now on the bench.** Layout v4 was chosen on 2026-11-21 and the packaging study is done. The bench parts are on order, and the firmware core (levelling logic, IMU driver, servo output, telemetry) is written and tested on a computer, with CI on every change. No hardware has been built or tested yet, all figures are estimates, and the design will change, so please don't start building from it. Ideas and doubts are welcome as [issues](https://github.com/nijaba/euc-stabilized-headlight/issues).
 
 ![Packaging model of layout v4, three-quarter view, with the clear wraparound sides](cad/renders/v4-three-quarter.png)
 
@@ -28,18 +30,18 @@ An EUC pitches nose-down when it accelerates and nose-up when it brakes, by up t
 ## Architecture
 
 ```
- Power bank (pouch) ──USB-C PD 15 V──► IP68 2-pin ──► Head
-                                                      │
-   ┌──────────────────────────────────────────────────┴───────────┐
-   │ fuse · reverse-polarity diode · TVS                          │
-   │   ├─► BuckBlock #1 ─► 2× XP-L HI   (spots, Carclo 10003)     │
-   │   ├─► BuckBlock #2 ─► 2× XP-L HI   (low beams, FILIPPA)      │
-   │   └─► 5 V buck ─► 4 servos ─► 2 mirrors (pitch + yaw each)   │
-   │                 └─► XIAO ESP32-S3 ◄─I²C─► LSM6DSO32 IMU      │
-   │                          ▲   └─I²C─► TFS20-L lidar (3.3 V)   │
-   │                          ├── BLE ── wrist remote (nRF52840)  │
-   │                          └── Wi-Fi ── calibration page       │
-   └──────────────────────────────────────────────────────────────┘
+Power bank ─USB-C─► PD trigger board, 15 V ─2 wires─► IP68 2-pin ─► Head
+└───────── in the pouch ─────────┘                                   │
+  ┌──────────────────────────────────────────────────────────────────┤
+  │ fuse · reverse-polarity diode · TVS · 220 µF                     │
+  │   ├─► BuckBlock #1 ─► 2× XP-L HI   (spots, Carclo 10003)         │
+  │   ├─► BuckBlock #2 ─► 2× XP-L HI   (low beams, FILIPPA)          │
+  │   └─► 5 V regulator ─► 4 servos ─► 2 mirrors (pitch + yaw each)  │
+  │                   └─► XIAO ESP32-S3 ◄─I²C─► LSM6DSO32 IMU        │
+  │                            ▲   └─I²C─► TFS20-L lidar (3.3 V)     │
+  │                            ├── BLE ── wrist remote (nRF52840)    │
+  │                            └── Wi-Fi ── calibration page         │
+  └──────────────────────────────────────────────────────────────────┘
 ```
 
 Top view of the head (layout v4, front at the top):
@@ -84,7 +86,8 @@ The low-beam figures were estimated with v3's 4° toe-out; v4 aims both low beam
 | [`hardware/BOM.md`](hardware/BOM.md) / [`BOM.csv`](hardware/BOM.csv) | Bill of materials with supplier links, the bench kit and the cost summary |
 | [`CHANGELOG.md`](CHANGELOG.md) | Notable changes |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) / [`SECURITY.md`](SECURITY.md) | How to contribute; how to report safety and security faults privately |
-| `firmware/` | ESP32-S3 firmware (to do) |
+| [`firmware/`](firmware/) | ESP32-S3 firmware (PlatformIO): levelling logic tested on a computer, IMU and servo hardware layer, serial telemetry; bench testing next |
+| [`.github/`](.github/) | CI: host tests and the board build on every PR that touches the firmware or the test plan |
 | [`cad/`](cad/) | OpenSCAD packaging models (v4, and v3 as the earlier layout), renders and mass budget |
 
 ## Roadmap

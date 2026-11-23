@@ -39,6 +39,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 - `CONTRIBUTING.md` and `SECURITY.md` (private reporting for safety faults as well as security issues).
 
 ### Changed
+- README and site brought up to date (2026-11-22): status now "on the bench" (bench kit on order, firmware core written and tested on a computer, no hardware yet); site roadmap shows phase 1 done and phase 2 at 3/7 with corrected counts for phases 4–6; test count 139 (23 automated, passing); weight margin corrected from "1 g" to 69 g and the no-lidar cost to ~$350; README gains a CI badge, the pouch trigger board in the power diagram and a real firmware/ entry.
 - Pitch filter (firmware-spec §2, 2026-11-22): the accelerometer correction is a time constant (0.25 s) instead of a per-step gain of 0.02, so its speed no longer depends on the loop rate (U-FILT-05); the loop rate is set at 200 Hz. Test plan: 13 rows had a stray empty column, fixed. README's next step updated.
 - 5 V regulator (2026-11-22): the Pololu D36V28F5 is out of stock, so the Pololu D30V30F5 (5 V 3.4 A, 5–45 V in, same footprint, $29.95) replaces it; design §7 updated. Material ~$409 with the lidar (limit $450), cash outlay ~$541, bench kit $351.03.
 - Spot optics (2026-11-22): the Carclo 10003 is bought from Mouser ($2.46, in stock), alongside the FILIPPA optics. Section C $153.56, cash outlay ~$535, bench kit $345.03; per-unit cost still ~$403 with the lidar.
